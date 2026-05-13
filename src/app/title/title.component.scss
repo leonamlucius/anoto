@@ -8,6 +8,11 @@
   font-weight: 500;
   color: #383838;
 }
+:host img {
+  width: 150px;
+  height: auto;
+}
+  
 @media (max-width: 600px) {
   :host {
     font-size: 60px;

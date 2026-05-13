@@ -14,8 +14,8 @@
   border-radius: 12px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
+  justify-content: space-around;
+  align-items: center;
   color: #383838;
   transition: all 0.3s ease;
   gap: 10px;
@@ -31,6 +31,14 @@
 
 .note p {
   font-weight: 400;
+}
+.note-body {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 13px;
 }
 
 @media (max-width: 600px) {
