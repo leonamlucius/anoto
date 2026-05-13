@@ -6,7 +6,7 @@
 
 
 <div class="colors">
-    <button *ngFor="let note of notes" class="note" [style.backgroundColor]="note.color">
+    <button *ngFor="let note of notes" class="note" [style.backgroundColor]="note.color" (click)="selectNote($event)">
 
     </button>
 </div>

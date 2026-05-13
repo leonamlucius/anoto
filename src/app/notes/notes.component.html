@@ -1,0 +1,12 @@
+<div *ngFor="let note of notes" class="note" (mouseenter)="showEdit(note)" (mouseleave)="hideEdit(note)"
+    [style.backgroundColor]="note.color">
+
+    <div class="note-body">
+        <h3>{{ note.title }}</h3>
+        <p>{{ note.content }}</p>
+    </div>
+
+    <div class="note-footer" [class.active]="note.showFooter">
+        <span class="material-symbols-outlined">edit_square</span>
+    </div>
+</div>

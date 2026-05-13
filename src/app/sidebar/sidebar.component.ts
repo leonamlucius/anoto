@@ -39,4 +39,15 @@ export class SidebarComponent {
       colorsDiv.classList.toggle('active');
     }
   }
+  public selectNote(event: MouseEvent) {
+  const clicked = event.currentTarget as HTMLElement;
+
+  if (clicked.classList.contains('active')) {
+    clicked.classList.remove('active');
+    return;
+  }
+
+  document.querySelectorAll('.note').forEach((n) => n.classList.remove('active'));
+  clicked.classList.add('active');
+}
 }

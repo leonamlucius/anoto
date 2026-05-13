@@ -4,5 +4,11 @@
     height: 100%;
     justify-content: flex-start;
     align-items: flex-start;
-    font-family: Hu;
+
+}
+
+@media (max-width: 600px) {
+    *{
+        flex-direction: column;
+    }
 }
