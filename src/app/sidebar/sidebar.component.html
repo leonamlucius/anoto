@@ -1,0 +1,12 @@
+<button class="add-button" (mouseenter)="showNoteContent()" (mouseleave)="hiddeNoteContent()" (click)="toggleNoteContent()">
+    <span class="material-symbols-outlined">
+        add
+    </span>
+</button>
+
+
+<div class="colors">
+    <button *ngFor="let note of notes" class="note" [style.backgroundColor]="note.color">
+
+    </button>
+</div>

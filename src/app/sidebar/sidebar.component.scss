@@ -1,0 +1,62 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  justify-content: flex-start;
+  padding: 15px;
+  box-sizing: border-box;
+  background-color: transparent;
+  width: 100px;
+  height: 100vh;
+  border-right: 1px solid #eeeeee;
+}
+
+:host button {
+  border: none;
+}
+:host .add-button {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #383838;
+  color: white;
+  transition: all 0.3s ease;
+}
+:host .add-button span{
+  pointer-events: none;
+}
+:host .add-button:hover {
+  cursor: pointer;
+  scale: 1.1;
+}
+.colors {
+  height: 0px;
+  width: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.colors.active {
+  height: 300px;
+}
+
+.colors button {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin: 5px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.colors button:hover {
+  scale: 1.1;
+}
+
