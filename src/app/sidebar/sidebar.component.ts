@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
+import { ModalComponent } from '../modal/modal.component';
 @Component({
   selector: 'app-sidebar',
-  imports: [NgFor],
+  imports: [NgFor, NgIf, ModalComponent],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
 })
 export class SidebarComponent {
+  showModal = false;
   notes = [
     { id: 1, title: 'Note 1', content: 'Content of Note 1', color: '#FFF176' },
     { id: 2, title: 'Note 2', content: 'Content of Note 2', color: ' #F48FB1' },
@@ -40,14 +42,24 @@ export class SidebarComponent {
     }
   }
   public selectNote(event: MouseEvent) {
-  const clicked = event.currentTarget as HTMLElement;
+    const clicked = event.currentTarget as HTMLElement;
 
-  if (clicked.classList.contains('active')) {
-    clicked.classList.remove('active');
-    return;
+    if (clicked.classList.contains('active')) {
+      clicked.classList.remove('active');
+      return;
+    }
+
+    document
+      .querySelectorAll('.note')
+      .forEach((n) => n.classList.remove('active'));
+    clicked.classList.add('active');
   }
 
-  document.querySelectorAll('.note').forEach((n) => n.classList.remove('active'));
-  clicked.classList.add('active');
-}
+  public showModalCreateNote() {
+    document.insertBefore;
+  }
+
+  public createModal() {
+    this.showModal = true;
+  }
 }

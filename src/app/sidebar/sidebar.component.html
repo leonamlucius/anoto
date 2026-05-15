@@ -1,4 +1,4 @@
-<button class="add-button" (mouseenter)="showNoteContent()" (mouseleave)="hiddeNoteContent()" (click)="toggleNoteContent()">
+<button class="add-button" (mouseenter)="showNoteContent()" (mouseleave)="hiddeNoteContent()" (click)="createModal()">
     <span class="material-symbols-outlined">
         add
     </span>
@@ -10,3 +10,5 @@
 
     </button>
 </div>
+
+<app-modal *ngIf="showModal" (closeModal)="showModal = false"></app-modal>

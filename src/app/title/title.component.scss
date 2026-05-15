@@ -12,9 +12,13 @@
   width: 150px;
   height: auto;
 }
-  
+
 @media (max-width: 600px) {
   :host {
     font-size: 60px;
+  }
+
+  :host img {
+    width: 160px;
   }
 }
