@@ -37,6 +37,7 @@
   background-color: #383838;
   color: white;
   transition: all 0.3s ease;
+  animation: popOut 0.3s ease;
 }
 :host .add-button span {
   pointer-events: none;
@@ -74,6 +75,21 @@
   margin: 5px;
   transition: all 0.3s ease;
   cursor: pointer;
+  animation: popOut 0.3s ease;
+}
+
+@keyframes popOut {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .colors button:hover {

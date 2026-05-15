@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
-import { ModalComponent } from '../modal/modal.component';
+import { ModalComponent } from '../../features/modal/modal.component';
 @Component({
   selector: 'app-sidebar',
   imports: [NgFor, NgIf, ModalComponent],

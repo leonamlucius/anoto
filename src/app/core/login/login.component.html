@@ -1,0 +1,32 @@
+<div class="login-body">
+    <div class="login-header">
+        <app-title title="Login"></app-title>
+    </div>
+
+    <div class="login-form">
+        <form>
+            <div class="form-group">
+                <label for="username">Email</label>
+                <input type="text" id="username" name="username" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <div class="password-wrapper">
+                    <input [type]="showPassword ? 'text' : 'password'" id="password" name="password"
+                        class="form-control">
+                    <button type="button" class="toggle-password" (click)="showPassword = !showPassword">
+                        <span class="material-symbols-outlined">
+                            {{ showPassword ? 'visibility_off' : 'visibility' }}
+                        </span>
+                    </button>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <span class="material-symbols-outlined">
+                    chevron_forward
+                </span>
+            </button>
+        </form>
+    </div>
+
+</div>
