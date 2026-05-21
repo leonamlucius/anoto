@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
+import { ModalComponent } from '../../features/modal/modal.component';
 
 @Component({
   selector: 'app-notes',
-  imports: [NgFor],
+  imports: [NgFor, NgIf, ModalComponent],
   templateUrl: './notes.component.html',
   styleUrl: './notes.component.scss',
 })
@@ -52,6 +53,16 @@ export class NotesComponent {
       showFooter: false,
     },
   ];
+
+  showModal = false;
+
+  public showModalCreateNote() {
+    document.insertBefore;
+  }
+
+  public createModal() {
+    this.showModal = true;
+  }
 
   public showEdit(note: any) {
     note.showFooter = true;

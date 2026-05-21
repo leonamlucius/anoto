@@ -1,5 +1,5 @@
-<div *ngFor="let note of notes" class="note" (mouseenter)="showEdit(note)" (mouseleave)="hideEdit(note)"
-    [style.backgroundColor]="note.color">
+<div *ngFor="let note of notes" class="note-card" (mouseenter)="showEdit(note)" (mouseleave)="hideEdit(note) "
+    id="{{note.color}}" [style.backgroundColor]="note.color">
 
     <div class="note-body">
         <h3>{{ note.title }}</h3>
@@ -7,6 +7,9 @@
     </div>
 
     <div class="note-footer" [class.active]="note.showFooter">
-        <span class="material-symbols-outlined">edit_square</span>
+        <span class="material-symbols-outlined" (click)="createModal()">edit_square</span>
     </div>
 </div>
+
+
+<app-modal *ngIf="showModal" (closeModal)="showModal = false"></app-modal>

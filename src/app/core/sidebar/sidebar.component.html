@@ -6,7 +6,10 @@
 
 
 <div class="colors">
-    <button *ngFor="let note of notes" class="note" [style.backgroundColor]="note.color" (click)="selectNote($event)">
+    <button *ngFor="let note of notes" class="note" [style.backgroundColor]="note.color" (click)="selectNote($event)" id="{{note.color}}">
+        <span class="material-symbols-outlined">
+            
+        </span>
 
     </button>
 </div>
