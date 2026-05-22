@@ -19,7 +19,7 @@
   align-items: center;
   text-align: center;
   width: 600px;
-  height: 400px;
+  height: auto;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -114,4 +114,37 @@
 
 .color-option.active {
   border: 2px solid #383838;
+}
+.modal-footer {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+@media (max-width: 600px) {
+  .modal-footer {
+    margin-top: 20px;
+  }
+}
+
+.modal-footer button {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  background-color: #383838;
+  border: none;
+  cursor: pointer;
+}
+.modal-footer button:hover {
+  cursor: pointer;
+  scale: 1.1;
+}
+
+.modal-footer button span {
+  color: white;
 }

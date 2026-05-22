@@ -7,9 +7,13 @@
     </div>
 
     <div class="note-footer" [class.active]="note.showFooter">
+        <span class="material-symbols-outlined" (click)="createModalDelete()">
+            delete
+        </span>
         <span class="material-symbols-outlined" (click)="createModal()">edit_square</span>
     </div>
 </div>
 
 
 <app-modal *ngIf="showModal" (closeModal)="showModal = false"></app-modal>
+<app-delete *ngIf="showDeleteModal" (closeModal)="showDeleteModal = false"></app-delete>

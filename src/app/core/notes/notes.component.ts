@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { ModalComponent } from '../../features/modal/modal.component';
+import { DeleteComponent } from '../../features/modal/delete/delete.component';
 
 @Component({
   selector: 'app-notes',
-  imports: [NgFor, NgIf, ModalComponent],
+  imports: [NgFor, NgIf, ModalComponent , DeleteComponent],
   templateUrl: './notes.component.html',
   styleUrl: './notes.component.scss',
 })
@@ -56,12 +57,18 @@ export class NotesComponent {
 
   showModal = false;
 
+  showDeleteModal = false;
+
   public showModalCreateNote() {
     document.insertBefore;
   }
 
   public createModal() {
     this.showModal = true;
+  }
+
+  public createModalDelete() {
+    this.showDeleteModal = true;
   }
 
   public showEdit(note: any) {

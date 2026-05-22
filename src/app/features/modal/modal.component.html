@@ -15,8 +15,19 @@
 
 
             <div class="modal-colors">
-                <div *ngFor="let note of notes" class="color-option" [style.background]="note.color" (click)="selectNote($event)" ></div>
+                <div *ngFor="let note of notes" class="color-option" [style.background]="note.color"
+                    (click)="selectNote($event)"></div>
             </div>
+        </div>
+
+
+        <div class="modal-footer">
+            <button>
+                <span class="material-symbols-outlined">
+                    chevron_forward
+                </span>
+            </button>
+
         </div>
 
 
