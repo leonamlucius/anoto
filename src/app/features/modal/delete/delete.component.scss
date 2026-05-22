@@ -56,20 +56,43 @@
   transition: all 0.3s ease;
 }
 
-.buttons button {
-  border: none;
-  width: 40px;
-  height: 40px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background-color: #383838;
-  color: white;
-  transition: all 0.3s ease;
-}
 .buttons button:hover {
   cursor: pointer;
   scale: 1.1;
+}
+@keyframes flowColors {
+  0% {
+    background-color: #fff176;
+  }
+  17% {
+    background-color: #f48fb1;
+  }
+  33% {
+    background-color: #a5d6a7;
+  }
+  50% {
+    background-color: #90caf9;
+  }
+  67% {
+    background-color: #ffcc80;
+  }
+  83% {
+    background-color: #ce93d8;
+  }
+}
+.buttons .delete-button {
+  transition:
+    width 0.3s ease,
+    height 0.3s ease,
+    border-radius 0.3s ease,
+    scale 0.3s ease,
+    color 0.3s ease;
+}
+.buttons .delete-button:hover {
+  scale: 1.1;
+  color: #383838;
+  width: 80px;
+  height: 40px;
+  border-radius: 12px;
+  animation: flowColors 7s steps(1) infinite;
 }

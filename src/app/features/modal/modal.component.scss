@@ -51,6 +51,28 @@
 .modal-header button:hover {
   cursor: pointer;
   scale: 1.1;
+  color: #383838;
+}
+
+@keyframes flowColors {
+  0% {
+    background-color: #fff176;
+  }
+  17% {
+    background-color: #f48fb1;
+  }
+  33% {
+    background-color: #a5d6a7;
+  }
+  50% {
+    background-color: #90caf9;
+  }
+  67% {
+    background-color: #ffcc80;
+  }
+  83% {
+    background-color: #ce93d8;
+  }
 }
 
 .modal-header button span {
@@ -120,6 +142,31 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  gap: 10px;
+}
+
+.modal-footer button {
+  border: none;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #383838;
+  color: white;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.modal-footer button:hover {
+  scale: 1.1;
+  color: #383838;
+  width: 80px;
+  height: 40px;
+  border-radius: 12px;
+  animation: flowColors 7s steps(1) infinite;
 }
 
 @media (max-width: 600px) {
