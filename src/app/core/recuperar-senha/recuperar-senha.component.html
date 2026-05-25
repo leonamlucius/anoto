@@ -1,0 +1,28 @@
+<div class="login-body">
+    <div class="login-header">
+        <app-title title="Login"></app-title>
+    </div>
+
+    <div class="login-form">
+        <form>
+            <div class="form-group">
+                <label for="username">Email</label>
+                <input type="email" #emailInput id="username" name="username" class="form-control"
+                placeholder="Digite seu email pessoal" required (input)="0">
+            </div>
+
+            <div class="form-footer">
+
+
+               <button type="button" class="btn btn-primary" [disabled]="!emailInput.validity.valid" (click)="renderBody()">
+                    <span class="material-symbols-outlined">
+                        chevron_forward
+                    </span>
+                </button>
+
+            </div>
+
+        </form>
+    </div>
+
+</div>
