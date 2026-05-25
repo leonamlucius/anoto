@@ -11,7 +11,7 @@
     padding: 50px;
   }
 }
-.login-body {
+::ng-deep .login-body {
   width: 500px;
   height: 300px;
   background-color: transparent;
@@ -21,7 +21,8 @@
   align-items: center;
   justify-content: center;
 }
-.login-form {
+
+::ng-deep .login-form {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -29,7 +30,7 @@
   justify-content: center;
 }
 
-.login-form form {
+::ng-deep .login-form form {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -38,31 +39,19 @@
   gap: 5px;
 }
 
-.password-wrapper {
-  position: relative;
-  width: 100%;
-  display: flex;
-  align-items: center;
+::ng-deep .login-form button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
-.password-wrapper input {
-  width: 100%;
-  padding-right: 40px;
-}
-
-.toggle-password {
-  position: absolute;
-  right: 4px;
-  width: 32px !important;
-  height: 32px !important;
-  background-color: transparent !important;
-  color: #383838 !important;
-  margin-top: 0 !important;
-  animation: none !important;
-}
-
-.toggle-password:hover {
-  background-color: #eeeeee !important;
+::ng-deep .login-form button:disabled:hover {
+  scale: 1;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  animation: none;
 }
 
 ::ng-deep .login-form button {
@@ -81,6 +70,7 @@
   animation: popOut 0.3s ease;
   cursor: pointer;
 }
+
 ::ng-deep .login-form .btn-primary:hover {
   scale: 1.1;
   color: #383838;
@@ -88,21 +78,6 @@
   height: 40px;
   border-radius: 12px;
   animation: flowColors 7s steps(1) infinite;
-}
-
-::ng-deep .login-form button:disabled {
-  background-color: #cccccc !important;
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-::ng-deep .login-form button:disabled:hover {
-  scale: 1;
-  color: white;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  animation: none;
 }
 
 @keyframes flowColors {
@@ -139,7 +114,7 @@
     transform: scale(1);
   }
 }
-.form-group {
+::ng-deep .form-group {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -147,14 +122,14 @@
   justify-content: center;
 }
 
-.form-group label {
+::ng-deep .form-group label {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: flex-start;
 }
 
-.form-group input {
+::ng-deep .form-group input {
   width: 100%;
   height: 35px;
   border: 1px solid #eeeeee;
@@ -163,37 +138,48 @@
   font-weight: 400;
 }
 
-.form-group input:focus {
+::ng-deep .form-group input:focus {
   outline: none;
   border: 2px solid #383838;
 }
-.form-footer {
+
+::ng-deep .form-footer {
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   margin-top: 10px;
 }
 
-.form-footer {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 10px;
-}
-
-.form-footer a {
+::ng-deep .form-footer a {
   color: #383838;
   text-decoration: none;
   font-size: 14px;
   transition: all 0.3s ease;
 }
-.cadastrar {
-  background-color: #383838 !important;
-  width: 80px !important;
-  height: 40px !important;
-  border-radius: 12px !important;
-  padding: 0 20px !important;
-  white-space: nowrap !important;
+::ng-deep.password-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+::ng-deep .password-wrapper input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+::ng-deep.toggle-password {
+  position: absolute;
+  right: 4px;
+  width: 32px !important;
+  height: 32px !important;
+  background-color: transparent !important;
+  color: #383838 !important;
+  margin-top: 0 !important;
+  animation: none !important;
+}
+
+.toggle-password:hover {
+  background-color: #eeeeee !important;
 }

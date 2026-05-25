@@ -1,19 +1,21 @@
-<div *ngFor="let note of notes" class="note-card" (mouseenter)="showEdit(note)" (mouseleave)="hideEdit(note) "
-    id="{{note.color}}" [style.backgroundColor]="note.color">
+<div *ngFor="let note of notes" class="note-card" (mouseenter)="showEdit(note)" (mouseleave)="hideEdit(note)"
+    [attr.data-id]="note.id" id="{{note.color}}" [style.backgroundColor]="note.color">
 
     <div class="note-body">
         <h3>{{ note.title }}</h3>
         <p>{{ note.content }}</p>
     </div>
 
-    <div class="note-footer" [class.active]="note.showFooter">
-        <span class="material-symbols-outlined" (click)="createModalDelete()">
+    <div class="note-footer" [class.active]="activeNoteId === note.id">
+        <span class="material-symbols-outlined"
+            (click)="createModalDelete(note.id, note.title, note.content, note.color)">
             delete
         </span>
-        <span class="material-symbols-outlined" (click)="createModal()">edit_square</span>
+        <span class="material-symbols-outlined" (click)="createModal(note)">edit_square</span>
     </div>
 </div>
 
 
-<app-modal *ngIf="showModal" (closeModal)="showModal = false"></app-modal>
-<app-delete *ngIf="showDeleteModal" (closeModal)="showDeleteModal = false"></app-delete>
+<app-modal *ngIf="showModal" [note]="selectedNote" (closeModal)="showModal = false; loadNotes()">
+</app-modal>
+<app-delete *ngIf="showDeleteModal" [noteId]="selectedNoteId!" (closeModal)="showDeleteModal = false"></app-delete>
