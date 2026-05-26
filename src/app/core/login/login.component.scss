@@ -190,10 +190,17 @@
   transition: all 0.3s ease;
 }
 .cadastrar {
-  background-color: #383838 !important;
-  width: 80px !important;
+  background-color: #383838;
+  width: 90px !important;
   height: 40px !important;
   border-radius: 12px !important;
-  padding: 0 20px !important;
+  padding: 0 40px !important;
+  box-sizing: border-box !important;
   white-space: nowrap !important;
+  transition: all 0.3s ease !important;
+}
+.cadastrar:hover {
+  animation: flowColors 7s steps(1) infinite;
+  scale: 1.1;
+  border-radius: 13px !important;
 }

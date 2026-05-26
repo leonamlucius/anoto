@@ -1,4 +1,5 @@
 import { Injectable, inject } from '@angular/core';
+import { AlertService } from '../features/modal/alert/service/service.component';
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -6,7 +7,7 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class ServicesService {
-  constructor() {}
+  constructor(private alertService: AlertService) {}
 
   notesUpdated$ = new Subject<void>();
   private router = inject(Router);
@@ -28,12 +29,15 @@ export class ServicesService {
       if (response.status === 200) {
         const data = await response.json();
         localStorage.setItem('token', data.token);
-        alert('Login successful!');
+        this.alertService.show('success', 'Login realizado com sucesso!');
         this.router.navigate(['/home']);
       }
     } catch (error) {
       console.error('Login failed:', error);
-      alert('Login failed. Please check your credentials and try again.');
+      this.alertService.show(
+        'error',
+        'Falha no login. Verifique suas credenciais e tente novamente.',
+      );
     }
   }
 
@@ -58,12 +62,15 @@ export class ServicesService {
       if (response.status === 200) {
         const data = await response.json();
         localStorage.setItem('token', data.token);
-        alert('Register successful!');
+        this.alertService.show('success', 'Cadastro realizado com sucesso!');
         this.router.navigate(['/home']);
       }
     } catch (error) {
       console.error('Register failed:', error);
-      alert('Register failed. Please check your credentials and try again.');
+      this.alertService.show(
+        'error',
+        'Falha no cadastro. Verifique seus dados e tente novamente.',
+      );
     }
   }
 
@@ -86,7 +93,10 @@ export class ServicesService {
       }
     } catch (error) {
       console.error('Failed to fetch notes:', error);
-      alert('Failed to fetch notes. Please try again.');
+      this.alertService.show(
+        'error',
+        'Falha ao buscar notas. Por favor, tente novamente.',
+      );
     }
   }
 
@@ -113,13 +123,14 @@ export class ServicesService {
       }
     } catch (error) {
       console.error('Failed to fetch notes:', error);
-      alert('Failed to fetch notes. Please try again.');
+      this.alertService.show(
+        'error',
+        'Falha ao buscar notas. Por favor, tente novamente.',
+      );
     }
   }
 
-  public async Deletenote(
-   id: number,
-  ): Promise<any[] | void> {
+  public async Deletenote(id: number): Promise<any[] | void> {
     try {
       const response = await fetch(`http://localhost:8080/notes/${id}`, {
         method: 'DELETE',
@@ -137,7 +148,10 @@ export class ServicesService {
       }
     } catch (error) {
       console.error('Failed to delete notes:', error);
-      alert('Failed to delete notes. Please try again.');
+      this.alertService.show(
+        'error',
+        'Falha ao deletar nota. Por favor, tente novamente.',
+      );
     }
   }
 
@@ -165,7 +179,10 @@ export class ServicesService {
       }
     } catch (error) {
       console.error('Failed to update notes:', error);
-      alert('Failed to update notes. Please try again.');
+      this.alertService.show(
+        'error',
+        'Falha ao atualizar nota. Por favor, tente novamente.',
+      );
     }
   }
 }
