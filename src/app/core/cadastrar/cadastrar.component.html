@@ -8,7 +8,7 @@
 
             <div class="form-group">
                 <label for="username">Nome</label>
-                <input type="name" #nameInput   id="name" name="name" class="form-control">
+                <input type="name" #nameInput id="name" name="name" class="form-control">
             </div>
             <div class="form-group">
                 <label for="username">Email</label>
@@ -32,8 +32,8 @@
             <div class="form-group">
                 <label for="password">Confirme sua senha</label>
                 <div class="password-wrapper">
-                    <input [type]="showConfirmPassword ? 'text' : 'password'" id="confirmPassword" #confirmPasswordInput name="confirmPassword"
-                        class="form-control">
+                    <input [type]="showConfirmPassword ? 'text' : 'password'" id="confirmPassword" #confirmPasswordInput
+                        name="confirmPassword" class="form-control">
                     <button type="button" class="toggle-password" (click)="showConfirmPassword = !showConfirmPassword">
                         <span class="material-symbols-outlined">
                             {{ showConfirmPassword ? 'visibility_off' : 'visibility' }}
@@ -46,8 +46,7 @@
 
 
                 <button type="button" class="btn btn-primary" [disabled]="!emailInput.validity.valid"
-                    (click)="register(nameInput.value, emailInput.value, passwordInput.value, confirmPasswordInput.value)"
-                    >
+                    (click)="register(nameInput.value, emailInput.value, passwordInput.value, confirmPasswordInput.value)">
                     <span class="material-symbols-outlined">
                         chevron_forward
                     </span>
@@ -56,7 +55,16 @@
             </div>
 
         </form>
+
+
     </div>
+
+
+    <button type="button" routerLink="/login" class="back" title="Voltar para o login">
+        <span class="material-symbols-outlined">
+            arrow_back
+        </span>
+    </button>
 
 </div>
 

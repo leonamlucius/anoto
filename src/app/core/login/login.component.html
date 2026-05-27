@@ -25,7 +25,7 @@
             <div class="form-footer">
                 <button type="button" routerLink="/cadastrar" class="cadastrar">Cadastra-se</button>
 
-                <a href="/recuperar-senha" class="forgot-password">Esqueci minha senha</a>
+                <button type="button" routerLink="/recuperar-senha" class="forgot-password">Esqueci minha senha</button>
 
                 <button (click)="login(emailInput.value, passwordInput.value)" type="submit" class="btn btn-primary"
                     [disabled]="!emailInput.validity.valid">

@@ -183,3 +183,33 @@
 .toggle-password:hover {
   background-color: #eeeeee !important;
 }
+.back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #383838;
+  color: white;
+  transition: all 0.3s ease;
+  animation: _ngcontent-ng-c3126000683_popOut 0.3s ease;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+.back:hover {
+  scale: 1.1;
+  color: #383838;
+  width: 80px;
+  height: 40px;
+  border-radius: 12px;
+  animation: flowColors 7s steps(1) infinite;
+}

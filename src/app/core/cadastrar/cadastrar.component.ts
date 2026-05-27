@@ -3,9 +3,10 @@ import { TitleComponent } from '../title/title.component';
 import { ServicesService } from '../services.service';
 import {AlertService} from "../../features/modal/alert/service/service.component";
 import { AlertComponent } from '../../features/modal/alert/alert.component';
+import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-cadastrar',
-  imports: [TitleComponent, AlertComponent],
+  imports: [TitleComponent, AlertComponent, RouterLink],
   templateUrl: './cadastrar.component.html',
   styleUrls: ['./cadastrar.component.scss'],
 })
