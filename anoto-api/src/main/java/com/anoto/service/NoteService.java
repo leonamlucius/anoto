@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import com.anoto.service.CryptoUtil;
 
 @Service
 @RequiredArgsConstructor
@@ -26,10 +27,16 @@ public class NoteService {
     }
 
     private NoteResponse toResponse(Note note) {
+        String decryptedContent = note.getContent();
+        try {
+            decryptedContent = CryptoUtil.decrypt(note.getContent());
+        } catch (Exception e) {
+            // Se falhar, retorna o conteúdo original (pode logar se quiser)
+        }
         return new NoteResponse(
                 note.getId(),
                 note.getTitle(),
-                note.getContent(),
+                decryptedContent,
                 note.getColor(),
                 note.getCreatedAt(),
                 note.getUpdatedAt());
@@ -49,9 +56,15 @@ public class NoteService {
 
     public NoteResponse create(NoteRequest request) {
         User user = getCurrentUser();
+        String encryptedContent = request.getContent();
+        try {
+            encryptedContent = CryptoUtil.encrypt(request.getContent());
+        } catch (Exception e) {
+            // Se falhar, salva o conteúdo original (pode logar se quiser)
+        }
         Note note = Note.builder()
                 .title(request.getTitle())
-                .content(request.getContent())
+                .content(encryptedContent)
                 .color(request.getColor())
                 .user(user)
                 .build();
@@ -63,7 +76,13 @@ public class NoteService {
         Note note = noteRepository.findByIdAndUserId(id, user.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Nota não encontrada."));
         note.setTitle(request.getTitle());
-        note.setContent(request.getContent());
+        String encryptedContent = request.getContent();
+        try {
+            encryptedContent = CryptoUtil.encrypt(request.getContent());
+        } catch (Exception e) {
+            // Se falhar, salva o conteúdo original (pode logar se quiser)
+        }
+        note.setContent(encryptedContent);
         note.setColor(request.getColor());
         return toResponse(noteRepository.save(note));
     }
