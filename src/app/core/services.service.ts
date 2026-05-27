@@ -14,7 +14,7 @@ export class ServicesService {
 
   public async login(email: string, password: string): Promise<void> {
     try {
-      const response = await fetch('http://localhost:8080/auth/login', {
+      const response = await fetch('https://anoto.onrender.com/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ export class ServicesService {
     password: string,
   ): Promise<void> {
     try {
-      const response = await fetch('http://localhost:8080/auth/register', {
+      const response = await fetch('https://anoto.onrender.com/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ export class ServicesService {
 
   public async Allnotes(): Promise<any[] | void> {
     try {
-      const response = await fetch('http://localhost:8080/notes', {
+      const response = await fetch('https://anoto.onrender.com/notes', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -106,7 +106,7 @@ export class ServicesService {
     color: string,
   ): Promise<any[] | void> {
     try {
-      const response = await fetch('http://localhost:8080/notes', {
+      const response = await fetch('https://anoto.onrender.com/notes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -132,7 +132,7 @@ export class ServicesService {
 
   public async Deletenote(id: number): Promise<any[] | void> {
     try {
-      const response = await fetch(`http://localhost:8080/notes/${id}`, {
+      const response = await fetch(`https://anoto.onrender.com/notes/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -162,7 +162,7 @@ export class ServicesService {
     color: string,
   ): Promise<any[] | void> {
     try {
-      const response = await fetch(`http://localhost:8080/notes/${id}`, {
+      const response = await fetch(`https://anoto.onrender.com/notes/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
