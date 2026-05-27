@@ -192,9 +192,17 @@
   box-sizing: border-box !important;
   white-space: nowrap !important;
   transition: all 0.3s ease !important;
+  animation: none !important;
+}
+
+.form-footer .forgot-password.disabled {
+  background-color: #cccccc !important;
+  cursor: not-allowed;
+  opacity: 0.6;
+ 
 }
 .form-footer .forgot-password:hover {
-  animation: flowColors 7s steps(1) infinite;
+  animation: flowColors 7s steps(1) infinite !important;
   scale: 1.1;
   border-radius: 13px !important;
 }
@@ -207,9 +215,10 @@
   box-sizing: border-box !important;
   white-space: nowrap !important;
   transition: all 0.3s ease !important;
+  animation: none !important;
 }
 .cadastrar:hover {
-  animation: flowColors 7s steps(1) infinite;
+  animation: flowColors 7s steps(1) infinite !important;
   scale: 1.1;
   border-radius: 13px !important;
 }

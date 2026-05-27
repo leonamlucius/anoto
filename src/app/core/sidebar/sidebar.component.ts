@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { ModalComponent } from '../../features/modal/modal.component';
+import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-sidebar',
-  imports: [NgFor, NgIf, ModalComponent],
+  imports: [NgFor, NgIf, ModalComponent, RouterLink],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.scss',
+  styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent {
   showModal = false;
