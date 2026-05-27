@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { TitleComponent } from '../title/title.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-recuperar-senha',
-  imports: [TitleComponent],
+  imports: [TitleComponent, RouterLink],
   templateUrl: './recuperar-senha.component.html',
   styleUrls: ['./recuperar-senha.component.scss'],
 })

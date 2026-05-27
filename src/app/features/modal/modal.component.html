@@ -10,27 +10,28 @@
         </div>
 
         <div class="modal-body">
-            <input type="text" placeholder="Título">
-            <textarea placeholder="Descrição"></textarea>
+            <input type="text" placeholder="Título" #titleInput [value]="note?.title ?? ''">
+            <textarea placeholder="Descrição" #descriptionInput>{{ note?.content ?? '' }}</textarea>
 
 
             <div class="modal-colors">
                 <div *ngFor="let note of notes" class="color-option" [style.background]="note.color"
-                    (click)="selectNote($event)"></div>
+                    [class.active]="selectedColor === note.color" (click)="selectColor(note.color)">
+                </div>
             </div>
+
+
+            <div class="modal-footer">
+                <button type="button" (click)="PostNote(titleInput.value, descriptionInput.value)"
+                    class="btn btn-primary">
+                    <span class="material-symbols-outlined">
+                        chevron_forward
+                    </span>
+                </button>
+
+            </div>
+
+
+
         </div>
-
-
-        <div class="modal-footer">
-            <button>
-                <span class="material-symbols-outlined">
-                    chevron_forward
-                </span>
-            </button>
-
-        </div>
-
-
-
     </div>
-</div>

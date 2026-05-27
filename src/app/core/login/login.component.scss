@@ -65,7 +65,7 @@
   background-color: #eeeeee !important;
 }
 
-.login-form button {
+::ng-deep .login-form button {
   border: none;
   width: 40px;
   height: 40px;
@@ -81,13 +81,28 @@
   animation: popOut 0.3s ease;
   cursor: pointer;
 }
-.login-form .btn-primary:hover {
+::ng-deep .login-form .btn-primary:hover {
   scale: 1.1;
   color: #383838;
   width: 80px;
   height: 40px;
   border-radius: 12px;
   animation: flowColors 7s steps(1) infinite;
+}
+
+::ng-deep .login-form button:disabled {
+  background-color: #cccccc !important;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+::ng-deep .login-form button:disabled:hover {
+  scale: 1;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  animation: none;
 }
 
 @keyframes flowColors {
@@ -152,7 +167,7 @@
   outline: none;
   border: 2px solid #383838;
 }
-.form-footer{
+.form-footer {
   width: 100%;
   display: flex;
   align-items: center;
@@ -160,7 +175,7 @@
   margin-top: 10px;
 }
 
-.form-footer{
+.form-footer {
   width: 100%;
   display: flex;
   align-items: center;
@@ -168,9 +183,42 @@
   margin-top: 10px;
 }
 
-.form-footer a{
-  color: #383838;
-  text-decoration: none;
-  font-size: 14px;
-  transition: all 0.3s ease;
+.form-footer .forgot-password {
+  background-color: #383838;
+  width: 150px !important;
+  height: 40px !important;
+  border-radius: 12px !important;
+  padding: 0 40px !important;
+  box-sizing: border-box !important;
+  white-space: nowrap !important;
+  transition: all 0.3s ease !important;
+  animation: none !important;
+}
+
+.form-footer .forgot-password.disabled {
+  background-color: #cccccc !important;
+  cursor: not-allowed;
+  opacity: 0.6;
+ 
+}
+.form-footer .forgot-password:hover {
+  animation: flowColors 7s steps(1) infinite !important;
+  scale: 1.1;
+  border-radius: 13px !important;
+}
+.cadastrar {
+  background-color: #383838;
+  width: 90px !important;
+  height: 40px !important;
+  border-radius: 12px !important;
+  padding: 0 40px !important;
+  box-sizing: border-box !important;
+  white-space: nowrap !important;
+  transition: all 0.3s ease !important;
+  animation: none !important;
+}
+.cadastrar:hover {
+  animation: flowColors 7s steps(1) infinite !important;
+  scale: 1.1;
+  border-radius: 13px !important;
 }

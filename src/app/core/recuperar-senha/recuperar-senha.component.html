@@ -8,13 +8,14 @@
             <div class="form-group">
                 <label for="username">Email</label>
                 <input type="email" #emailInput id="username" name="username" class="form-control"
-                placeholder="Digite seu email pessoal" required (input)="0">
+                    placeholder="Digite seu email pessoal" required (input)="0">
             </div>
 
             <div class="form-footer">
 
 
-               <button type="button" class="btn btn-primary" [disabled]="!emailInput.validity.valid" (click)="renderBody()">
+                <button type="button" class="btn btn-primary" [disabled]="!emailInput.validity.valid"
+                    (click)="renderBody()">
                     <span class="material-symbols-outlined">
                         chevron_forward
                     </span>
@@ -24,5 +25,11 @@
 
         </form>
     </div>
+
+    <button type="button" routerLink="/login" class="back" title="Voltar para o login">
+        <span class="material-symbols-outlined">
+            arrow_back
+        </span>
+    </button>
 
 </div>

@@ -1,59 +1,37 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { ModalComponent } from '../../features/modal/modal.component';
 import { DeleteComponent } from '../../features/modal/delete/delete.component';
-
+import { ServicesService } from '../services.service';
+import { OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-notes',
-  imports: [NgFor, NgIf, ModalComponent , DeleteComponent],
+  imports: [NgFor, NgIf, ModalComponent, DeleteComponent],
   templateUrl: './notes.component.html',
   styleUrl: './notes.component.scss',
 })
-export class NotesComponent {
-  notes = [
-    {
-      id: 1,
-      title: 'Compras',
-      content: 'Leite, ovos, pão, manteiga e café',
-      color: '#FFF176',
-      showFooter: false,
-    },
-    {
-      id: 2,
-      title: 'Reunião',
-      content: 'Apresentar o relatório mensal na sexta às 14h',
-      color: '#F48FB1',
-      showFooter: false,
-    },
-    {
-      id: 3,
-      title: 'Ideias',
-      content: 'Criar um app de receitas com filtro por ingredientes',
-      color: '#A5D6A7',
-      showFooter: false,
-    },
-    {
-      id: 4,
-      title: 'Leitura',
-      content: 'Terminar o capítulo 7 do livro de Clean Code',
-      color: '#90CAF9',
-      showFooter: false,
-    },
-    {
-      id: 5,
-      title: 'Academia',
-      content: 'Treino A: peito, ombro e tríceps às 18h',
-      color: '#FFCC80',
-      showFooter: false,
-    },
-    {
-      id: 6,
-      title: 'Aniversário',
-      content: 'Lembrar de ligar para a Ana no dia 20',
-      color: '#CE93D8',
-      showFooter: false,
-    },
-  ];
+export class NotesComponent implements OnInit, OnDestroy {
+  constructor(private services: ServicesService) {}
+
+  notes: any[] = [];
+
+  private sub!: Subscription;
+
+  ngOnInit() {
+    this.loadNotes();
+    this.sub = this.services.notesUpdated$.subscribe(() => this.loadNotes());
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
+
+  async loadNotes() {
+    this.notes = (await this.services.Allnotes()) ?? [];
+  }
+
+  activeNoteId: number | null = null;
 
   showModal = false;
 
@@ -63,19 +41,29 @@ export class NotesComponent {
     document.insertBefore;
   }
 
-  public createModal() {
+  selectedNote: any = null;
+
+  public createModal(note: any = null) {
+    this.selectedNote = note;
     this.showModal = true;
   }
 
-  public createModalDelete() {
+  selectedNoteId: number | null = null;
+  public createModalDelete(
+    id: number,
+    title: string,
+    content: string,
+    color: string,
+  ) {
+    this.selectedNoteId = id;
     this.showDeleteModal = true;
   }
 
   public showEdit(note: any) {
-    note.showFooter = true;
+    this.activeNoteId = note.id;
   }
 
   public hideEdit(note: any) {
-    note.showFooter = false;
+    this.activeNoteId = null;
   }
 }
