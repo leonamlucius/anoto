@@ -175,6 +175,13 @@
   margin-top: 10px;
 }
 
+@media (max-width: 600px) {
+  .form-footer {
+    gap: 5px;
+    justify-content: flex-start;
+  }
+}
+
 .form-footer {
   width: 100%;
   display: flex;
@@ -199,7 +206,6 @@
   background-color: #cccccc !important;
   cursor: not-allowed;
   opacity: 0.6;
- 
 }
 .form-footer .forgot-password:hover {
   animation: flowColors 7s steps(1) infinite !important;
