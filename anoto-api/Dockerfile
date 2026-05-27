@@ -3,4 +3,4 @@ WORKDIR /app
 COPY . .
 RUN chmod +x mvnw
 RUN ./mvnw clean package -DskipTests
-CMD ["java", "-jar", "target/*.jar"]
+CMD ["java", "-jar", "target/anoto-api-0.0.1-SNAPSHOT.jar"]
