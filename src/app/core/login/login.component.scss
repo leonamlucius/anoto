@@ -90,6 +90,19 @@
   animation: flowColors 7s steps(1) infinite;
 }
 
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+::ng-deep .login-form .btn-primary.loading span {
+  animation: spin 1s linear infinite !important;
+}
+
 ::ng-deep .login-form button:disabled {
   background-color: #cccccc !important;
   cursor: not-allowed;
@@ -199,7 +212,6 @@
   background-color: #cccccc !important;
   cursor: not-allowed;
   opacity: 0.6;
- 
 }
 .form-footer .forgot-password:hover {
   animation: flowColors 7s steps(1) infinite !important;
