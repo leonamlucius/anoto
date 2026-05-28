@@ -196,6 +196,12 @@
   margin-top: 10px;
 }
 
+@media (max-width: 600px) {
+  .form-footer {
+    gap: 5px;
+    justify-content: flex-start;
+  }
+}
 .form-footer .forgot-password {
   background-color: #383838;
   width: 150px !important;
