@@ -2,12 +2,16 @@ import { Injectable, inject } from '@angular/core';
 import { AlertService } from '../features/modal/alert/service/service.component';
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
+import { NgZone } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ServicesService {
-  constructor(private alertService: AlertService) {}
+  constructor(
+    private alertService: AlertService,
+    private ngZone: NgZone,
+  ) {}
 
   notesUpdated$ = new Subject<void>();
   private router = inject(Router);
@@ -182,6 +186,87 @@ export class ServicesService {
       this.alertService.show(
         'error',
         'Falha ao atualizar nota. Por favor, tente novamente.',
+      );
+    }
+  }
+
+  public async requestPasswordReset(email: string): Promise<void> {
+    try {
+      const response = await fetch(
+        'https://anoto.onrender.com/auth/forgot-password',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email }),
+        },
+      );
+      if (!response.ok) {
+        this.ngZone.run(() => {
+          this.alertService.show(
+            'error',
+            'Falha ao solicitar redefinição de senha. Por favor, tente novamente.',
+          );
+        });
+        throw new Error('Failed to request password reset');
+      }
+
+      this.ngZone.run(() => {
+        this.alertService.show(
+          'success',
+          'Email de recuperação enviado com sucesso!',
+        );
+      });
+    } catch (error) {
+      console.error('Failed to request password reset:', error);
+      this.alertService.show(
+        'error',
+        'Falha ao solicitar redefinição de senha. Por favor, tente novamente.',
+      );
+    }
+  }
+
+  public async requestToken(token: string, newPassword: string): Promise<void> {
+
+    if(newPassword.length < 8) {
+      this.alertService.show(
+        'error',`A senha deve conter no mínimo 8 caracteres.`
+      );
+      return;
+    }
+    try {
+      const response = await fetch(
+        'https://anoto.onrender.com/auth/reset-password',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ token, newPassword }),
+        },
+      );
+      if (!response.ok) {
+        this.ngZone.run(() => {
+          this.alertService.show(
+            'error',
+            'Falha ao solicitar redefinição de senha. Por favor, tente novamente.',
+          );
+        });
+        throw new Error('Failed to request password reset');
+      }
+
+      this.ngZone.run(() => {
+        this.alertService.show(
+          'success',
+          'Senha redefinida com sucesso!',
+        );
+      });
+    } catch (error) {
+      console.error('Failed to request password reset:', error);
+      this.alertService.show(
+        'error',
+        'Falha ao redefinir senha. Por favor, tente novamente.',
       );
     }
   }

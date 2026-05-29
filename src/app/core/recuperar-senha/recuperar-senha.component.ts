@@ -1,14 +1,20 @@
 import { Component } from '@angular/core';
 import { TitleComponent } from '../title/title.component';
 import { RouterLink } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+import { ServicesService } from '../services.service';
+
 
 @Component({
   selector: 'app-recuperar-senha',
-  imports: [TitleComponent, RouterLink],
+  imports: [TitleComponent, RouterLink, HttpClientModule],
   templateUrl: './recuperar-senha.component.html',
   styleUrls: ['./recuperar-senha.component.scss'],
 })
 export class RecuperarSenhaComponent {
+  constructor(private http: HttpClient, private servicesService: ServicesService) {}
+
   public renderBody(): void {
     const body = document.querySelector('.login-form') as HTMLElement;
 
@@ -36,5 +42,9 @@ export class RecuperarSenhaComponent {
 
       `;
     }
+  }
+
+  postEmail(email: string) {
+    this.servicesService.requestPasswordReset(email)
   }
 }

@@ -14,8 +14,8 @@
             <div class="form-footer">
 
 
-                <button type="button" class="btn btn-primary" [disabled]="!emailInput.validity.valid"
-                    (click)="renderBody()">
+                <button type="button" class="btn btn-primary" [disabled]="!emailInput.validity.valid" (click)="postEmail(emailInput.value)">
+                    
                     <span class="material-symbols-outlined">
                         chevron_forward
                     </span>

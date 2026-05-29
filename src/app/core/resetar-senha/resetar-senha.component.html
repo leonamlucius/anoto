@@ -1,0 +1,53 @@
+<div class="login-body">
+    <div class="login-header">
+        <app-title title="Redefinir Senha"></app-title>
+    </div>
+    <div class="login-form">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label for="newPassword">Nova senha</label>
+                <div class="password-wrapper">
+                    <input [type]="showNewPassword ? 'text' : 'password'" id="newPassword" formControlName="newPassword"
+                        class="form-control" placeholder="Digite a nova senha" required />
+                    <button type="button" class="toggle-password" (click)="showNewPassword = !showNewPassword">
+                        <span class="material-symbols-outlined">
+                            {{ showNewPassword ? 'visibility_off' : 'visibility' }}
+                        </span>
+                    </button>
+                </div>
+                <div *ngIf="form.get('newPassword')?.invalid && form.get('newPassword')?.touched">
+                    <small>Senha obrigatória (mínimo 8 caracteres)</small>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirmar senha</label>
+                <div class="password-wrapper">
+                    <input [type]="showConfirmPassword ? 'text' : 'password'" id="confirmPassword"
+                        formControlName="confirmPassword" class="form-control" placeholder="Confirme a nova senha"
+                        #secondPasswordInput required />
+                    <button type="button" class="toggle-password" (click)="showConfirmPassword = !showConfirmPassword">
+                        <span class="material-symbols-outlined">
+                            {{ showConfirmPassword ? 'visibility_off' : 'visibility' }}
+                        </span>
+                    </button>
+                </div>
+                <div *ngIf="form.hasError('mismatch') && form.get('confirmPassword')?.touched">
+                    <small>As senhas não coincidem</small>
+                </div>
+            </div>
+            <div class="form-footer">
+                <button type="submit" class="btn btn-primary" [disabled]="form.invalid || loading"
+                    (click)="postToken()">
+                    <span *ngIf="!loading" class="material-symbols-outlined">check</span>
+                    <span *ngIf="loading">Redefinindo...</span>
+                </button>
+            </div>
+            <div *ngIf="error" class="error">{{ error }}</div>
+            <div *ngIf="success" class="success">Senha redefinida com sucesso! Redirecionando...</div>
+        </form>
+    </div>
+
+    <button type="button" routerLink="/login" class="back" title="Voltar para recuperação de senha">
+        <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+</div>
