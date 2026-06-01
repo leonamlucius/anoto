@@ -79,7 +79,7 @@ export class ResetarSenhaComponent {
           setTimeout(() => this.router.navigate(['/login']), 2000);
         },
         error: (err) => {
-          this.error = err.error?.message || 'Erro ao redefinir senha.';
+          this.error = err.error?.message ;
           this.loading = false;
         },
       });
@@ -95,7 +95,7 @@ export class ResetarSenhaComponent {
           setTimeout(() => this.router.navigate(['/login']), 2000);
         },
         (err) => {
-          this.error = err.error?.message || 'Erro ao redefinir senha.';
+          this.error = err.error?.message;
           this.loading = false;
         },
       );
