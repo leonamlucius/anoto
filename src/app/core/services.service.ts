@@ -16,6 +16,18 @@ export class ServicesService {
   notesUpdated$ = new Subject<void>();
   private router = inject(Router);
 
+
+  public testeToken (): void {
+    const token = localStorage.getItem('token');
+
+    if(!token || token === 'undefined') {
+      console.log('Token não encontrado');
+      this.alertService.show('error', 'Token não encontrado. Por favor, faça login.');
+      this.ngZone.run(() => this.router.navigate(['/login']));
+      return;
+    }
+  };
+
   public async login(email: string, password: string): Promise<void> {
     try {
       const response = await fetch('https://anoto.onrender.com/auth/login', {
