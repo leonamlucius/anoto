@@ -39,6 +39,17 @@
   gap: 5px;
 }
 
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+::ng-deep form .btn-primary.loading span {
+  animation: spin 1s linear infinite !important;
+}
 ::ng-deep .login-form button:disabled {
   background-color: #cccccc;
   cursor: not-allowed;

@@ -45,6 +45,30 @@ export class RecuperarSenhaComponent {
   }
 
   postEmail(email: string) {
-    this.servicesService.requestPasswordReset(email)
+
+    const button = document.querySelector('.login-form button') as HTMLButtonElement;
+
+    button.disabled = true;
+    button.classList.add('loading');
+    button.innerHTML = `<span class="material-symbols-outlined">
+                             progress_activity
+                        </span>`;
+
+    this.servicesService.requestPasswordReset(email).then(
+       () => {
+           button.disabled = false;
+           button.classList.remove('loading');
+           button.innerHTML = `<span class="material-symbols-outlined">
+                             check
+                        </span>`;
+       },
+       (err) => {
+          button.disabled = false;
+           button.classList.remove('loading');
+           button.innerHTML = `<span class="material-symbols-outlined">
+                             chevron_forward
+                        </span>`;
+       },
+     );
   }
 }

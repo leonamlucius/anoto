@@ -86,17 +86,41 @@ export class ResetarSenhaComponent {
   }
 
   postToken() {
+
+
+    const button = document.querySelector(
+      '.btn.btn-primary',
+    ) as HTMLButtonElement;
+
+    if (button) {
+      button.disabled = true;
+      button.classList.add('loading');
+      button.innerHTML = `<span class="material-symbols-outlined">
+        progress_activity
+        </span>`;
+    }
     this.servicesService
       .requestToken(this.token!, this.form.value.newPassword)
       .then(
         () => {
           this.success = true;
           this.loading = false;
+          button!.disabled = false;
+          button!.classList.remove('loading');
+          button!.innerHTML = `<span class="material-symbols-outlined">
+                            check
+                        </span>`;
           setTimeout(() => this.router.navigate(['/login']), 2000);
         },
         (err) => {
           this.error = err.error?.message;
           this.loading = false;
+
+           button!.disabled = false;
+          button!.classList.remove('loading');
+          button!.innerHTML = `<span class="material-symbols-outlined">
+                            check
+                        </span>`;
         },
       );
   }
