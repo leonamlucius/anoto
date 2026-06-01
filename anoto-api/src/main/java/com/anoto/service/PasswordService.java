@@ -6,10 +6,13 @@ import com.anoto.repository.UserRepository;
 import com.anoto.repository.PasswordResetTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import com.sendgrid.*;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
+import org.springframework.beans.factory.annotation.Value;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,9 +25,10 @@ public class PasswordService {
     @Autowired
     private PasswordResetTokenRepository tokenRepository;
     @Autowired
-    private JavaMailSender mailSender;
-    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Value("${SENDGRID}")
+private String sendgridApiKey;
 
     public void sendResetPasswordEmail(String email) {
         User user = userRepository.findByEmail(email)
@@ -48,13 +52,22 @@ public class PasswordService {
     }
 
     public void sendEmail(String to, String subject, String text) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("leonam253@gmail.com");
-        message.setTo(to);
-        message.setSubject(subject);
-        message.setText(text);
-        mailSender.send(message);
+    Email from = new Email("leonam253@gmail.com");
+    Email toEmail = new Email(to);
+    Content content = new Content("text/plain", text);
+    Mail mail = new Mail(from, subject, toEmail, content);
+
+    SendGrid sg = new SendGrid(sendgridApiKey);
+    Request request = new Request();
+    try {
+        request.setMethod(Method.POST);
+        request.setEndpoint("mail/send");
+        request.setBody(mail.build());
+        sg.api(request);
+    } catch (Exception e) {
+        throw new RuntimeException("Erro ao enviar email: " + e.getMessage());
     }
+}
 
     public void resetPassword(String token, String newPassword) {
         PasswordResetToken resetToken = tokenRepository.findByToken(token)
