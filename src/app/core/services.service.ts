@@ -20,12 +20,27 @@ export class ServicesService {
   public testeToken (): void {
     const token = localStorage.getItem('token');
 
-    if(!token || token === 'undefined') {
-      console.log('Token não encontrado');
-      this.alertService.show('error', 'Token não encontrado. Por favor, faça login.');
+  if (!token || token === 'undefined') {
+    localStorage.removeItem('token');
+    this.alertService.show('error', 'Token não encontrado. Por favor, faça login.');
+    this.ngZone.run(() => this.router.navigate(['/login']));
+    return;
+  }
+
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const expiredAt = payload.exp * 1000; // exp vem em segundos, converte para ms
+
+    if (Date.now() > expiredAt) {
+      localStorage.removeItem('token');
+      this.alertService.show('error', 'Sessão expirada. Por favor, faça login novamente.');
       this.ngZone.run(() => this.router.navigate(['/login']));
       return;
     }
+  } catch {
+    localStorage.removeItem('token');
+    this.ngZone.run(() => this.router.navigate(['/login']));
+  }
   };
 
   public async login(email: string, password: string): Promise<void> {
