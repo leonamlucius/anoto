@@ -3,7 +3,7 @@
 
     <div class="note-body">
         <h3>{{ note.title }}</h3>
-        <p>{{ note.content }}</p>
+        <textarea>{{ note.content }}</textarea>
     </div>
 
     <div class="note-footer" [class.active]="activeNoteId === note.id">
