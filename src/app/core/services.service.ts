@@ -45,7 +45,7 @@ export class ServicesService {
 
   public async login(email: string, password: string): Promise<void> {
     try {
-      const response = await fetch('https://hungry-jeans-shop.loca.lt/auth/login', {
+      const response = await fetch('http://localhost:8080/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ export class ServicesService {
     password: string,
   ): Promise<void> {
     try {
-      const response = await fetch('https://hungry-jeans-shop.loca.lt/auth/register', {
+      const response = await fetch('http://localhost:8080/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -107,7 +107,7 @@ export class ServicesService {
 
   public async Allnotes(): Promise<any[] | void> {
     try {
-      const response = await fetch('https://hungry-jeans-shop.loca.lt/notes', {
+      const response = await fetch('http://localhost:8080/notes', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -137,7 +137,7 @@ export class ServicesService {
     color: string,
   ): Promise<any[] | void> {
     try {
-      const response = await fetch('https://hungry-jeans-shop.loca.lt/notes', {
+      const response = await fetch('http://localhost:8080/notes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -163,7 +163,7 @@ export class ServicesService {
 
   public async Deletenote(id: number): Promise<any[] | void> {
     try {
-      const response = await fetch(`https://hungry-jeans-shop.loca.lt/notes/${id}`, {
+      const response = await fetch(`http://localhost:8080/notes/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -193,7 +193,7 @@ export class ServicesService {
     color: string,
   ): Promise<any[] | void> {
     try {
-      const response = await fetch(`https://hungry-jeans-shop.loca.lt/notes/${id}`, {
+      const response = await fetch(`http://localhost:8080/notes/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -220,7 +220,7 @@ export class ServicesService {
   public async requestPasswordReset(email: string): Promise<void> {
     try {
       const response = await fetch(
-        'https://hungry-jeans-shop.loca.lt/auth/forgot-password',
+        'http://localhost:8080/auth/forgot-password',
         {
           method: 'POST',
           headers: {
@@ -264,7 +264,7 @@ export class ServicesService {
     }
     try {
       const response = await fetch(
-        'https://hungry-jeans-shop.loca.lt/auth/reset-password',
+        'http://localhost:8080/auth/reset-password',
         {
           method: 'POST',
           headers: {

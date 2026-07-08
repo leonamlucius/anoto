@@ -43,3 +43,4 @@ Thumbs.db
 # Spring Boot
 anoto-api/target/
 anoto-api/.mvn/wrapper/maven-wrapper.jar
+anoto-api/.env

@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:latest
+    container_name: anoto
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Oellagem1600
+      POSTGRES_DB: anoto
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+volumes:
+  postgres_data:
