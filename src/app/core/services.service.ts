@@ -3,7 +3,7 @@ import { AlertService } from '../features/modal/alert/service/service.component'
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { NgZone } from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../environments/environment';
 
 
 @Injectable({
