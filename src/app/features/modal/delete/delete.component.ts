@@ -26,6 +26,10 @@ export class DeleteComponent {
   }
 
   public async deleteNote() {
+
+    if (this.isLoading) {
+      return;
+    }
   if (this.noteId) {
     this.setLoadingState(true);
     this.services.Deletenote(this.noteId).then(() => {

@@ -45,11 +45,18 @@
             <div class="form-footer">
 
 
-                <button type="button" class="btn btn-primary" [disabled]="!emailInput.validity.valid"
+                <button type="button" class="btn btn-primary" [disabled]="!emailInput.validity.valid || isLoading"
                     (click)="register(nameInput.value, emailInput.value, passwordInput.value, confirmPasswordInput.value)">
-                    <span class="material-symbols-outlined">
+
+                    <span class="material-symbols-outlined" *ngIf="!isLoading">
                         chevron_forward
                     </span>
+
+
+                    <span *ngIf="isLoading" class="material-symbols-outlined" id="loading"  >
+                        progress_activity
+                    </span>
+
                 </button>
 
             </div>

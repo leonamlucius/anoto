@@ -71,6 +71,11 @@
   cursor: pointer;
 }
 
+
+::ng-deep .login-form button #loading {
+  animation: rotate 1.5s linear infinite;
+}
+
 ::ng-deep .login-form .btn-primary:hover {
   scale: 1.1;
   color: #383838;
@@ -212,4 +217,13 @@
   height: 40px;
   border-radius: 12px;
   animation: flowColors 7s steps(1) infinite;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
