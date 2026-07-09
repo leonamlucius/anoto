@@ -1,9 +1,39 @@
+
+<ng-container *ngIf="notes.length === 0 && pageAreLoaded === false">
+    <div class="no-notes">
+       <p>Carregando notas...</p>
+       <span class="material-symbols-outlined" id="loading">
+         progress_activity
+       </span>
+    </div>
+</ng-container>
+
+
+<ng-container *ngIf="notes.length === 0 && pageAreLoaded === true">
+    <div class="no-notes">
+       <app-error></app-error>
+       <p>Por favor, clique em 
+        <button class="mockup-button">
+            <span class="material-symbols-outlined">
+                add
+            </span>
+        </button>
+        para adicionar uma nova nota.</p>
+    </div>
+</ng-container>
+
+
+<div class="no-notes-color" style="display:none;">
+       <app-error></app-error>
+       <p>Não há notas disponíveis desssa cor.</p>
+</div>
+
 <div *ngFor="let note of notes" class="note-card" (mouseenter)="showEdit(note)" (mouseleave)="hideEdit(note)"
     [attr.data-id]="note.id" id="{{note.color}}" [style.backgroundColor]="note.color">
 
     <div class="note-body">
         <h3>{{ note.title }}</h3>
-        <textarea>{{ note.content }}</textarea>
+        <p>{{ note.content }}</p>
     </div>
 
     <div class="note-footer" [class.active]="activeNoteId === note.id">

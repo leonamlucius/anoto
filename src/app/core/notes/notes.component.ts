@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Signal } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { ModalComponent } from '../../features/modal/modal.component';
 import { DeleteComponent } from '../../features/modal/delete/delete.component';
 import { ServicesService } from '../services.service';
 import { OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
+import {ErrorComponent} from "../../features/error/error.component";
 @Component({
   selector: 'app-notes',
-  imports: [NgFor, NgIf, ModalComponent, DeleteComponent],
+  imports: [NgFor, NgIf, ModalComponent, DeleteComponent, ErrorComponent],
   templateUrl: './notes.component.html',
   styleUrl: './notes.component.scss',
 })
@@ -15,6 +16,8 @@ export class NotesComponent implements OnInit, OnDestroy {
   constructor(private services: ServicesService) {}
 
   notes: any[] = [];
+
+  public pageAreLoaded: boolean = false;
 
   private sub!: Subscription;
 
@@ -29,6 +32,7 @@ export class NotesComponent implements OnInit, OnDestroy {
 
   async loadNotes() {
     this.notes = (await this.services.Allnotes()) ?? [];
+    this.pageAreLoaded = true;
   }
 
   activeNoteId: number | null = null;

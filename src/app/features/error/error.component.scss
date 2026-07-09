@@ -1,0 +1,18 @@
+:host{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+img {
+    width: 25em;
+    height: 25em;
+    object-fit: cover;
+}
+
+@media (max-width: 600px) {
+    img {
+        width: 18em;
+        height: 18em;
+    }
+}

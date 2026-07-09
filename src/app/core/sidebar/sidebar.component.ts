@@ -44,8 +44,11 @@ export class SidebarComponent {
   }
   public selectNote(event: MouseEvent) {
     const clicked = event.currentTarget as HTMLElement;
+    const noNotesColor = document.querySelector('.no-notes-color') as HTMLElement;
 
     const id = clicked.getAttribute('id');
+
+    if (noNotesColor) noNotesColor.style.display = 'none';
 
     document.querySelectorAll(`.note-card`).forEach((c) => {
       c.classList.remove('none');
@@ -55,7 +58,7 @@ export class SidebarComponent {
     console.log('ID da nota clicada:', id);
     if (clicked.classList.contains('active')) {
       clicked.classList.remove('active');
-
+      
       document
         .querySelectorAll(`.note-card`)
         .forEach((c) => {c.classList.remove('none'); c.classList.remove('animate');});
@@ -65,11 +68,21 @@ export class SidebarComponent {
     document
       .querySelectorAll('.note')
       .forEach((n) => n.classList.remove('active'));
+
     clicked.classList.add('active');
 
     document
       .querySelectorAll(`.note-card:not([id="${id}"])`)
       .forEach((c) => c.classList.add('none'));
+
+      const filtredNote = document.querySelectorAll(`.note-card[id="${id}"]`);
+      
+
+      if (filtredNote.length === 0) {
+        if (noNotesColor) {
+          noNotesColor.style.display = 'flex';
+        }
+      }
   }
 
   public showModalCreateNote() {

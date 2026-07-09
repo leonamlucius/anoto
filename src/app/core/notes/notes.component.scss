@@ -21,6 +21,64 @@
     transform: scale(1);
   }
 }
+
+.no-notes {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 60px;
+  text-align: center;
+}
+
+
+.no-notes-color {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 60px;
+  text-align: center;
+}
+
+
+.no-notes-color p {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 500;
+  
+}
+
+.no-notes p {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 500;
+  
+}
+
+.no-notes #loading {
+  font-size: 35px;
+  animation: rotate 1.5s linear infinite;
+  z-index: -10;
+}
+
+.no-notes .mockup-button {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: #383838;
+    color: white;
+    transition: all 0.3s ease;
+    border: none;
+    vertical-align: middle;
+
+}
 .note-card {
   width: 210px;
   height: 200px;
@@ -63,22 +121,14 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.note-body textarea {
-  width: 100%;
-  height: 100%;
-  border: none;
-  resize: none;
-  background-color: transparent;
-  font-size: 14px;
-  font-family: inherit;
-  color: inherit;
-  overflow-y: hidden;
-pointer-events: none;
+.note-body p {
+  word-break: break-word;
+  white-space: pre-wrap;
 }
 @media (max-width: 600px) {
 
   :host {
-  padding: 7px 7px;
+  padding: 14px;
   width: 100%;
   display: flex;
   justify-content: flex-start;
@@ -88,8 +138,19 @@ pointer-events: none;
 }
   .note-card {
     width: 100%;
-    height: 200px;
+    height: 350px;
     gap: 50px;
+  }
+
+  .no-notes {
+   height: 70dvh;
+   word-break: break-word;
+   white-space: pre-wrap;
+  }
+
+
+  .no-notes p {
+    font-size: 24px;
   }
 
   .note-card:hover {
@@ -127,4 +188,14 @@ pointer-events: none;
 }
 .note-footer.active {
   display: flex;
+}
+
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
