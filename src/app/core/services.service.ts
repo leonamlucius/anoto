@@ -3,7 +3,7 @@ import { AlertService } from '../features/modal/alert/service/service.component'
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { NgZone } from '@angular/core';
-import { environment } from '../.././../environment';
+import { environment } from '../../../environments/environment';
 
 
 @Injectable({
@@ -82,7 +82,8 @@ export class ServicesService {
     password: string,
   ): Promise<void> {
     try {
-      const response = await fetch('http://localhost:8080/auth/register', {
+      const apiUrl = environment.apiUrl;
+      const response = await fetch(`${apiUrl}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -110,8 +111,9 @@ export class ServicesService {
   }
 
   public async Allnotes(): Promise<any[] | void> {
+    const apiUrl = environment.apiUrl;
     try {
-      const response = await fetch('http://localhost:8080/notes', {
+      const response = await fetch(`${apiUrl}/notes`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -141,7 +143,8 @@ export class ServicesService {
     color: string,
   ): Promise<any[] | void> {
     try {
-      const response = await fetch('http://localhost:8080/notes', {
+      const apiUrl = environment.apiUrl;
+      const response = await fetch(`${apiUrl}/notes`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -166,8 +169,9 @@ export class ServicesService {
   }
 
   public async Deletenote(id: number): Promise<any[] | void> {
+    const apiUrl = environment.apiUrl;
     try {
-      const response = await fetch(`http://localhost:8080/notes/${id}`, {
+      const response = await fetch(`${apiUrl}/notes/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -196,8 +200,9 @@ export class ServicesService {
     content: string,
     color: string,
   ): Promise<any[] | void> {
+    const apiUrl = environment.apiUrl;
     try {
-      const response = await fetch(`http://localhost:8080/notes/${id}`, {
+      const response = await fetch(`${apiUrl}/notes/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -222,9 +227,10 @@ export class ServicesService {
   }
 
   public async requestPasswordReset(email: string): Promise<void> {
+    const apiUrl = environment.apiUrl;
     try {
       const response = await fetch(
-        'http://localhost:8080/auth/forgot-password',
+        `${apiUrl}/auth/forgot-password`,
         {
           method: 'POST',
           headers: {
@@ -266,9 +272,10 @@ export class ServicesService {
       );
       return;
     }
+    const apiUrl = environment.apiUrl;
     try {
       const response = await fetch(
-        'http://localhost:8080/auth/reset-password',
+        `${apiUrl}/auth/reset-password`,
         {
           method: 'POST',
           headers: {
