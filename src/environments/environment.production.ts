@@ -1,3 +1,3 @@
 export const environment = {
-  apiUrl: 'https://anoto.onrender.com'
+  apiUrl: 'https://hungry-jeans-shop.loca.lt'
 };
