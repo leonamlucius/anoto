@@ -13,5 +13,14 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql
 
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: local-pgadminanoto
+    restart: always
+    ports:
+      - "8081:80"  
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
 volumes:
   postgres_data:

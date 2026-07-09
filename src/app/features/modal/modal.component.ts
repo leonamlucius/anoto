@@ -1,16 +1,21 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { ServicesService } from '../../core/services.service';
 import { Input, OnInit } from '@angular/core';
 import { AlertService } from './alert/service/service.component';
 
 @Component({
   selector: 'app-modal',
-  imports: [NgFor],
+  imports: [NgFor, NgIf],
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss'],
 })
 export class ModalComponent {
+
+
+  public isLoading: boolean = false;
+
+
   constructor(private services: ServicesService, private alertService: AlertService) {}
   title: string = 'teste';
   message: string = 'teste';
@@ -38,6 +43,10 @@ export class ModalComponent {
       this.selectedColor = this.note.color;
     }
   }
+
+  public setLoadingState(isLoading: boolean): void {
+    this.isLoading = isLoading;
+  }
   public selectNote(event: MouseEvent, color: string) {
     const clicked = event.currentTarget as HTMLElement;
 
@@ -56,13 +65,20 @@ export class ModalComponent {
 
   public PostNote(title: string, description: string): void {
 
+    if (this.isLoading) {
+      return; 
+    }
+
+    this.setLoadingState(true);
 
     if (!title.trim() || !description.trim()) {
       this.alertService.show('error', 'Título e descrição não podem ser vazios!');
+      this.setLoadingState(false);
       return;
     }
     if (!this.selectedColor) {
       this.alertService.show('error', 'Selecione uma cor para a nota!');
+      this.setLoadingState(false);
       return;
     }
 
@@ -70,12 +86,18 @@ export class ModalComponent {
       // edição
       this.services
         .Putnote(this.note.id, title, description, this.selectedColor)
-        .then(() => this.close());
+        .then(() => {
+          this.setLoadingState(false);
+          this.close();
+        });
     } else {
       // criação
       this.services
         .Postnote(title, description, this.selectedColor)
-        .then(() => this.close());
+        .then(() => {
+          this.setLoadingState(false);
+          this.close();
+        });
     }
   }
 

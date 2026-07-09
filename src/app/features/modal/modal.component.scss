@@ -160,6 +160,17 @@
   cursor: pointer;
 }
 
+
+.modal-footer button #loading {
+  animation: rotate 1.5s linear infinite;
+}
+
+
+.modal-footer button.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  pointer-events: none;
+}
 .modal-footer button:hover {
   scale: 1.1;
   color: #383838;
@@ -194,4 +205,14 @@
 
 .modal-footer button span {
   color: white;
+}
+
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }

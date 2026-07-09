@@ -8,9 +8,12 @@
                     close
                 </span>
             </button>
-            <button class="delete-button" (click)="deleteNote()">
-                <span class="material-symbols-outlined">
+            <button class="delete-button" (click)="deleteNote()" [class.disabled]="isLoading">
+                <span class="material-symbols-outlined" *ngIf="!isLoading">
                     chevron_forward
+                </span>
+                <span class="material-symbols-outlined" *ngIf="isLoading" id="loading" >
+                    progress_activity
                 </span>
             </button>
         </div>

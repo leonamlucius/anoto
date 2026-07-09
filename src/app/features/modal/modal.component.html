@@ -22,10 +22,14 @@
 
 
             <div class="modal-footer">
-                <button type="button" (click)="PostNote(titleInput.value, descriptionInput.value)"
+                <button type="button" (click)="PostNote(titleInput.value, descriptionInput.value)" [class.disabled]="isLoading"
                     class="btn btn-primary">
-                    <span class="material-symbols-outlined">
+                    <span *ngIf="!isLoading" class="material-symbols-outlined">
                         chevron_forward
+                    </span>
+
+                    <span *ngIf="isLoading" class="material-symbols-outlined" id="loading"  >
+                        progress_activity
                     </span>
                 </button>
 
