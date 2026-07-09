@@ -3,6 +3,8 @@ import { AlertService } from '../features/modal/alert/service/service.component'
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { NgZone } from '@angular/core';
+import { environment } from '../.././../environment';
+
 
 @Injectable({
   providedIn: 'root',
@@ -44,8 +46,10 @@ export class ServicesService {
   };
 
   public async login(email: string, password: string): Promise<void> {
+
+    const apiUrl = environment.apiUrl;
     try {
-      const response = await fetch('http://localhost:8080/auth/login', {
+      const response = await fetch(`${apiUrl}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
