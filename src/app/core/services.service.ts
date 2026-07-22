@@ -19,19 +19,7 @@ export class ServicesService {
   private router = inject(Router);
 
 
-  public testeToken (): void {
-    const token = localStorage.getItem('token');
 
-  if (!token || token === 'undefined') {
-    localStorage.removeItem('token');
-    this.alertService.show('error', 'Token não encontrado. Por favor, faça login.');
-    this.ngZone.run(() => this.router.navigate(['/login']));
-    return;
-  }
-
-  this.testToken(token);
-
-  };
 
   public async login(email: string, password: string): Promise<void> {
 
@@ -297,7 +285,7 @@ export class ServicesService {
     }
   }
 
-  public async testToken(token: string): Promise<void> {
+  public async testToken(token: any): Promise<any> {
     const apiUrl = environment.apiUrl;
     try {
       const response = await fetch(`${apiUrl}/auth/jwtTest`, {
@@ -314,8 +302,6 @@ export class ServicesService {
       const isValid = await response.json();
       if (!isValid) {
         this.alertService.show('error', 'Token inválido. Por favor, faça login novamente.');
-        localStorage.removeItem('token');
-        this.ngZone.run(() => this.router.navigate(['/login']));
       }
     } catch (error) {
       console.error('Failed to test token:', error);
