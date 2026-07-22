@@ -1,5 +1,5 @@
 
-<ng-container *ngIf="notes.length === 0 && pageAreLoaded === false">
+<ng-container *ngIf="notes().length === 0 && pageAreLoaded === false">
     <div class="no-notes">
        <p>Carregando notas...</p>
        <span class="material-symbols-outlined" id="loading">
@@ -9,7 +9,7 @@
 </ng-container>
 
 
-<ng-container *ngIf="notes.length === 0 && pageAreLoaded === true">
+<ng-container *ngIf="notes().length === 0 && pageAreLoaded === true">
     <div class="no-notes">
        <app-error></app-error>
        <p>Por favor, clique em 
@@ -23,12 +23,12 @@
 </ng-container>
 
 
-<div class="no-notes-color" style="display:none;">
+<div class="no-notes-color" style="display:none;" *ngIf="notes().length !== 0">
        <app-error></app-error>
        <p>Não há notas disponíveis desssa cor.</p>
 </div>
 
-<div *ngFor="let note of notes" class="note-card" (mouseenter)="showEdit(note)" (mouseleave)="hideEdit(note)"
+<div *ngFor="let note of notes()" class="note-card" (mouseenter)="showEdit(note)" (mouseleave)="hideEdit(note)"
     [attr.data-id]="note.id" id="{{note.color}}" [style.backgroundColor]="note.color">
 
     <div class="note-body">
