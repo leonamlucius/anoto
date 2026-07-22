@@ -1,24 +1,3 @@
-@keyframes slideUp {
-  0% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-60px);
-  }
-}
-@keyframes slideDown {
-  0% {
-    opacity: 0;
-    transform: translateY(-60px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 div.success,
 div.error,
 div.warning {
@@ -61,4 +40,38 @@ div.error {
 div.warning {
   border-color: #ff9800;
   color: #ff9800;
+}
+
+@media (max-width: 600px) {
+  div.success,
+  div.error,
+  div.warning {
+    width: 90%;
+    right: 5%;
+    font-size: 22px;
+    padding: 35px 15px;
+    text-align: center;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+  }
+}
+
+@keyframes slideUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-60px);
+  }
+}
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-60px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
