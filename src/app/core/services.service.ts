@@ -29,20 +29,8 @@ export class ServicesService {
     return;
   }
 
-  try {
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    const expiredAt = payload.exp * 1000; // exp vem em segundos, converte para ms
+  this.testToken(token);
 
-    if (Date.now() > expiredAt) {
-      localStorage.removeItem('token');
-      this.alertService.show('error', 'Sessão expirada. Por favor, faça login novamente.');
-      this.ngZone.run(() => this.router.navigate(['/login']));
-      return;
-    }
-  } catch {
-    localStorage.removeItem('token');
-    this.ngZone.run(() => this.router.navigate(['/login']));
-  }
   };
 
   public async login(email: string, password: string): Promise<void> {
@@ -306,6 +294,32 @@ export class ServicesService {
         'error',
         'Falha ao redefinir senha. Por favor, tente novamente.',
       );
+    }
+  }
+
+  public async testToken(token: string): Promise<void> {
+    const apiUrl = environment.apiUrl;
+    try {
+      const response = await fetch(`${apiUrl}/auth/jwtTest`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to test token');
+      }
+
+      const isValid = await response.json();
+      if (!isValid) {
+        this.alertService.show('error', 'Token inválido. Por favor, faça login novamente.');
+        localStorage.removeItem('token');
+        this.ngZone.run(() => this.router.navigate(['/login']));
+      }
+    } catch (error) {
+      console.error('Failed to test token:', error);
+      this.alertService.show('error', 'Falha ao testar token. Por favor, tente novamente.');
     }
   }
 }
