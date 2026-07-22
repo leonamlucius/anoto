@@ -32,7 +32,7 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(request));
     }
 
-    @PostMapping("/{id}/jwtTest")
+    @PostMapping("/jwtTest")
     public ResponseEntity<Boolean> jwtTest(@RequestHeader(value = "Authorization", required = true) String bearerToken) {
         if (bearerToken == null || !bearerToken.startsWith("Bearer ")) {
             return ResponseEntity.status(401).body(false);
