@@ -5,6 +5,7 @@ import com.anoto.dto.NoteResponse;
 import com.anoto.service.NoteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +36,7 @@ public class NoteController {
 
     @PutMapping("/{id}")
     public ResponseEntity<NoteResponse> update(@PathVariable Long id,
-                                               @Valid @RequestBody NoteRequest request) {
+            @Valid @RequestBody NoteRequest request) {
         return ResponseEntity.ok(noteService.update(id, request));
     }
 
@@ -44,4 +45,5 @@ public class NoteController {
         noteService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
 }
