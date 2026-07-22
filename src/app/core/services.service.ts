@@ -299,10 +299,8 @@ export class ServicesService {
         throw new Error('Failed to test token');
       }
 
-      const isValid = await response.json();
-      if (!isValid) {
-        this.alertService.show('error', 'Token inválido. Por favor, faça login novamente.');
-      }
+      const result = await response.json();
+      return result;
     } catch (error) {
       console.error('Failed to test token:', error);
       this.alertService.show('error', 'Falha ao testar token. Por favor, tente novamente.');
