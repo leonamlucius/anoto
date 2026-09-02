@@ -53,6 +53,7 @@ export class ModalComponent {
     if (clicked.classList.contains('active')) {
       clicked.classList.remove('active');
       this.selectedColor = '';
+      this.selectedColor = '';
       return;
     }
 

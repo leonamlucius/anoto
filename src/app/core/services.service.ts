@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { NgZone } from '@angular/core';
 import { environment } from '../../environments/environment';
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -18,11 +17,7 @@ export class ServicesService {
   notesUpdated$ = new Subject<void>();
   private router = inject(Router);
 
-
-
-
   public async login(email: string, password: string): Promise<void> {
-
     const apiUrl = environment.apiUrl;
     try {
       const response = await fetch(`${apiUrl}/auth/login`, {
@@ -205,16 +200,13 @@ export class ServicesService {
   public async requestPasswordReset(email: string): Promise<void> {
     const apiUrl = environment.apiUrl;
     try {
-      const response = await fetch(
-        `${apiUrl}/auth/forgot-password`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email }),
+      const response = await fetch(`${apiUrl}/auth/forgot-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
+        body: JSON.stringify({ email }),
+      });
       if (!response.ok) {
         this.ngZone.run(() => {
           this.alertService.show(
@@ -241,25 +233,22 @@ export class ServicesService {
   }
 
   public async requestToken(token: string, newPassword: string): Promise<void> {
-
-    if(newPassword.length < 8) {
+    if (newPassword.length < 8) {
       this.alertService.show(
-        'error',`A senha deve conter no mínimo 8 caracteres.`
+        'error',
+        `A senha deve conter no mínimo 8 caracteres.`,
       );
       return;
     }
     const apiUrl = environment.apiUrl;
     try {
-      const response = await fetch(
-        `${apiUrl}/auth/reset-password`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ token, newPassword }),
+      const response = await fetch(`${apiUrl}/auth/reset-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
+        body: JSON.stringify({ token, newPassword }),
+      });
       if (!response.ok) {
         this.ngZone.run(() => {
           this.alertService.show(
@@ -271,10 +260,7 @@ export class ServicesService {
       }
 
       this.ngZone.run(() => {
-        this.alertService.show(
-          'success',
-          'Senha redefinida com sucesso!',
-        );
+        this.alertService.show('success', 'Senha redefinida com sucesso!');
       });
     } catch (error) {
       console.error('Failed to request password reset:', error);
@@ -303,7 +289,10 @@ export class ServicesService {
       return result;
     } catch (error) {
       console.error('Failed to test token:', error);
-      this.alertService.show('error', 'Falha ao testar token. Por favor, tente novamente.');
+      this.alertService.show(
+        'error',
+        'Falha ao testar token. Por favor, tente novamente.',
+      );
     }
   }
 }

@@ -3,6 +3,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "java",
+      "name": "AnotoApplication",
+      "request": "launch",
+      "mainClass": "com.anoto.AnotoApplication",
+      "projectName": "anoto-api"
+    },
+    {
       "name": "ng serve",
       "type": "chrome",
       "request": "launch",

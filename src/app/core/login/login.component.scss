@@ -118,6 +118,34 @@
   animation: none;
 }
 
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+::ng-deep .login-form .btn-primary.loading span {
+  animation: spin 1s linear infinite !important;
+}
+
+::ng-deep .login-form button:disabled {
+  background-color: #cccccc !important;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+::ng-deep .login-form button:disabled:hover {
+  scale: 1;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  animation: none;
+}
+
 @keyframes flowColors {
   0% {
     background-color: #fff176;
@@ -187,6 +215,7 @@
   justify-content: space-between;
   margin-top: 10px;
 }
+
 
 .form-footer {
   width: 100%;

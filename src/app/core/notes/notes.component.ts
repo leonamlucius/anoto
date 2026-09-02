@@ -5,7 +5,7 @@ import { DeleteComponent } from '../../features/modal/delete/delete.component';
 import { ServicesService } from '../services.service';
 import { OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import {ErrorComponent} from "../../features/error/error.component";
+import { ErrorComponent } from '../../features/error/error.component';
 @Component({
   selector: 'app-notes',
   imports: [NgFor, NgIf, ModalComponent, DeleteComponent, ErrorComponent],
@@ -65,9 +65,11 @@ export class NotesComponent implements OnInit, OnDestroy {
 
   public showEdit(note: any) {
     this.activeNoteId = note.id;
+    this.activeNoteId = note.id;
   }
 
   public hideEdit(note: any) {
+    this.activeNoteId = null;
     this.activeNoteId = null;
   }
 }

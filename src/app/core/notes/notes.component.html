@@ -36,6 +36,7 @@
         <p>{{ note.content }}</p>
     </div>
 
+    
     <div class="note-footer" [class.active]="activeNoteId === note.id">
         <span class="material-symbols-outlined"
             (click)="createModalDelete(note.id, note.title, note.content, note.color)">
@@ -44,6 +45,7 @@
         <span class="material-symbols-outlined" (click)="createModal(note)">edit_square</span>
     </div>
 </div>
+
 
 
 <app-modal *ngIf="showModal" [note]="selectedNote" (closeModal)="showModal = false; loadNotes()">

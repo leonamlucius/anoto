@@ -12,6 +12,7 @@
         <div class="modal-body">
             <input type="text" placeholder="Título" #titleInput [value]="note?.title ?? ''">
             <textarea placeholder="Descrição" #descriptionInput>{{ note?.content ?? '' }}</textarea>
+            
 
 
             <div class="modal-colors">
@@ -19,7 +20,7 @@
                     [class.active]="selectedColor === note.color" (click)="selectColor(note.color)">
                 </div>
             </div>
-
+                    
 
             <div class="modal-footer">
                 <button type="button" (click)="PostNote(titleInput.value, descriptionInput.value)" [class.disabled]="isLoading"
@@ -33,9 +34,12 @@
                     </span>
                 </button>
 
+            
             </div>
 
 
 
+        
+    </div>
         </div>
     </div>
