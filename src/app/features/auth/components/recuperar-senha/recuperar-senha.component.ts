@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { TitleComponent } from '../title/title.component';
+import { TitleComponent } from '../../../home/components/title/title.component';
 import { RouterLink } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
-import { ServicesService } from '../services.service';
-
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-recuperar-senha',
@@ -13,7 +12,10 @@ import { ServicesService } from '../services.service';
   styleUrls: ['./recuperar-senha.component.scss'],
 })
 export class RecuperarSenhaComponent {
-  constructor(private http: HttpClient, private servicesService: ServicesService) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+  ) {}
 
   public renderBody(): void {
     const body = document.querySelector('.login-form') as HTMLElement;
@@ -45,8 +47,9 @@ export class RecuperarSenhaComponent {
   }
 
   postEmail(email: string) {
-
-    const button = document.querySelector('.login-form button') as HTMLButtonElement;
+    const button = document.querySelector(
+      '.login-form button',
+    ) as HTMLButtonElement;
 
     button.disabled = true;
     button.classList.add('loading');
@@ -54,21 +57,21 @@ export class RecuperarSenhaComponent {
                              progress_activity
                         </span>`;
 
-    this.servicesService.requestPasswordReset(email).then(
-       () => {
-           button.disabled = false;
-           button.classList.remove('loading');
-           button.innerHTML = `<span class="material-symbols-outlined">
+    this.authService.requestPasswordReset(email).then(
+      () => {
+        button.disabled = false;
+        button.classList.remove('loading');
+        button.innerHTML = `<span class="material-symbols-outlined">
                              check
                         </span>`;
-       },
-       (err) => {
-          button.disabled = false;
-           button.classList.remove('loading');
-           button.innerHTML = `<span class="material-symbols-outlined">
+      },
+      (err) => {
+        button.disabled = false;
+        button.classList.remove('loading');
+        button.innerHTML = `<span class="material-symbols-outlined">
                              chevron_forward
                         </span>`;
-       },
-     );
+      },
+    );
   }
 }

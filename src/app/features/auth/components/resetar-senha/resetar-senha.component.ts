@@ -4,10 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { TitleComponent } from '../title/title.component';
+import { TitleComponent } from '../../../home/components/title/title.component';
 import { NgIf } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ServicesService } from '../services.service';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-resetar-senha',
@@ -36,7 +36,7 @@ export class ResetarSenhaComponent {
     private route: ActivatedRoute,
     private http: HttpClient,
     private router: Router,
-    private servicesService: ServicesService,
+    private authService: AuthService,
   ) {
     this.form = this.fb.group(
       {
@@ -79,15 +79,13 @@ export class ResetarSenhaComponent {
           setTimeout(() => this.router.navigate(['/login']), 2000);
         },
         error: (err) => {
-          this.error = err.error?.message ;
+          this.error = err.error?.message;
           this.loading = false;
         },
       });
   }
 
   postToken() {
-
-
     const button = document.querySelector(
       '.btn.btn-primary',
     ) as HTMLButtonElement;
@@ -99,7 +97,7 @@ export class ResetarSenhaComponent {
         progress_activity
         </span>`;
     }
-    this.servicesService
+    this.authService
       .requestToken(this.token!, this.form.value.newPassword)
       .then(
         () => {
@@ -116,7 +114,7 @@ export class ResetarSenhaComponent {
           this.error = err.error?.message;
           this.loading = false;
 
-           button!.disabled = false;
+          button!.disabled = false;
           button!.classList.remove('loading');
           button!.innerHTML = `<span class="material-symbols-outlined">
                             check

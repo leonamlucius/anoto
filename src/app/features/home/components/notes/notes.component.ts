@@ -1,11 +1,11 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
-import { ModalComponent } from '../../features/modal/modal.component';
-import { DeleteComponent } from '../../features/modal/delete/delete.component';
-import { ServicesService } from '../services.service';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
+import { DeleteComponent } from '../../../../shared/components/delete/delete.component';
+import { ServicesService } from '../../../../core/services/services.service';
 import { OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { ErrorComponent } from '../../features/error/error.component';
+import { ErrorComponent } from '../../../../shared/components/error/error.component';
 @Component({
   selector: 'app-notes',
   imports: [NgFor, NgIf, ModalComponent, DeleteComponent, ErrorComponent],

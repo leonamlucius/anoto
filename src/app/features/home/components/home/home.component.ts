@@ -1,7 +1,7 @@
 import { Component, OnInit, DestroyRef } from '@angular/core';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { BodyComponent } from '../body/body.component';
-import { ServicesService } from '../services.service';
+import { AuthService } from '../../../../core/services/auth.service';
 import { timer, merge, fromEvent, of } from 'rxjs';
 import { switchMap, throttleTime, startWith } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -14,7 +14,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class HomeComponent implements OnInit {
   constructor(
-    private servicesService: ServicesService,
+    private authService: AuthService,
     private destroyRef: DestroyRef,
   ) {}
 
@@ -40,7 +40,7 @@ export class HomeComponent implements OnInit {
     merge(of(null), idleLoop$)
       .pipe(
         switchMap(() => {
-          return this.servicesService.testToken(token);
+          return this.authService.testToken(token);
         }),
         takeUntilDestroyed(this.destroyRef),
       )

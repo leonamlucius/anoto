@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { SidebarComponent } from './core/sidebar/sidebar.component';
-import { TitleComponent } from './core/title/title.component';
-import { NotesComponent } from './core/notes/notes.component';
-import { BodyComponent } from './core/body/body.component';
-import {AlertComponent} from "./features/modal/alert/alert.component";
+import { SidebarComponent } from './features/home/components/sidebar/sidebar.component';
+import { TitleComponent } from './features/home/components/title/title.component';
+import { NotesComponent } from './features/home/components/notes/notes.component';
+import { BodyComponent } from './features/home/components/body/body.component';
+import { AlertComponent } from './shared/components/alert/alert.component';
 
 @Component({
   selector: 'app-root',

@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { AlertService } from '../../features/modal/alert/service/service.component';
-import { TitleComponent } from '../title/title.component';
+import { AlertService } from '../../../../shared/services/alert.service';
+import { TitleComponent } from '../../../home/components/title/title.component';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { ServicesService } from '../services.service';
-import { AlertComponent } from '../../features/modal/alert/alert.component';
-
+import { AuthService } from '../../../../core/services/auth.service';
+import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +16,7 @@ export class LoginComponent {
   showPassword = false;
 
   constructor(
-    private services: ServicesService,
+    private authService: AuthService,
     private alertService: AlertService,
   ) {}
 
@@ -43,7 +42,7 @@ export class LoginComponent {
       return;
     }
 
-    this.services.login(email, password).finally(() => {
+    this.authService.login(email, password).finally(() => {
       button.disabled = false;
       button.classList.remove('loading');
       button.innerHTML = `<span class="material-symbols-outlined">

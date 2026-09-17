@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgClass } from '@angular/common';
-import { AlertService } from '../alert/service/service.component';
+import { AlertService } from '../../services/alert.service';
 import { NgIf } from '@angular/common';
 
 @Component({

@@ -1,9 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
 import { NgFor, NgIf, NgClass } from '@angular/common';
-import { ModalComponent } from '../../features/modal/modal.component';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { RouterLink } from '@angular/router';
-import { ServicesService } from '../services.service';
-import { AlertService } from '../../features/modal/alert/service/service.component';
+import { ServicesService } from '../../../../core/services/services.service';
+import { AlertService } from '../../../../shared/services/alert.service';
 @Component({
   selector: 'app-sidebar',
   imports: [NgFor, NgIf, NgClass, ModalComponent, RouterLink],

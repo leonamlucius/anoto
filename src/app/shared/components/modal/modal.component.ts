@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
-import { ServicesService } from '../../core/services.service';
+import { ServicesService } from '../../../core/services/services.service';
 import { Input, OnInit } from '@angular/core';
-import { AlertService } from './alert/service/service.component';
+import { AlertService } from '../../services/alert.service';
 
 @Component({
   selector: 'app-modal',
@@ -11,12 +11,12 @@ import { AlertService } from './alert/service/service.component';
   styleUrls: ['./modal.component.scss'],
 })
 export class ModalComponent {
-
-
   public isLoading: boolean = false;
 
-
-  constructor(private services: ServicesService, private alertService: AlertService) {}
+  constructor(
+    private services: ServicesService,
+    private alertService: AlertService,
+  ) {}
   title: string = 'teste';
   message: string = 'teste';
 
@@ -65,15 +65,17 @@ export class ModalComponent {
   }
 
   public PostNote(title: string, description: string): void {
-
     if (this.isLoading) {
-      return; 
+      return;
     }
 
     this.setLoadingState(true);
 
     if (!title.trim() || !description.trim()) {
-      this.alertService.show('error', 'Título e descrição não podem ser vazios!');
+      this.alertService.show(
+        'error',
+        'Título e descrição não podem ser vazios!',
+      );
       this.setLoadingState(false);
       return;
     }
