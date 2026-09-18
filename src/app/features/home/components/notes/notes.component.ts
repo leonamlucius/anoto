@@ -1,37 +1,40 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
+import { NgFor, NgIf, AsyncPipe } from '@angular/common';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { DeleteComponent } from '../../../../shared/components/delete/delete.component';
-import { ServicesService } from '../../../../core/services/services.service';
+import { NoteService } from '../../services/note.service';
 import { OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ErrorComponent } from '../../../../shared/components/error/error.component';
 @Component({
   selector: 'app-notes',
-  imports: [NgFor, NgIf, ModalComponent, DeleteComponent, ErrorComponent],
+  imports: [
+    NgFor,
+    NgIf,
+    AsyncPipe,
+    ModalComponent,
+    DeleteComponent,
+    ErrorComponent,
+  ],
   templateUrl: './notes.component.html',
   styleUrls: ['./notes.component.scss'],
 })
-export class NotesComponent implements OnInit, OnDestroy {
-  constructor(private services: ServicesService) {}
+export class NotesComponent implements OnInit {
+  constructor(private noteService: NoteService) {}
 
-  public notes = signal<any[]>([]);
 
   public pageAreLoaded: boolean = false;
 
   private sub!: Subscription;
 
+  public notes$!:  Observable<any[]>;
+
   ngOnInit() {
     this.loadNotes();
-    this.sub = this.services.notesUpdated$.subscribe(() => this.loadNotes());
+    this.noteService.Allnotes().subscribe();
+    this.notes$ = this.noteService.allNotesObservable$;
   }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
-
   async loadNotes() {
-    this.notes.set((await this.services.Allnotes()) ?? []);
     this.pageAreLoaded = true;
   }
 

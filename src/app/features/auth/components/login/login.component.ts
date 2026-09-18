@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { AlertService } from '../../../../shared/services/alert.service';
 import { TitleComponent } from '../../../home/components/title/title.component';
 import { FormsModule } from '@angular/forms';
@@ -20,6 +20,10 @@ export class LoginComponent {
     private alertService: AlertService,
   ) {}
 
+
+  // ngOnDestroy(): void {
+  //   this.authService.login('', '').subscribe();
+  // }
   public login(email: string, password: string): void {
     const button = document.querySelector(
       '.btn.btn-primary',
@@ -42,12 +46,14 @@ export class LoginComponent {
       return;
     }
 
-    this.authService.login(email, password).finally(() => {
-      button.disabled = false;
-      button.classList.remove('loading');
-      button.innerHTML = `<span class="material-symbols-outlined">
-                        chevron_forward
-                    </span>`;
+    this.authService.login(email, password).subscribe({
+      complete: () => {
+        button.disabled = false;
+        button.classList.remove('loading');
+        button.innerHTML = `<span class="material-symbols-outlined">
+                          chevron_forward
+                      </span>`;
+      }
     });
   }
 }

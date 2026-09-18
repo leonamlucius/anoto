@@ -37,7 +37,7 @@ export class HomeComponent implements OnInit {
 
     const idleLoop$ = idleCheck$.pipe(switchMap(() => timer(minutes, minutes)));
 
-    merge(of(null), idleLoop$)
+    idleLoop$
       .pipe(
         switchMap(() => {
           return this.authService.testToken(token);

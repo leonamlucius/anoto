@@ -51,8 +51,13 @@ export class CadastrarComponent {
     }
 
     this.setLoadingState(true);
-    this.authService.register(name, email, password).finally(() => {
-      this.setLoadingState(false);
+    this.authService.register(name, email, password).subscribe({
+      next: () => {
+        this.setLoadingState(false);
+      },
+      error: () => {
+        this.setLoadingState(false);
+      },
     });
   }
 }

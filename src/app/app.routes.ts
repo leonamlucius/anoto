@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
 import { LoginComponent } from './features/auth/components/login/login.component';
 import { HomeComponent } from './features/home/components/home/home.component';
 import { RecuperarSenhaComponent } from './features/auth/components/recuperar-senha/recuperar-senha.component';
@@ -8,7 +9,7 @@ import { ResetarSenhaComponent } from './features/auth/components/resetar-senha/
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'home', component: HomeComponent },
+  { path: 'home', component: HomeComponent , canActivate: [authGuard] },
   { path: 'recuperar-senha', component: RecuperarSenhaComponent },
   { path: 'cadastrar', component: CadastrarComponent },
   { path: 'resetar-senha', component: ResetarSenhaComponent },

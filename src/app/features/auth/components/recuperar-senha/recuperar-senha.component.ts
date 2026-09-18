@@ -57,7 +57,7 @@ export class RecuperarSenhaComponent {
                              progress_activity
                         </span>`;
 
-    this.authService.requestPasswordReset(email).then(
+    this.authService.requestPasswordReset(email).subscribe(
       () => {
         button.disabled = false;
         button.classList.remove('loading');

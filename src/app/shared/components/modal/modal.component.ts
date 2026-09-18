@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
-import { ServicesService } from '../../../core/services/services.service';
+import { NoteService } from '../../../features/home/services/note.service';
 import { Input, OnInit } from '@angular/core';
 import { AlertService } from '../../services/alert.service';
 
@@ -14,7 +14,7 @@ export class ModalComponent {
   public isLoading: boolean = false;
 
   constructor(
-    private services: ServicesService,
+    private noteService: NoteService,
     private alertService: AlertService,
   ) {}
   title: string = 'teste';
@@ -87,18 +87,20 @@ export class ModalComponent {
 
     if (this.note) {
       // edição
-      this.services
+      this.noteService
         .Putnote(this.note.id, title, description, this.selectedColor)
-        .then(() => {
+        .subscribe(() => {
           this.setLoadingState(false);
+          this.noteService.Allnotes().subscribe();
           this.close();
         });
     } else {
       // criação
-      this.services
+      this.noteService
         .Postnote(title, description, this.selectedColor)
-        .then(() => {
+        .subscribe(() => {
           this.setLoadingState(false);
+          this.noteService.Allnotes().subscribe();
           this.close();
         });
     }

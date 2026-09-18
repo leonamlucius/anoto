@@ -99,7 +99,7 @@ export class ResetarSenhaComponent {
     }
     this.authService
       .requestToken(this.token!, this.form.value.newPassword)
-      .then(
+      .subscribe(
         () => {
           this.success = true;
           this.loading = false;

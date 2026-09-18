@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { NgFor, NgIf, NgClass } from '@angular/common';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { RouterLink } from '@angular/router';
-import { ServicesService } from '../../../../core/services/services.service';
+import { NoteService } from '../../services/note.service';
 import { AlertService } from '../../../../shared/services/alert.service';
 @Component({
   selector: 'app-sidebar',
@@ -14,7 +14,7 @@ export class SidebarComponent {
   public notesGet = signal<any[]>([]);
 
   constructor(
-    private services: ServicesService,
+    private noteService: NoteService,
     private alertService: AlertService,
   ) {}
 
@@ -58,8 +58,9 @@ export class SidebarComponent {
 
     const id = clicked.getAttribute('id');
 
-    const notes = await this.services.Allnotes();
-    this.notesGet.set(notes ?? []);
+    this.noteService
+      .Allnotes()
+      .subscribe((notes) => this.notesGet.set(notes ?? []));
 
     if (this.notesGet().length === 0) {
       this.alertService.show('warning', 'Sem notas criadas.');

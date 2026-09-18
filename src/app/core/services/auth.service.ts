@@ -3,6 +3,8 @@ import { AlertService } from '../../shared/services/alert.service';
 import { environment } from '../../../environments/environment';
 import { NgZone } from '@angular/core';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { Observable, tap, catchError, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -12,168 +14,126 @@ export class AuthService {
     private alertService: AlertService,
     private ngZone: NgZone,
     private router: Router,
+    private http: HttpClient,
   ) {}
 
-  public async login(email: string, password: string): Promise<void> {
-    const apiUrl = environment.apiUrl;
-    try {
-      const response = await fetch(`${apiUrl}/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
+  private apiUrl = environment.apiUrl;
 
-      if (!response.ok) {
-        throw new Error('Login failed');
-      }
-
-      if (response.status === 200) {
-        const data = await response.json();
-        localStorage.setItem('token', data.token);
-        this.alertService.show('success', 'Login realizado com sucesso!');
-        this.router.navigate(['/home']);
-      }
-    } catch (error) {
-      console.error('Login failed:', error);
-      this.alertService.show(
-        'error',
-        'Falha no login. Verifique suas credenciais e tente novamente.',
+  public login(email: string, password: string): Observable<any> {
+    return this.http
+      .post<any>(`${this.apiUrl}/auth/login`, {
+        email,
+        password,
+      })
+      .pipe(
+        tap((response) => {
+          localStorage.setItem('token', response.token);
+          this.alertService.show('success', 'Login realizado com sucesso!');
+          this.router.navigate(['/home']);
+        }),
+        catchError((error) => {
+          console.error('Failed to login:', error);
+          this.alertService.show(
+            'error',
+            'Falha no login. Verifique suas credenciais e tente novamente.',
+          );
+          return of(null);
+        }),
       );
-    }
   }
 
-  public async register(
+  public register(
     name: string,
     email: string,
     password: string,
-  ): Promise<void> {
-    try {
-      const apiUrl = environment.apiUrl;
-      const response = await fetch(`${apiUrl}/auth/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password, name }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Register failed');
-      }
-
-      if (response.status === 200) {
-        const data = await response.json();
-        localStorage.setItem('token', data.token);
-        this.alertService.show('success', 'Cadastro realizado com sucesso!');
-        this.router.navigate(['/home']);
-      }
-    } catch (error) {
-      console.error('Register failed:', error);
-      this.alertService.show(
-        'error',
-        'Falha no cadastro. Verifique seus dados e tente novamente.',
+  ): Observable<any> {
+    return this.http
+      .post<any>(`${this.apiUrl}/auth/register`, {
+        email,
+        password,
+        name,
+      })
+      .pipe(
+        tap((response) => {
+          localStorage.setItem('token', response.token);
+          this.alertService.show('success', 'Cadastro realizado com sucesso!');
+          this.router.navigate(['/home']);
+        }),
+        catchError((error) => {
+          console.error('Failed to register:', error);
+          this.alertService.show(
+            'error',
+            'Falha no cadastro. Verifique seus dados e tente novamente.',
+          );
+          return of(null);
+        }),
       );
-    }
   }
 
-  public async requestPasswordReset(email: string): Promise<void> {
-    const apiUrl = environment.apiUrl;
-    try {
-      const response = await fetch(`${apiUrl}/auth/forgot-password`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
-      if (!response.ok) {
-        this.ngZone.run(() => {
+  public requestPasswordReset(email: string): Observable<any> {
+    return this.http
+      .post<any>(`${this.apiUrl}/auth/forgot-password`, { email })
+      .pipe(
+        tap((response) => {
+          this.alertService.show(
+            'success',
+            'Email de recuperação enviado com sucesso!',
+          );
+        }),
+
+        catchError((error) => {
+          console.error('Failed to request password reset:', error);
           this.alertService.show(
             'error',
             'Falha ao solicitar redefinição de senha. Por favor, tente novamente.',
           );
-        });
-        throw new Error('Failed to request password reset');
-      }
-
-      this.ngZone.run(() => {
-        this.alertService.show(
-          'success',
-          'Email de recuperação enviado com sucesso!',
-        );
-      });
-    } catch (error) {
-      console.error('Failed to request password reset:', error);
-      this.alertService.show(
-        'error',
-        'Falha ao solicitar redefinição de senha. Por favor, tente novamente.',
+          return of(null);
+        }),
       );
-    }
   }
 
-  public async requestToken(token: string, newPassword: string): Promise<void> {
+  public requestToken(token: string, newPassword: string): Observable<any> {
     if (newPassword.length < 8) {
       this.alertService.show(
         'error',
         `A senha deve conter no mínimo 8 caracteres.`,
       );
-      return;
+      return of(null);
     }
-    const apiUrl = environment.apiUrl;
-    try {
-      const response = await fetch(`${apiUrl}/auth/reset-password`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ token, newPassword }),
-      });
-      if (!response.ok) {
-        this.ngZone.run(() => {
+
+    return this.http
+      .post<any>(`${this.apiUrl}/auth/reset-password`, {
+        token,
+        newPassword,
+      })
+      .pipe(
+        tap((response) => {
+          this.alertService.show('success', 'Senha redefinida com sucesso!');
+        }),
+        catchError((error) => {
+          console.error('Failed to request password reset:', error);
           this.alertService.show(
             'error',
-            'Falha ao solicitar redefinição de senha. Por favor, tente novamente.',
+            'Falha ao redefinir senha. Por favor, tente novamente.',
           );
-        });
-        throw new Error('Failed to request password reset');
-      }
-
-      this.ngZone.run(() => {
-        this.alertService.show('success', 'Senha redefinida com sucesso!');
-      });
-    } catch (error) {
-      console.error('Failed to request password reset:', error);
-      this.alertService.show(
-        'error',
-        'Falha ao redefinir senha. Por favor, tente novamente.',
+          return of(null);
+        }),
       );
-    }
   }
 
-  public async testToken(token: any): Promise<any> {
-    const apiUrl = environment.apiUrl;
-    try {
-      const response = await fetch(`${apiUrl}/auth/jwtTest`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!response.ok) {
-        throw new Error('Failed to test token');
-      }
-
-      const result = await response.json();
-      return result;
-    } catch (error) {
-      console.error('Failed to test token:', error);
-      this.alertService.show(
-        'error',
-        'Falha ao testar token. Por favor, tente novamente.',
-      );
-    }
+  public testToken(token: any): Observable<boolean> {
+    return this.http.post<boolean>(`${this.apiUrl}/auth/jwtTest`, { token }).pipe(
+      tap((response) => {
+        return response;
+      }),
+      catchError((error) => {
+        console.error('Failed to test token:', error);
+        this.alertService.show(
+          'error',
+          'Falha ao testar token. Por favor, tente novamente.',
+        );
+        return of(false);
+      }),
+    );
   }
 }

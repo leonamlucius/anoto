@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { ServicesService } from '../../../core/services/services.service';
+import { NoteService } from '../../../features/home/services/note.service';
 import { NgIf } from '@angular/common';
 import { Input } from '@angular/core';
 @Component({
@@ -12,7 +12,7 @@ export class DeleteComponent {
   @Output() closeModal = new EventEmitter<void>();
 
   @Input() noteId!: number;
-  constructor(private services: ServicesService) {}
+  constructor(private noteService: NoteService) {}
 
   public isLoading: boolean = false;
 
@@ -30,9 +30,9 @@ export class DeleteComponent {
     }
     if (this.noteId) {
       this.setLoadingState(true);
-      this.services.Deletenote(this.noteId).then(() => {
-        this.services.notesUpdated$.next();
+      this.noteService.Deletenote(this.noteId).subscribe(() => {
         this.setLoadingState(false);
+        this.noteService.Allnotes().subscribe();
         this.close();
       });
     }
