@@ -4,6 +4,7 @@ import { ModalComponent } from '../../../../shared/components/modal/modal.compon
 import { RouterLink } from '@angular/router';
 import { NoteService } from '../../services/note.service';
 import { AlertService } from '../../../../shared/services/alert.service';
+
 @Component({
   selector: 'app-sidebar',
   imports: [NgFor, NgIf, NgClass, ModalComponent, RouterLink],
@@ -52,21 +53,10 @@ export class SidebarComponent {
     }
   }
   public async selectNote(event: MouseEvent) {
-    this.notesGet.set([]);
 
     const clicked = event.currentTarget as HTMLElement;
 
     const id = clicked.getAttribute('id');
-
-    this.noteService
-      .Allnotes()
-      .subscribe((notes) => this.notesGet.set(notes ?? []));
-
-    if (this.notesGet().length === 0) {
-      this.alertService.show('warning', 'Sem notas criadas.');
-
-      return;
-    }
 
     const noNotesColor = document.querySelector(
       '.no-notes-color',
@@ -81,14 +71,8 @@ export class SidebarComponent {
       c.classList.add('animate');
     });
 
-    console.log('ID da nota clicada:', id);
     if (clicked.classList.contains('active')) {
       clicked.classList.remove('active');
-
-      document.querySelectorAll(`.note-card`).forEach((c) => {
-        c.classList.remove('none');
-        c.classList.remove('animate');
-      });
       return;
     }
 
