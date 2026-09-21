@@ -1,0 +1,125 @@
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { TitleComponent } from '../../../home/components/title/title.component';
+import { NgIf } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { AuthService } from '../../../../core/services/auth.service';
+
+@Component({
+  selector: 'app-resetar-senha',
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    TitleComponent,
+    NgIf,
+    RouterModule,
+  ],
+  templateUrl: './resetar-senha.component.html',
+  styleUrls: ['./resetar-senha.component.scss'],
+})
+export class ResetarSenhaComponent {
+  form: FormGroup;
+  token: string | null = null;
+  loading = false;
+  error: string | null = null;
+  success: boolean = false;
+  showNewPassword = false;
+  showConfirmPassword = false;
+
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private http: HttpClient,
+    private router: Router,
+    private authService: AuthService,
+  ) {
+    this.form = this.fb.group(
+      {
+        newPassword: ['', [Validators.required, Validators.minLength(6)]],
+        confirmPassword: ['', [Validators.required]],
+      },
+      { validator: this.passwordsMatchValidator },
+    );
+  }
+
+  ngOnInit() {
+    this.token = this.route.snapshot.queryParamMap.get('token');
+  }
+
+  passwordsMatchValidator(form: FormGroup) {
+    return form.get('newPassword')!.value === form.get('confirmPassword')!.value
+      ? null
+      : { mismatch: true };
+  }
+
+  onSubmit() {
+    if (!this.token) {
+      this.error = 'Token inválido ou ausente.';
+      return;
+    }
+    if (this.form.invalid) {
+      return;
+    }
+    this.loading = true;
+    this.error = null;
+    this.http
+      .post('/api/auth/reset-password', {
+        token: this.token,
+        newPassword: this.form.value.newPassword,
+      })
+      .subscribe({
+        next: () => {
+          this.success = true;
+          this.loading = false;
+          setTimeout(() => this.router.navigate(['/login']), 2000);
+        },
+        error: (err) => {
+          this.error = err.error?.message;
+          this.loading = false;
+        },
+      });
+  }
+
+  postToken() {
+    const button = document.querySelector(
+      '.btn.btn-primary',
+    ) as HTMLButtonElement;
+
+    if (button) {
+      button.disabled = true;
+      button.classList.add('loading');
+      button.innerHTML = `<span class="material-symbols-outlined">
+        progress_activity
+        </span>`;
+    }
+    this.authService
+      .requestToken(this.token!, this.form.value.newPassword)
+      .subscribe(
+        () => {
+          this.success = true;
+          this.loading = false;
+          button!.disabled = false;
+          button!.classList.remove('loading');
+          button!.innerHTML = `<span class="material-symbols-outlined">
+                            check
+                        </span>`;
+          setTimeout(() => this.router.navigate(['/login']), 2000);
+        },
+        (err) => {
+          this.error = err.error?.message;
+          this.loading = false;
+
+          button!.disabled = false;
+          button!.classList.remove('loading');
+          button!.innerHTML = `<span class="material-symbols-outlined">
+                            check
+                        </span>`;
+        },
+      );
+  }
+}

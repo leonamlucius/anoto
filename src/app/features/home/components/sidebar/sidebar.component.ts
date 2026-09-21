@@ -1,0 +1,116 @@
+import { Component, inject, signal } from '@angular/core';
+import { NgFor, NgIf, NgClass } from '@angular/common';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
+import { RouterLink } from '@angular/router';
+import { NoteService } from '../../services/note.service';
+import { AlertService } from '../../../../shared/services/alert.service';
+import { Observable, catchError, of, map } from 'rxjs';
+
+@Component({
+  selector: 'app-sidebar',
+  imports: [NgFor, NgIf, NgClass, ModalComponent, RouterLink],
+  templateUrl: './sidebar.component.html',
+  styleUrls: ['./sidebar.component.scss'],
+})
+export class SidebarComponent {
+  constructor(
+    private noteService: NoteService,
+    private alertService: AlertService,
+  ) {}
+
+  public notesGet = signal<any[]>([]);
+
+  showModal = false;
+  notes = [
+    { id: 1, title: 'Note 1', content: 'Content of Note 1', color: '#FFF176' },
+    { id: 2, title: 'Note 2', content: 'Content of Note 2', color: '#F48FB1' },
+    { id: 3, title: 'Note 3', content: 'Content of Note 3', color: '#A5D6A7' },
+    { id: 4, title: 'Note 4', content: 'Content of Note 4', color: '#90CAF9' },
+    { id: 5, title: 'Note 5', content: 'Content of Note 5', color: '#FFCC80' },
+    { id: 6, title: 'Note 6', content: 'Content of Note 6', color: '#CE93D8' },
+  ];
+
+  booleanValue = true;
+
+  public haveNotes$!: Observable<boolean>;
+
+  public hiddeNoteContent() {
+    const colorsDiv = document.querySelector('.colors');
+    if (colorsDiv && this.booleanValue !== false) {
+      colorsDiv.classList.remove('active');
+    }
+  }
+
+  public showNoteContent() {
+    const colorsDiv = document.querySelector('.colors');
+    if (colorsDiv) {
+      colorsDiv.classList.add('active');
+    }
+  }
+
+  public toggleNoteContent() {
+    this.booleanValue = !this.booleanValue;
+    const colorsDiv = document.querySelector('.colors');
+    if (colorsDiv) {
+      colorsDiv.classList.toggle('active');
+    }
+  }
+  public async selectNote(event: MouseEvent) {
+    const clicked = event.currentTarget as HTMLElement;
+
+    this.noteService.allNotesObservable$
+      .pipe(map((notes) => notes.length === 0))
+      .subscribe((haveNoNotes) => {
+        if (haveNoNotes) {
+          this.alertService.show('warning', 'Sem notas criadas.');
+          return;
+        }
+
+        const id = clicked.getAttribute('id');
+
+        const noNotesColor = document.querySelector(
+          '.no-notes-color',
+        ) as HTMLElement;
+
+        if (noNotesColor) {
+          noNotesColor.style.display = 'none';
+        }
+
+        document.querySelectorAll(`.note-card`).forEach((c) => {
+          c.classList.remove('none');
+          c.classList.add('animate');
+        });
+
+        if (clicked.classList.contains('active')) {
+          clicked.classList.remove('active');
+          return;
+        }
+
+        document
+          .querySelectorAll('.note')
+          .forEach((n) => n.classList.remove('active'));
+
+        clicked.classList.add('active');
+
+        document
+          .querySelectorAll(`.note-card:not([id="${id}"])`)
+          .forEach((c) => c.classList.add('none'));
+
+        const filtredNote = document.querySelectorAll(`.note-card[id="${id}"]`);
+
+        if (filtredNote.length === 0) {
+          if (noNotesColor) {
+            noNotesColor.style.display = 'flex';
+          }
+        }
+      });
+  }
+
+  public showModalCreateNote() {
+    document.insertBefore;
+  }
+
+  public createModal() {
+    this.showModal = true;
+  }
+}
