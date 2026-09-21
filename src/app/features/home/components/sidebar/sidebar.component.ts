@@ -4,6 +4,7 @@ import { ModalComponent } from '../../../../shared/components/modal/modal.compon
 import { RouterLink } from '@angular/router';
 import { NoteService } from '../../services/note.service';
 import { AlertService } from '../../../../shared/services/alert.service';
+import { Observable, catchError, of, map } from 'rxjs';
 
 @Component({
   selector: 'app-sidebar',
@@ -12,12 +13,12 @@ import { AlertService } from '../../../../shared/services/alert.service';
   styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent {
-  public notesGet = signal<any[]>([]);
-
   constructor(
     private noteService: NoteService,
     private alertService: AlertService,
   ) {}
+
+  public notesGet = signal<any[]>([]);
 
   showModal = false;
   notes = [
@@ -30,6 +31,8 @@ export class SidebarComponent {
   ];
 
   booleanValue = true;
+
+  public haveNotes$!: Observable<boolean>;
 
   public hiddeNoteContent() {
     const colorsDiv = document.querySelector('.colors');
@@ -53,46 +56,54 @@ export class SidebarComponent {
     }
   }
   public async selectNote(event: MouseEvent) {
-
     const clicked = event.currentTarget as HTMLElement;
 
-    const id = clicked.getAttribute('id');
+    this.noteService.allNotesObservable$
+      .pipe(map((notes) => notes.length === 0))
+      .subscribe((haveNoNotes) => {
+        if (haveNoNotes) {
+          this.alertService.show('warning', 'Sem notas criadas.');
+          return;
+        }
 
-    const noNotesColor = document.querySelector(
-      '.no-notes-color',
-    ) as HTMLElement;
+        const id = clicked.getAttribute('id');
 
-    if (noNotesColor) {
-      noNotesColor.style.display = 'none';
-    }
+        const noNotesColor = document.querySelector(
+          '.no-notes-color',
+        ) as HTMLElement;
 
-    document.querySelectorAll(`.note-card`).forEach((c) => {
-      c.classList.remove('none');
-      c.classList.add('animate');
-    });
+        if (noNotesColor) {
+          noNotesColor.style.display = 'none';
+        }
 
-    if (clicked.classList.contains('active')) {
-      clicked.classList.remove('active');
-      return;
-    }
+        document.querySelectorAll(`.note-card`).forEach((c) => {
+          c.classList.remove('none');
+          c.classList.add('animate');
+        });
 
-    document
-      .querySelectorAll('.note')
-      .forEach((n) => n.classList.remove('active'));
+        if (clicked.classList.contains('active')) {
+          clicked.classList.remove('active');
+          return;
+        }
 
-    clicked.classList.add('active');
+        document
+          .querySelectorAll('.note')
+          .forEach((n) => n.classList.remove('active'));
 
-    document
-      .querySelectorAll(`.note-card:not([id="${id}"])`)
-      .forEach((c) => c.classList.add('none'));
+        clicked.classList.add('active');
 
-    const filtredNote = document.querySelectorAll(`.note-card[id="${id}"]`);
+        document
+          .querySelectorAll(`.note-card:not([id="${id}"])`)
+          .forEach((c) => c.classList.add('none'));
 
-    if (filtredNote.length === 0) {
-      if (noNotesColor) {
-        noNotesColor.style.display = 'flex';
-      }
-    }
+        const filtredNote = document.querySelectorAll(`.note-card[id="${id}"]`);
+
+        if (filtredNote.length === 0) {
+          if (noNotesColor) {
+            noNotesColor.style.display = 'flex';
+          }
+        }
+      });
   }
 
   public showModalCreateNote() {

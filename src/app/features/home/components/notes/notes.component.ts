@@ -1,10 +1,11 @@
 import { Component, OnInit, signal } from '@angular/core';
+import { Note } from '../../models/note';
 import { NgFor, NgIf, AsyncPipe } from '@angular/common';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { DeleteComponent } from '../../../../shared/components/delete/delete.component';
 import { NoteService } from '../../services/note.service';
 import { OnDestroy } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, tap, finalize } from 'rxjs';
 import { ErrorComponent } from '../../../../shared/components/error/error.component';
 @Component({
   selector: 'app-notes',
@@ -22,16 +23,17 @@ import { ErrorComponent } from '../../../../shared/components/error/error.compon
 export class NotesComponent implements OnInit {
   constructor(private noteService: NoteService) {}
 
-
   public pageAreLoaded: boolean = false;
 
   private sub!: Subscription;
 
-  public notes$!:  Observable<any[]>;
+  public notes$!: Observable<Note[]>;
 
   ngOnInit() {
-    this.loadNotes();
-    this.noteService.Allnotes().subscribe();
+    this.noteService
+      .Allnotes()
+      .pipe(finalize(() => this.loadNotes()))
+      .subscribe();
     this.notes$ = this.noteService.allNotesObservable$;
   }
   async loadNotes() {
