@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { NgFor, NgIf, NgClass } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { RouterLink } from '@angular/router';
 import { NoteService } from '../../services/note.service';
@@ -8,7 +8,7 @@ import { Observable, catchError, of, map } from 'rxjs';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [NgFor, NgIf, NgClass, ModalComponent, RouterLink],
+  imports: [NgFor, NgIf, ModalComponent, RouterLink],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
 })

@@ -4,7 +4,7 @@ import { environment } from '../../../environments/environment';
 import { NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap, catchError, of } from 'rxjs';
+import { Observable, tap, catchError, of, BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +19,16 @@ export class AuthService {
 
   private apiUrl = environment.apiUrl;
 
+  private name = new BehaviorSubject<string>('Leonam Lucius');
+
+  public getName(): Observable<string> {
+    return this.name.asObservable();
+  }
+
+  public setName(name: string): void {
+    this.name.next(name);
+  }
+
   public login(email: string, password: string): Observable<any> {
     return this.http
       .post<any>(`${this.apiUrl}/auth/login`, {
@@ -28,6 +38,7 @@ export class AuthService {
       .pipe(
         tap((response) => {
           localStorage.setItem('token', response.token);
+          this.setName(response.name);
           this.alertService.show('success', 'Login realizado com sucesso!');
           this.router.navigate(['/home']);
         }),
@@ -56,6 +67,7 @@ export class AuthService {
       .pipe(
         tap((response) => {
           localStorage.setItem('token', response.token);
+          this.setName(response.name);
           this.alertService.show('success', 'Cadastro realizado com sucesso!');
           this.router.navigate(['/home']);
         }),
@@ -122,18 +134,20 @@ export class AuthService {
   }
 
   public testToken(token: any): Observable<boolean> {
-    return this.http.post<boolean>(`${this.apiUrl}/auth/jwtTest`, { token }).pipe(
-      tap((response) => {
-        return response;
-      }),
-      catchError((error) => {
-        console.error('Failed to test token:', error);
-        this.alertService.show(
-          'error',
-          'Falha ao testar token. Por favor, tente novamente.',
-        );
-        return of(false);
-      }),
-    );
+    return this.http
+      .post<boolean>(`${this.apiUrl}/auth/jwtTest`, { token })
+      .pipe(
+        tap((response) => {
+          return response;
+        }),
+        catchError((error) => {
+          console.error('Failed to test token:', error);
+          this.alertService.show(
+            'error',
+            'Falha ao testar token. Por favor, tente novamente.',
+          );
+          return of(false);
+        }),
+      );
   }
 }
