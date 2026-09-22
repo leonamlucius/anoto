@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -15,15 +16,17 @@ import { AlertComponent } from '../../../../shared/components/alert/alert.compon
 export class LoginComponent {
   showPassword = false;
 
+  private loginSubscription?: Subscription | null = null;
+
   constructor(
     private authService: AuthService,
     private alertService: AlertService,
   ) {}
 
 
-  // ngOnDestroy(): void {
-  //   this.authService.login('', '').subscribe();
-  // }
+  ngOnDestroy(): void {
+     this.loginSubscription?.unsubscribe();
+  }
   public login(email: string, password: string): void {
     const button = document.querySelector(
       '.btn.btn-primary',
@@ -46,7 +49,7 @@ export class LoginComponent {
       return;
     }
 
-    this.authService.login(email, password).subscribe({
+    this.loginSubscription = this.authService.login(email, password).subscribe({
       complete: () => {
         button.disabled = false;
         button.classList.remove('loading');

@@ -67,7 +67,11 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@ngx-env/builder:dev-server",
+          "options": {
+            "port": 4200,
+            "host": "localhost"
+          },
           "configurations": {
             "production": {
               "buildTarget": "anoto:build:production"

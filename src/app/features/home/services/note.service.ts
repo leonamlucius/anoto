@@ -36,7 +36,7 @@ export class NoteService {
           'error',
           'Falha ao buscar notas. Por favor, tente novamente.',
         );
-        return of(  []);
+        return of([]);
       }),
     );
   }
