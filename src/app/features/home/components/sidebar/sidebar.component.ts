@@ -4,7 +4,7 @@ import { ModalComponent } from '../../../../shared/components/modal/modal.compon
 import { RouterLink } from '@angular/router';
 import { NoteService } from '../../services/note.service';
 import { AlertService } from '../../../../shared/services/alert.service';
-import { Observable, catchError, of, map } from 'rxjs';
+import { Observable, catchError, of, map, take } from 'rxjs';
 
 @Component({
   selector: 'app-sidebar',
@@ -59,7 +59,10 @@ export class SidebarComponent {
     const clicked = event.currentTarget as HTMLElement;
 
     this.noteService.allNotesObservable$
-      .pipe(map((notes) => notes.length === 0))
+      .pipe(
+        map((notes) => notes.length === 0),
+        take(1),
+      )
       .subscribe((haveNoNotes) => {
         if (haveNoNotes) {
           this.alertService.show('warning', 'Sem notas criadas.');

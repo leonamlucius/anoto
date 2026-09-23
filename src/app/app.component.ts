@@ -7,7 +7,6 @@ import { AlertComponent } from './shared/components/alert/alert.component';
   selector: 'app-root',
   imports: [
     RouterOutlet,
-    
     AlertComponent,
 
   ],
