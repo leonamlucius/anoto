@@ -1,8 +1,19 @@
-<div class="photo">
-  <img
-    src="/img/blank-profile-picture-973460_960_720.png"
-    alt="Profile Photo"
-  />
-</div>
+<button id="back-button" (click)="toggleProfileExpanded()" [class.active]="profileExpanded()">
+  <span class="material-symbols-outlined"> chevron_backward </span>
+</button>
 
-<div class="name">{{ userName$ | async }}</div>
+
+<div class="profile-container" [class.active]="profileExpanded()">
+  <div class="photo">
+    <img
+      src="/img/blank-profile-picture-973460_960_720.png"
+      alt="Profile Photo"
+    />
+  </div>
+
+  <div class="name" [class.active]="profileExpanded()">{{ (userName$ | async)?.name }}</div>
+
+  <!-- <button class="edit-button">
+    <span class="material-symbols-outlined"> edit </span>
+  </button> -->
+</div>

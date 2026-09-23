@@ -3,18 +3,19 @@
   (mouseenter)="showNoteContent()"
   (mouseleave)="hiddeNoteContent()"
   (click)="createModal()"
->
+  >
   <span class="material-symbols-outlined"> add </span>
 </button>
 
 <div class="colors">
-  <button
-    *ngFor="let note of notes"
-    class="note"
-    [style.backgroundColor]="note.color"
-    (click)="selectNote($event)"
-    id="{{ note.color }}"
-  ></button>
+  @for (note of notes; track note) {
+    <button
+      class="note"
+      [style.backgroundColor]="note.color"
+      (click)="selectNote($event)"
+      id="{{ note.color }}"
+    ></button>
+  }
 </div>
 
 <button
@@ -22,8 +23,10 @@
   routerLink="/login"
   class="back"
   title="Voltar para o login"
->
+  >
   <span class="material-symbols-outlined"> arrow_back </span>
 </button>
 
-<app-modal *ngIf="showModal" (closeModal)="showModal = false"></app-modal>
+@if (showModal) {
+  <app-modal (closeModal)="showModal = false"></app-modal>
+}

@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { NoteService } from '../../../features/home/services/note.service';
-import { NgIf } from '@angular/common';
+
 import { Input } from '@angular/core';
 @Component({
   selector: 'app-delete',
-  imports: [NgIf],
+  imports: [],
   templateUrl: './delete.component.html',
   styleUrls: ['./delete.component.scss'],
 })

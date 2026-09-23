@@ -23,9 +23,8 @@ export class LoginComponent {
     private alertService: AlertService,
   ) {}
 
-
   ngOnDestroy(): void {
-     this.loginSubscription?.unsubscribe();
+    this.loginSubscription?.unsubscribe();
   }
   public login(email: string, password: string): void {
     const button = document.querySelector(
@@ -56,7 +55,7 @@ export class LoginComponent {
         button.innerHTML = `<span class="material-symbols-outlined">
                           chevron_forward
                       </span>`;
-      }
+      },
     });
   }
 }

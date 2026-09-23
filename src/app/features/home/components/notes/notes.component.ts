@@ -1,6 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { Note } from '../../models/note';
-import { NgFor, NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { DeleteComponent } from '../../../../shared/components/delete/delete.component';
 import { NoteService } from '../../services/note.service';
@@ -9,14 +9,7 @@ import { Observable, Subscription, tap, finalize } from 'rxjs';
 import { ErrorComponent } from '../../../../shared/components/error/error.component';
 @Component({
   selector: 'app-notes',
-  imports: [
-    NgFor,
-    NgIf,
-    AsyncPipe,
-    ModalComponent,
-    DeleteComponent,
-    ErrorComponent,
-  ],
+  imports: [AsyncPipe, ModalComponent, DeleteComponent, ErrorComponent],
   templateUrl: './notes.component.html',
   styleUrls: ['./notes.component.scss'],
 })

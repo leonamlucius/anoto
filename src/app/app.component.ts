@@ -8,7 +8,6 @@ import { AlertComponent } from './shared/components/alert/alert.component';
   imports: [
     RouterOutlet,
     AlertComponent,
-
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],

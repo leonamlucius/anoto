@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { TitleComponent } from '../../../home/components/title/title.component';
-import { NgIf } from '@angular/common';
+
 import { AuthService } from '../../../../core/services/auth.service';
 import { AlertService } from '../../../../shared/services/alert.service';
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-cadastrar',
-  imports: [TitleComponent, AlertComponent, RouterLink, NgIf],
+  imports: [TitleComponent, AlertComponent, RouterLink],
   templateUrl: './cadastrar.component.html',
   styleUrls: ['./cadastrar.component.scss'],
 })

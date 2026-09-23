@@ -4,7 +4,7 @@ import { environment } from '../../../environments/environment';
 import { NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap, catchError, of, BehaviorSubject, Subscription } from 'rxjs';
+import { Observable, tap, catchError, of, BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -19,9 +19,7 @@ export class AuthService {
 
   private apiUrl = environment.apiUrl;
 
-  private name = new BehaviorSubject<string>('Leonam Lucius');
-
-  
+  private name = new BehaviorSubject<string>('');
 
   public getName(): Observable<string> {
     return this.name.asObservable();
