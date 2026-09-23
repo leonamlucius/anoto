@@ -5,7 +5,6 @@ import { TitleComponent } from './features/home/components/title/title.component
 import { NotesComponent } from './features/home/components/notes/notes.component';
 import { BodyComponent } from './features/home/components/body/body.component';
 import { AlertComponent } from './shared/components/alert/alert.component';
-import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +15,6 @@ import { HttpClientModule } from '@angular/common/http';
     NotesComponent,
     BodyComponent,
     AlertComponent,
-    HttpClientModule,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],

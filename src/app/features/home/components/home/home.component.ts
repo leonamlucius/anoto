@@ -35,14 +35,16 @@ export class HomeComponent implements OnInit {
       fromEvent(document, 'scroll'),
     ).pipe(throttleTime(1000), startWith(null));
 
-    const idleLoop$ = idleCheck$.pipe(switchMap(() => timer(minutes, minutes)));
+    const idleLoop$ = idleCheck$.pipe(
+      switchMap(() => timer(minutes, minutes)),
+      takeUntilDestroyed(this.destroyRef),
+    );
 
     idleLoop$
       .pipe(
         switchMap(() => {
           return this.authService.testToken(token);
         }),
-        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe((isValid: boolean) => {
         if (!isValid) {

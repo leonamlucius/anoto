@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgClass } from '@angular/common';
 import { AlertService } from '../../services/alert.service';
 import { NgIf } from '@angular/common';
@@ -20,22 +22,26 @@ export class AlertComponent implements OnInit {
   type: 'success' | 'error' | 'warning' = 'success';
   icon = '';
 
+  private destroyRef = inject(DestroyRef);
+
   constructor(private alertService: AlertService) {}
 
   ngOnInit() {
-    this.alertService.alert$.subscribe((alert) => {
-      this.type = alert.type;
-      this.message = alert.message;
-      this.icon = this.getIcon(alert.type);
-      this.isHiding = false;
-      this.showAlert = true;
-      setTimeout(() => {
-        this.isHiding = true;
+    this.alertService.alert$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((alert) => {
+        this.type = alert.type;
+        this.message = alert.message;
+        this.icon = this.getIcon(alert.type);
+        this.isHiding = false;
+        this.showAlert = true;
         setTimeout(() => {
-          this.showAlert = false;
-        }, 400); // tempo da animação de saída
-      }, 3000);
-    });
+          this.isHiding = true;
+          setTimeout(() => {
+            this.showAlert = false;
+          }, 400); // tempo da animação de saída
+        }, 3000);
+      });
   }
 
   getIcon(type: string) {
