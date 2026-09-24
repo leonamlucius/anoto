@@ -1,4 +1,27 @@
 :host {
   width: 100%;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+span {
+  position: absolute;
+  left: 13%;
+  animation: rotate 2s linear infinite;
+}
+
+@media (max-width: 600px) {
+  span {
+    left: 45%;
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

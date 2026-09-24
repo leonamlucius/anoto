@@ -39,7 +39,8 @@ public class NoteService {
                 decryptedContent,
                 note.getColor(),
                 note.getCreatedAt(),
-                note.getUpdatedAt());
+                note.getUpdatedAt(),
+                note.getFixed());
     }
 
     public List<NoteResponse> findAll() {
@@ -67,6 +68,7 @@ public class NoteService {
                 .content(encryptedContent)
                 .color(request.getColor())
                 .user(user)
+                .fixed(false)
                 .build();
         return toResponse(noteRepository.save(note));
     }
@@ -84,6 +86,14 @@ public class NoteService {
         }
         note.setContent(encryptedContent);
         note.setColor(request.getColor());
+        return toResponse(noteRepository.save(note));
+    }
+
+    public NoteResponse fixedNote(Long id) {
+        User user = getCurrentUser();
+        Note note = noteRepository.findByIdAndUserId(id, user.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Nota não encontrada."));
+        note.setFixed(!note.getFixed());
         return toResponse(noteRepository.save(note));
     }
 

@@ -13,6 +13,7 @@
       class="note"
       [style.backgroundColor]="note.color"
       (click)="selectNote($event)"
+      [class.active]="(noteService.selectedColor$ | async) === note.color"
       id="{{ note.color }}"
     ></button>
   }

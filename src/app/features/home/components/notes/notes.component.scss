@@ -2,10 +2,35 @@
   padding: 15px 15px;
   width: 100%;
   display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.fixed-notes-title {
+  width: 100%;
+  display: flex;
   justify-content: flex-start;
   align-items: center;
+  padding: 0px 5px;
+  font-size: 0.7em;
+  color: #383838;
+  opacity: 0.5;
+}
+.note-card-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
   flex-wrap: wrap;
   gap: 20px;
+  padding: 15px 0;
+}
+
+.note-card-container.top {
+  border-bottom: 1px solid #eeeeee;
 }
 
 @keyframes popOut {
@@ -32,7 +57,6 @@
   text-align: center;
 }
 
-
 .no-notes-color {
   width: 100%;
   display: flex;
@@ -43,19 +67,16 @@
   text-align: center;
 }
 
-
 .no-notes-color p {
   margin: 0;
   font-size: 22px;
   font-weight: 500;
-  
 }
 
 .no-notes p {
   margin: 0;
   font-size: 22px;
   font-weight: 500;
-  
 }
 
 .no-notes #loading {
@@ -65,19 +86,18 @@
 }
 
 .no-notes .mockup-button {
-    width: 40px;
-    height: 40px;
-    flex-shrink: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background-color: #383838;
-    color: white;
-    transition: all 0.3s ease;
-    border: none;
-    vertical-align: middle;
-
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #383838;
+  color: white;
+  transition: all 0.3s ease;
+  border: none;
+  vertical-align: middle;
 }
 .note-card {
   width: 210px;
@@ -92,6 +112,7 @@
   transition: all 0.3s ease;
   gap: 10px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 .note-card.none {
   display: none;
@@ -99,7 +120,6 @@
 .note-card.animate {
   animation: popOut 0.3s ease;
 }
-
 
 .note-card:hover {
   transform: scale(1.1);
@@ -111,6 +131,34 @@
 .note-card p {
   font-weight: 400;
 }
+#fixed {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  display: none;
+  cursor: pointer;
+}
+
+#fixed.active {
+  display: flex;
+}
+
+#fixed.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+#fixed.active:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
 .note-body {
   width: 100%;
   height: 100%;
@@ -126,16 +174,15 @@
   white-space: pre-wrap;
 }
 @media (max-width: 600px) {
-
   :host {
-  padding: 14px;
-  width: 100%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 20px;
-}
+    padding: 14px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
   .note-card {
     width: 100%;
     height: 350px;
@@ -143,11 +190,10 @@
   }
 
   .no-notes {
-   height: 70dvh;
-   word-break: break-word;
-   white-space: pre-wrap;
+    height: 70dvh;
+    word-break: break-word;
+    white-space: pre-wrap;
   }
-
 
   .no-notes p {
     font-size: 24px;
@@ -190,12 +236,11 @@
   display: flex;
 }
 
-
 @keyframes rotate {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
