@@ -1,4 +1,3 @@
-
 @if ((notes$ | async)?.length === 0 && !pageAreLoaded) {
   <div class="no-notes">
     <p>Carregando notas...</p>
@@ -8,51 +7,124 @@
   </div>
 }
 
-
 @if ((notes$ | async)?.length === 0 && pageAreLoaded) {
   <div class="no-notes">
     <app-error></app-error>
-    <p>Por favor, clique em
+    <p>
+      Por favor, clique em
       <button class="mockup-button">
-        <span class="material-symbols-outlined">
-          add
-        </span>
+        <span class="material-symbols-outlined"> add </span>
       </button>
-    para adicionar uma nova nota.</p>
+      para adicionar uma nova nota.
+    </p>
   </div>
 }
 
-
 @if ((notes$ | async)?.length !== 0) {
-  <div class="no-notes-color" style="display:none;">
+  <div class="no-notes-color" style="display: none">
     <app-error></app-error>
     <p>Não há notas disponíveis desssa cor.</p>
   </div>
 }
 
-@for (note of notes$ | async; track note) {
-  <div class="note-card" (mouseenter)="showEdit(note)" (mouseleave)="hideEdit(note)"
-    [attr.data-id]="note.id" id="{{note.color}}" [style.backgroundColor]="note.color">
-    <div class="note-body">
-      <h3>{{ note.title }}</h3>
-      <p>{{ note.content }}</p>
+@if (notesFixed$ | async; as notesFixed) {
+  @if (notesFixed.length > 0) {
+    <span class="fixed-notes-title">
+      <p>FIXADAS</p>
+    </span>
+    <div class="note-card-container top">
+      @for (note of notesFixed$ | async; track note) {
+        <div
+          class="note-card"
+          (mouseenter)="showEdit(note)"
+          (mouseleave)="hideEdit(note)"
+          [attr.data-id]="note.id"
+          id="{{ note.color }}"
+          [style.backgroundColor]="note.color"
+        >
+          <span
+            class="material-symbols-outlined"
+            id="fixed"
+            [class.active]="activeNoteId === note.id"
+            [class.disabled]="noteService.loadingFixed()"
+            (click)="fixNote(note.id)"
+          >
+            keep_off
+          </span>
+
+          <div class="note-body">
+            <h3>{{ note.title }}</h3>
+            <p>{{ note.content }}</p>
+          </div>
+          <div class="note-footer" [class.active]="activeNoteId === note.id">
+            <span
+              class="material-symbols-outlined"
+              (click)="
+                createModalDelete(note.id, note.title, note.content, note.color)
+              "
+            >
+              delete
+            </span>
+            <span class="material-symbols-outlined" (click)="createModal(note)"
+              >edit_square</span
+            >
+          </div>
+        </div>
+      }
     </div>
-    <div class="note-footer" [class.active]="activeNoteId === note.id">
-      <span class="material-symbols-outlined"
-        (click)="createModalDelete(note.id, note.title, note.content, note.color)">
-        delete
-      </span>
-      <span class="material-symbols-outlined" (click)="createModal(note)">edit_square</span>
-    </div>
-  </div>
+  }
 }
+<div class="note-card-container">
+  @for (note of notesNotFixed$ | async; track note) {
+    <div
+      class="note-card"
+      (mouseenter)="showEdit(note)"
+      (mouseleave)="hideEdit(note)"
+      [attr.data-id]="note.id"
+      id="{{ note.color }}"
+      [style.backgroundColor]="note.color"
+    >
+      <span
+        class="material-symbols-outlined"
+        id="fixed"
+        [class.active]="activeNoteId === note.id"
+        [class.disabled]="noteService.loadingFixed()"
+        (click)="fixNote(note.id)"
+      >
+        keep
+      </span>
 
-
+      <div class="note-body">
+        <h3>{{ note.title }}</h3>
+        <p>{{ note.content }}</p>
+      </div>
+      <div class="note-footer" [class.active]="activeNoteId === note.id">
+        <span
+          class="material-symbols-outlined"
+          (click)="
+            createModalDelete(note.id, note.title, note.content, note.color)
+          "
+        >
+          delete
+        </span>
+        <span class="material-symbols-outlined" (click)="createModal(note)"
+          >edit_square</span
+        >
+      </div>
+    </div>
+  }
+</div>
 
 @if (showModal) {
-  <app-modal [note]="selectedNote" (closeModal)="showModal = false; loadNotes()">
+  <app-modal
+    [note]="selectedNote"
+    (closeModal)="showModal = false; loadNotes()"
+  >
   </app-modal>
 }
 @if (showDeleteModal) {
-  <app-delete [noteId]="selectedNoteId!" (closeModal)="showDeleteModal = false"></app-delete>
+  <app-delete
+    [noteId]="selectedNoteId!"
+    (closeModal)="showDeleteModal = false"
+  ></app-delete>
 }
