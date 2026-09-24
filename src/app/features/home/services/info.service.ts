@@ -21,8 +21,9 @@ export class InfoService {
     return this.name.asObservable();
   }
 
-  public getInfo(param: string): Observable<Info> {
-    return this.http.get<Info>(`${this.apiUrl}/info/${param}`).pipe(
+  public getInfo(): Observable<Info> {
+    return this.http.get<Info>(`${this.apiUrl}/info/get`, {
+    }).pipe(
       tap((info: Info) => this.setName(info)),
       catchError((error) => {
         console.error('Error fetching info:', error);

@@ -20,7 +20,7 @@ export class ProfileComponent implements OnInit {
 
   
   ngOnInit(): void {
-    this.infoService.getInfo('1').subscribe();
+    this.infoService.getInfo().subscribe();
     this.userName$ = this.infoService.getName();
   }
 

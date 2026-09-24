@@ -12,8 +12,8 @@ public class InfoService {
     @Autowired
     private UserRepository userRepository;
 
-    public InfoResponse getInfo(String param) {
-        return userRepository.findById(Long.parseLong(param))
+    public InfoResponse getInfo(String id) {
+        return userRepository.findById(Long.parseLong(id))
                 .map(user -> new InfoResponse(user.getEmail(), user.getName()))
                 .orElse(null);
     }

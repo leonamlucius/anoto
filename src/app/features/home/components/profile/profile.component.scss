@@ -21,28 +21,55 @@
   cursor: pointer;
   background: none;
   border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  box-sizing: border-box;
+  height: 20px;
+  width: 20px;
+  transition: all 0.3s ease-in-out;
 }
 
-#back-button.active{
+#back-button span {
+  scale: 0.8;
+}
+
+#back-button:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+#back-button.active {
   rotate: 180deg;
 }
 
 .profile-container {
   color: white;
-  width: 43px;
+  width: 39px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding: 5px;
-  background-color: #383838;
+  padding: 3px;
+  background: #fff176;
+  background: conic-gradient(
+    from 45deg,
+    #fff176 14%,
+    #f490b1 28%,
+    #a5d6a7 41%,
+    #91caf9 56%,
+    #ffcc80 70%,
+    #ce94d8 81%
+  );
   border-radius: 50px;
   position: relative;
-  transition: all 0.3s ease-in-out;
-  
+  transition: all 0.3s ease-in-out, background-color 0.1s ease-out;
 }
 
 .profile-container.active {
   box-sizing: border-box;
+  background-color: #383838 !important;
+  background-image: none !important;
   width: 40%;
   gap: 10px;
 }
