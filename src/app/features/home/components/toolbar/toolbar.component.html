@@ -21,4 +21,12 @@
       <option value="oldest">Mais antigos</option>
     </select>
   </div>
+
+  <div class="action-item" [class.active]="activeItem() === 'notes'">
+    <p>Visualizar por:</p>
+    <div class="view-buttons">
+      <button value="notes" [class.active]="activeView() === 'notes'" (click)="setActiveView('notes')">Notas</button>
+      <button value="list" [class.active]="activeView() === 'list'" (click)="setActiveView('list')">Lista</button>
+    </div>
+  </div>
 </div>

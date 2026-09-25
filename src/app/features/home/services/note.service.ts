@@ -36,6 +36,9 @@ export class NoteService {
   private orderBySubject = new BehaviorSubject<string | null>('newest');
   public orderBy$ = this.orderBySubject.asObservable();
 
+  private viewSubject = new BehaviorSubject<'notes' | 'list'>('notes');
+  public view$ = this.viewSubject.asObservable();
+
   public filteredNotes$: Observable<Note[]> = combineLatest([
     this.allNotesObservable$,
     this.selectedColor$,
@@ -54,6 +57,10 @@ export class NoteService {
     this.orderBySubject.next(orderBy);
 
     console.log('Order by set to:', orderBy);
+  }
+
+  public setView(view: 'notes' | 'list') {
+    this.viewSubject.next(view);
   }
 
   public toggleColorFilter(color: string | null) {
