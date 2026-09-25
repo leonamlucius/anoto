@@ -5,7 +5,14 @@ import { ModalComponent } from '../../../../shared/components/modal/modal.compon
 import { DeleteComponent } from '../../../../shared/components/delete/delete.component';
 import { NoteService } from '../../services/note.service';
 import { OnDestroy } from '@angular/core';
-import { Observable, Subscription, tap, finalize, map } from 'rxjs';
+import {
+  Observable,
+  Subscription,
+  tap,
+  finalize,
+  map,
+  combineLatest,
+} from 'rxjs';
 import { ErrorComponent } from '../../../../shared/components/error/error.component';
 @Component({
   selector: 'app-notes',
@@ -34,11 +41,39 @@ export class NotesComponent implements OnInit {
       .pipe(finalize(() => this.loadNotes()))
       .subscribe();
     this.notes$ = this.noteService.filteredNotes$;
-    this.notesNotFixed$ = this.notes$.pipe(
-      map(notes => notes.filter(note => !note.fixed))
+
+    this.notesNotFixed$ = combineLatest([
+      this.notes$,
+      this.noteService.orderBy$,
+    ]).pipe(
+      map(([notes, orderBy]) =>
+        [...notes]
+          .filter((note) => !note.fixed)
+          .sort((a, b) => {
+            return orderBy === 'newest'
+              ? new Date(b.createdAt).getTime() -
+                  new Date(a.createdAt).getTime()
+              : new Date(a.createdAt).getTime() -
+                  new Date(b.createdAt).getTime();
+          }),
+      ),
     );
-    this.notesFixed$ = this.notes$.pipe(
-      map(notes => notes.filter(note => note.fixed))
+
+    this.notesFixed$ = combineLatest([
+      this.notes$,
+      this.noteService.orderBy$,
+    ]).pipe(
+      map(([notes, orderBy]) =>
+        [...notes]
+          .filter((note) => note.fixed)
+          .sort((a, b) => {
+            return orderBy === 'newest'
+              ? new Date(b.createdAt).getTime() -
+                  new Date(a.createdAt).getTime()
+              : new Date(a.createdAt).getTime() -
+                  new Date(b.createdAt).getTime();
+          }),
+      ),
     );
   }
   async loadNotes() {
@@ -51,14 +86,10 @@ export class NotesComponent implements OnInit {
 
   showDeleteModal = false;
 
-
   public fixNote(id: number) {
-    this.noteService.FixNote(id)
-    .subscribe(
-      () => {
-        this.noteService.Allnotes().subscribe(); 
-      }
-    );
+    this.noteService.FixNote(id).subscribe(() => {
+      this.noteService.Allnotes().subscribe();
+    });
   }
 
   public showModalCreateNote() {

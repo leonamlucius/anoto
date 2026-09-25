@@ -33,6 +33,9 @@ export class NoteService {
   private selectedColorSubject = new BehaviorSubject<string | null>(null);
   public selectedColor$ = this.selectedColorSubject.asObservable();
 
+  private orderBySubject = new BehaviorSubject<string | null>('newest');
+  public orderBy$ = this.orderBySubject.asObservable();
+
   public filteredNotes$: Observable<Note[]> = combineLatest([
     this.allNotesObservable$,
     this.selectedColor$,
@@ -47,6 +50,12 @@ export class NoteService {
 
   private apiUrl = environment.apiUrl;
 
+  public setOrderBy(orderBy: string | null) {
+    this.orderBySubject.next(orderBy);
+
+    console.log('Order by set to:', orderBy);
+  }
+
   public toggleColorFilter(color: string | null) {
     const currentColor = this.selectedColorSubject.getValue();
     if (currentColor === color) {
@@ -55,10 +64,6 @@ export class NoteService {
       this.selectedColorSubject.next(color);
     }
   }
-  public set SetAllNotes(notes: Observable<Note[]>) {
-    notes.subscribe((n) => this.allNotes.next(n));
-  }
-
   public Allnotes(): Observable<Note[]> {
     return this.http.get<Note[]>(`${this.apiUrl}/notes`, {}).pipe(
       tap((notes) => this.allNotes.next(notes)),

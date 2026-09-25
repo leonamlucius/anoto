@@ -1,0 +1,24 @@
+<div class="toolbar-buttons">
+  @for (item of items; track $index) {
+    <div
+      class="toolbar-item"
+      (click)="setActiveItem(item.label)"
+      title="{{ item.description }}"
+    >
+      <span [innerHTML]="item.icon"></span>
+
+      <p [class.active]="activeItem() === item.label">{{ item.description }}</p>
+    </div>
+  }
+</div>
+
+<div class="toolbar-action" [class.active]="activeAction()">
+  <div class="action-item" [class.active]="activeItem() === 'date'">
+    <span class="material-symbols-outlined"> list_arrow </span>
+    <p>Ordernar por:</p>
+    <select #orderBySelect (change)="setOrderBy(orderBySelect.value)">
+      <option value="newest">Mais recentes</option>
+      <option value="oldest">Mais antigos</option>
+    </select>
+  </div>
+</div>
