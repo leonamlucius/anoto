@@ -35,7 +35,11 @@ export class NotesComponent implements OnInit {
 
   public loadingFixed = signal(false);
 
+
+  public view$!: Observable<string | 'notes' | 'list'>;
+
   ngOnInit() {
+    this.view$ = this.noteService.view$;
     this.noteService
       .Allnotes()
       .pipe(finalize(() => this.loadNotes()))

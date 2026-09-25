@@ -14,7 +14,6 @@
   align-items: center;
   justify-content: flex-start;
   height: 55px;
-  gap: 5px;
   overflow: hidden;
   transition: all 0.3s ease;
 }
@@ -49,6 +48,7 @@
   user-select: none;
   cursor: pointer;
   transition: all 0.3s ease;
+  margin-right: 5px;
 }
 
 .toolbar-item span {
@@ -111,6 +111,38 @@
   scale: 0.95;
 }
 
+.view-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  background-color: rgb(161, 159, 159);
+  border-radius: 12px;
+  padding: 2px;
+}
+.view-buttons button {
+  width: 65px;
+  background-color:transparent;
+  border: transparent;
+  color: #383838;
+  cursor: pointer;
+  border-radius: 12px;
+  padding: 5px 10px;
+  transition: all 0.3s ease;
+  font-size: 0.9em;
+  opacity: 0.5;
+}
+
+.view-buttons button.active {
+  background-color: #383838;
+  color: white;
+  opacity: 1;
+}
+
+.view-buttons button:hover {
+  opacity: 0.7;
+}
+
 @media (max-width: 600px) {
   .toolbar-buttons {
     overflow-x: scroll;
@@ -119,5 +151,9 @@
   }
   .toolbar-item {
     scale: 1.07;
+    margin: 0 6px;
+  }
+  .toolbar-item:hover {
+    transform: scale(1);
   }
 }

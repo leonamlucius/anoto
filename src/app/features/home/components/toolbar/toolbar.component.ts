@@ -10,7 +10,9 @@ import { NoteService } from '../../services/note.service';
 export class ToolbarComponent {
   constructor(private noteService: NoteService) {}
   public activeAction = signal<boolean>(false);
-  public activeItem = signal<'date' | string | null>(null);
+  public activeItem = signal<'date'| 'notes' | string | null>(null);
+
+  public activeView = signal<'notes' | 'list'>('notes');
 
   public items = [
     {
@@ -19,10 +21,18 @@ export class ToolbarComponent {
       calendar_today
       </span>`,
       description: 'Data',
-    }
+    },
+
+    {
+      label: 'notes',
+      icon: `<span class="material-symbols-outlined">
+      splitscreen
+      </span>`,
+      description: 'Estilos de visualização',
+    },
   ];
 
-  public setActiveItem(item: 'date' | string | null) {
+  public setActiveItem(item: 'date' | 'notes' | string | null) {
     if (this.activeItem() === item) {
       setTimeout(() => {
         this.activeAction.set(false);
@@ -39,5 +49,12 @@ export class ToolbarComponent {
 
   public setOrderBy(orderBy: string | null) {
     this.noteService.setOrderBy(orderBy);
+  }
+
+  public setActiveView(view: 'notes' | 'list') {
+    setTimeout(() => {
+      this.activeView.set(view);
+    }, 300);
+     this.noteService.setView(view);
   }
 }

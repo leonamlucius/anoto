@@ -32,7 +32,7 @@
     <span class="fixed-notes-title">
       <p>FIXADAS</p>
     </span>
-    <div class="note-card-container top">
+    <div class="note-card-container top" [class.list]="(view$ | async) === 'list'">
       @for (note of notesFixed$ | async; track note) {
         <div
           class="note-card"
@@ -41,6 +41,7 @@
           [attr.data-id]="note.id"
           id="{{ note.color }}"
           [style.backgroundColor]="note.color"
+          [class.list]="(view$ | async) === 'list'"
         >
           <span
             class="material-symbols-outlined"
@@ -74,7 +75,7 @@
     </div>
   }
 }
-<div class="note-card-container">
+<div class="note-card-container" [class.list]="(view$ | async) === 'list'">
   @for (note of notesNotFixed$ | async; track note) {
     <div
       class="note-card"
@@ -83,6 +84,7 @@
       [attr.data-id]="note.id"
       id="{{ note.color }}"
       [style.backgroundColor]="note.color"
+      [class.list]="(view$ | async) === 'list'"
     >
       <span
         class="material-symbols-outlined"
