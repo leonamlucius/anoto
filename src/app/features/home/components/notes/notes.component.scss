@@ -27,7 +27,7 @@
   width: 100%;
   flex-wrap: wrap;
   gap: 20px;
-  padding: 15px 0;
+  padding: 10px 0;
 }
 
 .note-card-container.top {
@@ -199,7 +199,6 @@
   }
   .note-card {
     width: 100%;
-    max-width: 47%;
     height: 175px;
   }
 
@@ -208,8 +207,15 @@
   }
 
   .note-card-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
-    flex-wrap: wrap;
+  }
+
+  .note-card-container.list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
   }
 
   .no-notes {

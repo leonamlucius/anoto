@@ -1,11 +1,6 @@
-<button
-  class="add-button"
-  (mouseenter)="showNoteContent()"
-  (mouseleave)="hiddeNoteContent()"
-  (click)="createModal()"
-  >
-  <span class="material-symbols-outlined"> add </span>
-</button>
+
+  <app-add></app-add>
+
 
 <div class="colors">
   @for (note of notes; track note) {
@@ -24,10 +19,6 @@
   routerLink="/login"
   class="back"
   title="Voltar para o login"
-  >
+>
   <span class="material-symbols-outlined"> arrow_back </span>
 </button>
-
-@if (showModal) {
-  <app-modal (closeModal)="showModal = false"></app-modal>
-}
