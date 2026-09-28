@@ -1,26 +1,26 @@
-import { Component, inject, signal } from '@angular/core';
-import { NgFor, NgIf, NgClass } from '@angular/common';
+import { Component, inject, signal} from '@angular/core';
+
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
-import { RouterLink } from '@angular/router';
+import {AddComponent} from '../../../../shared/components/add/add.component';
+import { RouterLink, ɵEmptyOutletComponent } from '@angular/router';
 import { NoteService } from '../../services/note.service';
 import { AlertService } from '../../../../shared/services/alert.service';
-import { Observable, catchError, of, map, take } from 'rxjs';
+import { Observable, catchError, of, map, take} from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [NgFor, NgIf, NgClass, ModalComponent, RouterLink],
+  imports: [ModalComponent, AddComponent, RouterLink, AsyncPipe, ɵEmptyOutletComponent],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent {
   constructor(
-    private noteService: NoteService,
+    protected noteService: NoteService,
     private alertService: AlertService,
   ) {}
 
   public notesGet = signal<any[]>([]);
-
-  showModal = false;
   notes = [
     { id: 1, title: 'Note 1', content: 'Content of Note 1', color: '#FFF176' },
     { id: 2, title: 'Note 2', content: 'Content of Note 2', color: '#F48FB1' },
@@ -58,62 +58,20 @@ export class SidebarComponent {
   public async selectNote(event: MouseEvent) {
     const clicked = event.currentTarget as HTMLElement;
 
-    this.noteService.allNotesObservable$
-      .pipe(
-        map((notes) => notes.length === 0),
-        take(1),
-      )
-      .subscribe((haveNoNotes) => {
-        if (haveNoNotes) {
-          this.alertService.show('warning', 'Sem notas criadas.');
-          return;
-        }
+    this.noteService.allNotesObservable$.pipe(take(1)).subscribe((notes) => {
+      if (notes.length === 0) {
+        this.alertService.show('warning', 'Sem notas criadas.');
+        return;
+      }
 
-        const id = clicked.getAttribute('id');
-
-        const noNotesColor = document.querySelector(
-          '.no-notes-color',
-        ) as HTMLElement;
-
-        if (noNotesColor) {
-          noNotesColor.style.display = 'none';
-        }
-
-        document.querySelectorAll(`.note-card`).forEach((c) => {
-          c.classList.remove('none');
-          c.classList.add('animate');
-        });
-
-        if (clicked.classList.contains('active')) {
-          clicked.classList.remove('active');
-          return;
-        }
-
-        document
-          .querySelectorAll('.note')
-          .forEach((n) => n.classList.remove('active'));
-
-        clicked.classList.add('active');
-
-        document
-          .querySelectorAll(`.note-card:not([id="${id}"])`)
-          .forEach((c) => c.classList.add('none'));
-
-        const filtredNote = document.querySelectorAll(`.note-card[id="${id}"]`);
-
-        if (filtredNote.length === 0) {
-          if (noNotesColor) {
-            noNotesColor.style.display = 'flex';
-          }
-        }
-      });
+      // Alterna a cor selecionada no serviço de forma limpa
+      this.noteService.toggleColorFilter(clicked.getAttribute('id'));
+    });
   }
 
   public showModalCreateNote() {
     document.insertBefore;
   }
 
-  public createModal() {
-    this.showModal = true;
-  }
+
 }

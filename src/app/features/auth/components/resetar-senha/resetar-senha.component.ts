@@ -5,19 +5,13 @@ import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TitleComponent } from '../../../home/components/title/title.component';
-import { NgIf } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-resetar-senha',
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    TitleComponent,
-    NgIf,
-    RouterModule,
-  ],
+  imports: [FormsModule, ReactiveFormsModule, TitleComponent, RouterModule],
   templateUrl: './resetar-senha.component.html',
   styleUrls: ['./resetar-senha.component.scss'],
 })

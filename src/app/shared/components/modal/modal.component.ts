@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
+
 import { NoteService } from '../../../features/home/services/note.service';
 import { Input, OnInit } from '@angular/core';
 import { AlertService } from '../../services/alert.service';
 
 @Component({
   selector: 'app-modal',
-  imports: [NgFor, NgIf],
+  imports: [],
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss'],
 })

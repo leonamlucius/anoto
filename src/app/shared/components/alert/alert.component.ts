@@ -3,15 +3,16 @@ import { DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgClass } from '@angular/common';
 import { AlertService } from '../../services/alert.service';
-import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-alert',
-  imports: [NgClass, NgIf],
+  imports: [NgClass],
   template: `
-    <div *ngIf="showAlert" [ngClass]="[type, isHiding ? 'hide' : '']">
-      <span [innerHTML]="icon"></span> {{ message }}
-    </div>
+    @if (showAlert) {
+      <div [ngClass]="[type, isHiding ? 'hide' : '']">
+        <span [innerHTML]="icon"></span> {{ message }}
+      </div>
+    }
   `,
   styleUrls: ['./alert.component.scss'],
 })

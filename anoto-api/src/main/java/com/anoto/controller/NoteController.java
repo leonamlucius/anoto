@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/notes")
@@ -44,6 +46,11 @@ public class NoteController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         noteService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("fixed/{id}")
+    public ResponseEntity<NoteResponse> fixedNote(@PathVariable Long id) {
+        return ResponseEntity.ok(noteService.fixedNote(id));
     }
 
 }

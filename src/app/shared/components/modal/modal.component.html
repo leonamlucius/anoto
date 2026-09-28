@@ -1,45 +1,51 @@
 <div class="modal-create">
-    <div class="modal-content">
+  <div class="modal-content">
 
-        <div class="modal-header">
-            <button (click)="close()">
-                <span class="material-symbols-outlined">
-                    close
-                </span>
-            </button>
-        </div>
-
-        <div class="modal-body">
-            <input type="text" placeholder="Título" #titleInput [value]="note?.title ?? ''">
-            <textarea placeholder="Descrição" #descriptionInput>{{ note?.content ?? '' }}</textarea>
-            
-
-
-            <div class="modal-colors">
-                <div *ngFor="let note of notes" class="color-option" [style.background]="note.color"
-                    [class.active]="selectedColor === note.color" (click)="selectColor(note.color)">
-                </div>
-            </div>
-                    
-
-            <div class="modal-footer">
-                <button type="button" (click)="PostNote(titleInput.value, descriptionInput.value)" [class.disabled]="isLoading"
-                    class="btn btn-primary">
-                    <span *ngIf="!isLoading" class="material-symbols-outlined">
-                        chevron_forward
-                    </span>
-
-                    <span *ngIf="isLoading" class="material-symbols-outlined" id="loading"  >
-                        progress_activity
-                    </span>
-                </button>
-
-            
-            </div>
-
-
-
-        
+    <div class="modal-header">
+      <button (click)="close()">
+        <span class="material-symbols-outlined">
+          close
+        </span>
+      </button>
     </div>
-        </div>
+
+    <div class="modal-body">
+      <input type="text" placeholder="Título" #titleInput [value]="note?.title ?? ''">
+      <textarea placeholder="Descrição" #descriptionInput>{{ note?.content ?? '' }}</textarea>
+
+
+
+      <div class="modal-colors">
+        @for (note of notes; track note) {
+          <div class="color-option" [style.background]="note.color"
+            [class.active]="selectedColor === note.color" (click)="selectColor(note.color)">
+          </div>
+        }
+      </div>
+
+
+      <div class="modal-footer">
+        <button type="button" (click)="PostNote(titleInput.value, descriptionInput.value)" [class.disabled]="isLoading"
+          class="btn btn-primary">
+          @if (!isLoading) {
+            <span class="material-symbols-outlined">
+              chevron_forward
+            </span>
+          }
+
+          @if (isLoading) {
+            <span class="material-symbols-outlined" id="loading"  >
+              progress_activity
+            </span>
+          }
+        </button>
+
+
+      </div>
+
+
+
+
     </div>
+  </div>
+</div>

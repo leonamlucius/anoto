@@ -14,4 +14,5 @@ public class NoteResponse {
     private String color;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Boolean fixed;
 }

@@ -3,12 +3,14 @@ import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AlertService {
-  private alertSubject = new Subject<{ type: 'success' | 'error' | 'warning', message: string }>();
+  private alertSubject = new Subject<{
+    type: 'success' | 'error' | 'warning';
+    message: string;
+  }>();
   alert$ = this.alertSubject.asObservable();
   public showAlert = false;
 
   show(type: 'success' | 'error' | 'warning', message: string) {
-
     if (this.showAlert) {
       return;
     }

@@ -1,20 +1,17 @@
-<button
-  class="add-button"
-  (mouseenter)="showNoteContent()"
-  (mouseleave)="hiddeNoteContent()"
-  (click)="createModal()"
->
-  <span class="material-symbols-outlined"> add </span>
-</button>
+
+  <app-add></app-add>
+
 
 <div class="colors">
-  <button
-    *ngFor="let note of notes"
-    class="note"
-    [style.backgroundColor]="note.color"
-    (click)="selectNote($event)"
-    id="{{ note.color }}"
-  ></button>
+  @for (note of notes; track note) {
+    <button
+      class="note"
+      [style.backgroundColor]="note.color"
+      (click)="selectNote($event)"
+      [class.active]="(noteService.selectedColor$ | async) === note.color"
+      id="{{ note.color }}"
+    ></button>
+  }
 </div>
 
 <button
@@ -25,5 +22,3 @@
 >
   <span class="material-symbols-outlined"> arrow_back </span>
 </button>
-
-<app-modal *ngIf="showModal" (closeModal)="showModal = false"></app-modal>
