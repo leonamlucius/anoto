@@ -5,3 +5,17 @@
   align-items: flex-start;
   justify-content: flex-start;
 }
+
+app-add {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
+@media (max-width: 600px) {
+  app-add {
+    display: block;
+  }
+}
+

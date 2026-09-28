@@ -1,7 +1,8 @@
 import { Component, inject, signal} from '@angular/core';
 
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
-import { RouterLink } from '@angular/router';
+import {AddComponent} from '../../../../shared/components/add/add.component';
+import { RouterLink, ɵEmptyOutletComponent } from '@angular/router';
 import { NoteService } from '../../services/note.service';
 import { AlertService } from '../../../../shared/services/alert.service';
 import { Observable, catchError, of, map, take} from 'rxjs';
@@ -9,7 +10,7 @@ import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [ModalComponent, RouterLink, AsyncPipe],
+  imports: [ModalComponent, AddComponent, RouterLink, AsyncPipe, ɵEmptyOutletComponent],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
 })
@@ -20,8 +21,6 @@ export class SidebarComponent {
   ) {}
 
   public notesGet = signal<any[]>([]);
-
-  showModal = false;
   notes = [
     { id: 1, title: 'Note 1', content: 'Content of Note 1', color: '#FFF176' },
     { id: 2, title: 'Note 2', content: 'Content of Note 2', color: '#F48FB1' },
@@ -74,7 +73,5 @@ export class SidebarComponent {
     document.insertBefore;
   }
 
-  public createModal() {
-    this.showModal = true;
-  }
+
 }

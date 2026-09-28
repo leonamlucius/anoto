@@ -10,7 +10,7 @@ import { NoteService } from '../../services/note.service';
 export class ToolbarComponent {
   constructor(private noteService: NoteService) {}
   public activeAction = signal<boolean>(false);
-  public activeItem = signal<'date'| 'notes' | string | null>(null);
+  public activeItem = signal<'date' | 'notes' | string | null>(null);
 
   public activeView = signal<'notes' | 'list'>('notes');
 
@@ -41,9 +41,10 @@ export class ToolbarComponent {
       this.activeItem.set(null);
     } else {
       setTimeout(() => {
-        this.activeAction.set(true);
         this.activeItem.set(item);
       }, 300);
+
+      this.activeAction.set(true);
     }
   }
 
@@ -55,6 +56,6 @@ export class ToolbarComponent {
     setTimeout(() => {
       this.activeView.set(view);
     }, 300);
-     this.noteService.setView(view);
+    this.noteService.setView(view);
   }
 }

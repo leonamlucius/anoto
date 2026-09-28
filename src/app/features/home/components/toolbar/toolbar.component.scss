@@ -77,7 +77,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 6px;
-  font-size: 0;
+  font-size: 0.75em;
   gap: 5px;
   transition: all 0.3s ease;
   overflow: hidden;
@@ -85,7 +85,6 @@
 .action-item.active {
   width: fit-content;
   padding: 5px 15px;
-  font-size: 0.75em;
 }
 .action-item select,
 .action-item option {
@@ -155,5 +154,9 @@
   }
   .toolbar-item:hover {
     transform: scale(1);
+  }
+
+  .action-item.active {
+    scale: 1.02;
   }
 }
