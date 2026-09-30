@@ -5,4 +5,6 @@ export interface Note {
   color: string;
   fixed: boolean;
   createdAt: Date;
+  updatedAt: Date;
+  placeHolder: boolean;
 }
