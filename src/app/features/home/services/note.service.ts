@@ -9,6 +9,7 @@ import {
   tap,
   finalize,
   combineLatest,
+  throwError,
 } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
@@ -88,16 +89,21 @@ export class NoteService {
     content: string,
     color: string,
   ): Observable<Note[]> {
+    if (!title || !content || !color) {
+      this.alertService.show(
+        'error',
+        'Todos os campos são obrigatórios. Por favor, preencha todos os campos.',
+      );
+
+      return throwError(() => new Error('All fields are required'));
+    }
+
     return this.http
       .post<Note[]>(`${this.apiUrl}/notes`, { title, content, color })
       .pipe(
         catchError((error) => {
           console.error('Failed to post note:', error);
-          this.alertService.show(
-            'error',
-            'Falha ao criar nota. Por favor, tente novamente.',
-          );
-          return of([]);
+          return throwError(() => error);
         }),
       );
   }
@@ -122,6 +128,14 @@ export class NoteService {
     color: string,
   ): Observable<Note[]> {
     if (this.loadingFixed()) {
+      return of([]);
+    }
+
+    if (!title || !content || !color) {
+      this.alertService.show(
+        'error',
+        'Todos os campos são obrigatórios. Por favor, preencha todos os campos.',
+      );
       return of([]);
     }
 

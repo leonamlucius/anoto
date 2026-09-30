@@ -3,6 +3,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { NoteService } from '../../../features/home/services/note.service';
 import { Input, OnInit } from '@angular/core';
 import { AlertService } from '../../services/alert.service';
+import { catchError, EMPTY, finalize, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-modal',
@@ -71,39 +72,23 @@ export class ModalComponent {
 
     this.setLoadingState(true);
 
-    if (!title.trim() || !description.trim()) {
-      this.alertService.show(
-        'error',
-        'Título e descrição não podem ser vazios!',
-      );
-      this.setLoadingState(false);
-      return;
-    }
-    if (!this.selectedColor) {
-      this.alertService.show('error', 'Selecione uma cor para a nota!');
-      this.setLoadingState(false);
-      return;
-    }
+    this.noteService
+      .Postnote(title, description, this.selectedColor)
+      .pipe(
+        switchMap(() => this.noteService.Allnotes()),
+        catchError((error) => {
+          console.error('Erro capturado no componente:', error);
 
-    if (this.note) {
-      // edição
-      this.noteService
-        .Putnote(this.note.id, title, description, this.selectedColor)
-        .subscribe(() => {
-          this.setLoadingState(false);
-          this.noteService.Allnotes().subscribe();
-          this.close();
-        });
-    } else {
-      // criação
-      this.noteService
-        .Postnote(title, description, this.selectedColor)
-        .subscribe(() => {
-          this.setLoadingState(false);
-          this.noteService.Allnotes().subscribe();
-          this.close();
-        });
-    }
+          setTimeout(() => {
+            this.setLoadingState(false);
+          }, 2000);
+          return EMPTY;
+        }),
+      )
+      .subscribe(() => {
+        this.setLoadingState(false);
+        this.close();
+      });
   }
 
   public selectColor(color: string) {
