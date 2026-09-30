@@ -209,7 +209,11 @@
           <div class="note-card-actions-right">
             <button
               type="button"
-              (click)="fixNote(selectedNote.id, !selectedNote.fixed); $event.stopPropagation()"
+              (click)="
+                fixNote(selectedNote.id, !selectedNote.fixed);
+                $event.stopPropagation()
+              "
+              [class.disabled]="noteService.loadingFixed()"
             >
               @if (selectedNote.fixed) {
                 <span class="material-symbols-outlined"> keep_off </span>

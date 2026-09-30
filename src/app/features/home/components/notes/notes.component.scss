@@ -243,6 +243,12 @@
   transition: all 0.3s ease;
 }
 
+.note-card-actions-right button.disabled {
+  cursor: not-allowed;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
 .note-card-actions-right button:hover {
   transform: scale(1.1);
 }
