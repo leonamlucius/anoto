@@ -90,8 +90,12 @@ export class NotesComponent implements OnInit {
           })
           .map((note) => ({
             ...note,
-            updatedAt: this.formatDate(note.updatedAt ? note.updatedAt : null),
+
             createdAt: this.formatDate(note.createdAt),
+            updatedAt: this.formatDate(
+              note.updatedAt ? note.updatedAt : null,
+              true,
+            ),
           })),
       ),
     );
@@ -113,13 +117,16 @@ export class NotesComponent implements OnInit {
           .map((note) => ({
             ...note,
             createdAt: this.formatDate(note.createdAt),
-            updatedAt: this.formatDate(note.updatedAt ? note.updatedAt : null),
+            updatedAt: this.formatDate(
+              note.updatedAt ? note.updatedAt : null,
+              true,
+            ),
           })),
       ),
     );
   }
 
-  public formatDate(date: string | any): any {
+  public formatDate(date: string | any, includeHour: boolean = false): any {
     if (!date) return null;
     let dateString = date?.slice(0, 10) || '';
 
@@ -129,6 +136,9 @@ export class NotesComponent implements OnInit {
     let month = parseInt(dateString?.slice(5, 7) || '0', 10);
     let year = parseInt(date?.slice(0, 6) || '0', 10);
 
+    let hour = parseInt(date?.slice(11, 13) || '0', 10);
+    let minute = parseInt(date?.slice(14, 16) || '0', 10);
+
     const formattedDay = String(day).padStart(2, '0');
     const formattedMonth = String(month).padStart(2, '0');
 
@@ -136,14 +146,23 @@ export class NotesComponent implements OnInit {
       month === parseInt(actualDate?.slice(5, 7) || '0', 10) &&
       day === parseInt(actualDate?.slice(8, 10) || '0', 10) - 1
     ) {
+      if (includeHour) {
+        return `Ontem às ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+      }
       return 'Ontem';
     }
 
     if (dateString === actualDate) {
+      if (includeHour) {
+        return `Hoje às ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+      }
       return 'Hoje';
     }
 
     if (month < new Date().getMonth() + 1) {
+      if (includeHour) {
+        return `${formattedDay}/${formattedMonth}/${year} às ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+      }
       return `${formattedDay}/${formattedMonth}/${year}`;
     }
 
@@ -151,13 +170,21 @@ export class NotesComponent implements OnInit {
       weekday: 'long',
     }).format(new Date(year, month - 1, day));
 
+    if (includeHour) {
+      return `${weekday.slice(0, 3).charAt(0).toUpperCase()}${weekday.slice(1, 3)}, ${formattedDay}/${formattedMonth} às ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+    }
+
     return `${weekday.slice(0, 3).charAt(0).toUpperCase()}${weekday.slice(1, 3)}, ${formattedDay}/${formattedMonth}`;
   }
   async loadNotes() {
     this.pageAreLoaded = true;
   }
 
-  public fixNote(id: number) {
+  public fixNote(id: number, fixed: boolean | null = null) {
+    if (fixed !== null) {
+      this.selectedNote.fixed = fixed;
+    }
+
     this.noteService.FixNote(id).subscribe(() => {
       this.noteService.Allnotes().subscribe();
     });
@@ -240,9 +267,11 @@ export class NotesComponent implements OnInit {
   public putNote(id: number, note: any, content: string, color: string) {
     this.noteService
       .Putnote(id, note, content, color)
-      .pipe(finalize(() => {
-        this.inputChange.set(false);
-      }))
+      .pipe(
+        finalize(() => {
+          this.inputChange.set(false);
+        }),
+      )
       .subscribe(() => {
         this.noteService.Allnotes().subscribe();
       });

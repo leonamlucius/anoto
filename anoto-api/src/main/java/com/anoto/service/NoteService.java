@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import com.anoto.service.CryptoUtil;
 
@@ -87,6 +88,7 @@ public class NoteService {
         }
         note.setContent(encryptedContent);
         note.setColor(request.getColor());
+        note.setUpdatedAt(LocalDateTime.now());
         return toResponse(noteRepository.save(note));
     }
 
