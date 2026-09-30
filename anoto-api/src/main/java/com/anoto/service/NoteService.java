@@ -69,6 +69,7 @@ public class NoteService {
                 .color(request.getColor())
                 .user(user)
                 .fixed(false)
+                .updatedAt(null)
                 .build();
         return toResponse(noteRepository.save(note));
     }

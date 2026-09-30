@@ -1,4 +1,11 @@
-import { Component, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  effect,
+  OnInit,
+  signal,
+  inject,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { Note } from '../../models/note';
 import { AsyncPipe } from '@angular/common';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
@@ -23,9 +30,9 @@ import { ErrorComponent } from '../../../../shared/components/error/error.compon
 export class NotesComponent implements OnInit {
   constructor(protected noteService: NoteService) {}
 
-  public pageAreLoaded: boolean = false;
+  private cdr = inject(ChangeDetectorRef);
 
-  private sub!: Subscription;
+  public pageAreLoaded: boolean = false;
 
   public notes$!: Observable<Note[]>;
 
@@ -35,8 +42,30 @@ export class NotesComponent implements OnInit {
 
   public loadingFixed = signal(false);
 
-
   public view$!: Observable<string | 'notes' | 'list'>;
+
+  activeNoteId: number | null = null;
+
+  showModal = signal(false);
+
+  showDeleteModal = false;
+
+  selectedNote: any = null;
+
+  selectedNoteId: number | null = null;
+
+  selectedNoteIdEdited: number | null = null;
+
+  inputChange = signal(false);
+
+  colors = [
+    { color: '#FFF176' },
+    { color: '#F48FB1' },
+    { color: '#A5D6A7' },
+    { color: '#90CAF9' },
+    { color: '#FFCC80' },
+    { color: '#CE93D8' },
+  ];
 
   ngOnInit() {
     this.view$ = this.noteService.view$;
@@ -54,12 +83,16 @@ export class NotesComponent implements OnInit {
         [...notes]
           .filter((note) => !note.fixed)
           .sort((a, b) => {
-            return orderBy === 'newest'
-              ? new Date(b.createdAt).getTime() -
-                  new Date(a.createdAt).getTime()
-              : new Date(a.createdAt).getTime() -
-                  new Date(b.createdAt).getTime();
-          }),
+            const timeA = new Date(a.createdAt).getTime();
+            const timeB = new Date(b.createdAt).getTime();
+
+            return orderBy === 'newest' ? timeB - timeA : timeA - timeB;
+          })
+          .map((note) => ({
+            ...note,
+            updatedAt: this.formatDate(note.updatedAt ? note.updatedAt : null),
+            createdAt: this.formatDate(note.createdAt),
+          })),
       ),
     );
 
@@ -76,19 +109,53 @@ export class NotesComponent implements OnInit {
                   new Date(a.createdAt).getTime()
               : new Date(a.createdAt).getTime() -
                   new Date(b.createdAt).getTime();
-          }),
+          })
+          .map((note) => ({
+            ...note,
+            createdAt: this.formatDate(note.createdAt),
+            updatedAt: this.formatDate(note.updatedAt ? note.updatedAt : null),
+          })),
       ),
     );
+  }
+
+  public formatDate(date: string | any): any {
+    if (!date) return null;
+    let dateString = date?.slice(0, 10) || '';
+
+    let actualDate: string = new Date().toISOString().slice(0, 10);
+
+    let day = parseInt(dateString?.slice(8, 10) || '0', 10);
+    let month = parseInt(dateString?.slice(5, 7) || '0', 10);
+    let year = parseInt(date?.slice(0, 6) || '0', 10);
+
+    const formattedDay = String(day).padStart(2, '0');
+    const formattedMonth = String(month).padStart(2, '0');
+
+    if (
+      month === parseInt(actualDate?.slice(5, 7) || '0', 10) &&
+      day === parseInt(actualDate?.slice(8, 10) || '0', 10) - 1
+    ) {
+      return 'Ontem';
+    }
+
+    if (dateString === actualDate) {
+      return 'Hoje';
+    }
+
+    if (month < new Date().getMonth() + 1) {
+      return `${formattedDay}/${formattedMonth}/${year}`;
+    }
+
+    const weekday = new Intl.DateTimeFormat('pt-BR', {
+      weekday: 'long',
+    }).format(new Date(year, month - 1, day));
+
+    return `${weekday.slice(0, 3).charAt(0).toUpperCase()}${weekday.slice(1, 3)}, ${formattedDay}/${formattedMonth}`;
   }
   async loadNotes() {
     this.pageAreLoaded = true;
   }
-
-  activeNoteId: number | null = null;
-
-  showModal = false;
-
-  showDeleteModal = false;
 
   public fixNote(id: number) {
     this.noteService.FixNote(id).subscribe(() => {
@@ -100,14 +167,13 @@ export class NotesComponent implements OnInit {
     document.insertBefore;
   }
 
-  selectedNote: any = null;
-
   public createModal(note: any = null) {
+    this.selectedNoteId = note?.id || null;
     this.selectedNote = note;
-    this.showModal = true;
+
+    this.showModal.set(true);
   }
 
-  selectedNoteId: number | null = null;
   public createModalDelete(
     id: number,
     title: string,
@@ -118,8 +184,78 @@ export class NotesComponent implements OnInit {
     this.showDeleteModal = true;
   }
 
+  public createModalEdit(note: any = null) {
+    this.selectedNoteIdEdited = note?.id;
+
+    this.cdr.detectChanges();
+
+    const updateDOM = () => {
+      this.selectedNote = note;
+      this.cdr.detectChanges();
+    };
+
+    if ('startViewTransition' in document) {
+      (document as any).startViewTransition(updateDOM);
+    } else {
+      updateDOM();
+    }
+  }
+
+  public closeModalEdit(
+    id: number,
+    title: string,
+    content: string,
+    color: string,
+  ) {
+    if (!this.selectedNote) return;
+
+    if (this.inputChange()) {
+      this.putNote(id, title, content, color);
+    }
+
+    const updateDOM = () => {
+      this.selectedNote = null;
+      this.cdr.detectChanges();
+    };
+
+    if ('startViewTransition' in document) {
+      const transition = (document as any).startViewTransition(updateDOM);
+
+      transition.finished.then(() => {
+        this.selectedNoteIdEdited = null;
+        this.cdr.detectChanges();
+      });
+    } else {
+      updateDOM();
+      this.selectedNoteIdEdited = null;
+    }
+  }
+
+  public inputChanged() {
+    if (!this.inputChange()) {
+      this.inputChange.set(true);
+    }
+  }
+
+  public putNote(id: number, note: any, content: string, color: string) {
+    this.noteService
+      .Putnote(id, note, content, color)
+      .pipe(finalize(() => {
+        this.inputChange.set(false);
+      }))
+      .subscribe(() => {
+        this.noteService.Allnotes().subscribe();
+      });
+  }
+
+  public selectColor(color: string) {
+    this.inputChanged();
+    if (this.selectedNote) {
+      this.selectedNote.color = color;
+    }
+  }
+
   public showEdit(note: any) {
-    this.activeNoteId = note.id;
     this.activeNoteId = note.id;
   }
 

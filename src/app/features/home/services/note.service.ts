@@ -55,8 +55,6 @@ export class NoteService {
 
   public setOrderBy(orderBy: string | null) {
     this.orderBySubject.next(orderBy);
-
-    console.log('Order by set to:', orderBy);
   }
 
   public setView(view: 'notes' | 'list') {
@@ -123,6 +121,11 @@ export class NoteService {
     content: string,
     color: string,
   ): Observable<Note[]> {
+    if (this.loadingFixed()) {
+      return of([]);
+    }
+
+    this.loadingFixed.set(true);
     return this.http
       .put<Note[]>(`${this.apiUrl}/notes/${id}`, { title, content, color })
       .pipe(
@@ -134,6 +137,7 @@ export class NoteService {
           );
           return of([]);
         }),
+        finalize(() => this.loadingFixed.set(false)),
       );
   }
 

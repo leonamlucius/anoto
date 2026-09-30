@@ -32,23 +32,33 @@
     <span class="fixed-notes-title">
       <p>FIXADAS</p>
     </span>
-    <div class="note-card-container top" [class.list]="(view$ | async) === 'list'">
+    <div
+      class="note-card-container top"
+      [class.list]="(view$ | async) === 'list'"
+    >
       @for (note of notesFixed$ | async; track note) {
         <div
           class="note-card"
+          (click)="createModalEdit(note)"
           (mouseenter)="showEdit(note)"
           (mouseleave)="hideEdit(note)"
           [attr.data-id]="note.id"
           id="{{ note.color }}"
           [style.backgroundColor]="note.color"
           [class.list]="(view$ | async) === 'list'"
+          [class.invisible]="selectedNoteIdEdited === note.id"
+          [style.view-transition-name]="
+            selectedNoteIdEdited === note.id && !selectedNote
+              ? 'active-note'
+              : 'none'
+          "
         >
           <span
             class="material-symbols-outlined"
             id="fixed"
             [class.active]="activeNoteId === note.id"
             [class.disabled]="noteService.loadingFixed()"
-            (click)="fixNote(note.id)"
+            (click)="fixNote(note.id); $event.stopPropagation()"
           >
             keep_off
           </span>
@@ -61,14 +71,19 @@
             <span
               class="material-symbols-outlined"
               (click)="
-                createModalDelete(note.id, note.title, note.content, note.color)
+                createModalDelete(
+                  note.id,
+                  note.title,
+                  note.content,
+                  note.color
+                );
+                $event.stopPropagation()
               "
             >
               delete
             </span>
-            <span class="material-symbols-outlined" (click)="createModal(note)"
-              >edit_square</span
-            >
+
+            <span class="date" [innerHTML]="note.createdAt"> </span>
           </div>
         </div>
       }
@@ -79,19 +94,26 @@
   @for (note of notesNotFixed$ | async; track note) {
     <div
       class="note-card"
+      (click)="createModalEdit(note)"
       (mouseenter)="showEdit(note)"
       (mouseleave)="hideEdit(note)"
       [attr.data-id]="note.id"
       id="{{ note.color }}"
       [style.backgroundColor]="note.color"
       [class.list]="(view$ | async) === 'list'"
+      [class.invisible]="selectedNoteIdEdited === note.id"
+      [style.view-transition-name]="
+        selectedNoteIdEdited === note.id && !selectedNote
+          ? 'active-note'
+          : 'none'
+      "
     >
       <span
         class="material-symbols-outlined"
         id="fixed"
         [class.active]="activeNoteId === note.id"
         [class.disabled]="noteService.loadingFixed()"
-        (click)="fixNote(note.id)"
+        (click)="fixNote(note.id); $event.stopPropagation()"
       >
         keep
       </span>
@@ -104,26 +126,100 @@
         <span
           class="material-symbols-outlined"
           (click)="
-            createModalDelete(note.id, note.title, note.content, note.color)
+            createModalDelete(note.id, note.title, note.content, note.color);
+            $event.stopPropagation()
           "
         >
           delete
         </span>
-        <span class="material-symbols-outlined" (click)="createModal(note)"
-          >edit_square</span
-        >
+
+        <span class="date" [innerHTML]="note.createdAt"> </span>
       </div>
     </div>
   }
 </div>
 
-@if (showModal) {
+@if (selectedNote) {
+  <div
+    class="note-card-edit"
+    (click)="
+      closeModalEdit(
+        selectedNote.id,
+        titleInput.value,
+        contentInput.value,
+        selectedNote.color
+      );
+      $event.stopPropagation()
+    "
+  >
+    <div
+      class="note-card-edit-content"
+      style="view-transition-name: active-note"
+      [style.backgroundColor]="selectedNote.color"
+    >
+      <button
+        class="close"
+        (click)="
+          closeModalEdit(
+            selectedNote.id,
+            titleInput.value,
+            contentInput.value,
+            selectedNote.color
+          );
+          $event.stopPropagation()
+        "
+      >
+        <span _ngcontent-ng-c466980344="" class="material-symbols-outlined">
+          close
+        </span>
+      </button>
+
+      <div class="note-card-content" (click)="$event.stopPropagation()">
+        <input
+          value="{{ selectedNote.title }}"
+          placeholder="Title"
+          (change)="inputChanged()"
+          #titleInput
+        />
+        <textarea
+          placeholder="Content"
+          (change)="inputChanged()"
+          #contentInput
+          >{{ selectedNote.content }}</textarea
+        >
+
+        <div class="note-card-colors">
+          @for (note of colors; track note) {
+            <div
+              class="color-option"
+              [style.background]="note.color"
+              [class.active]="selectedNote.color === note.color"
+              (click)="selectColor(note.color)"
+            ></div>
+          }
+        </div>
+      </div>
+      <div
+        class="note-card-footer"
+        [class.full]="selectedNote.updatedAt"
+        (click)="$event.stopPropagation()"
+      >
+        @if (selectedNote.updatedAt) {
+          <p class="edited">Editada: {{ selectedNote.updatedAt }}</p>
+        }
+        <p>{{ selectedNote.createdAt }}</p>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- @if (showModal) {
   <app-modal
     [note]="selectedNote"
     (closeModal)="showModal = false; loadNotes()"
   >
   </app-modal>
-}
+} -->
 @if (showDeleteModal) {
   <app-delete
     [noteId]="selectedNoteId!"

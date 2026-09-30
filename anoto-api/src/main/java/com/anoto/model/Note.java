@@ -34,7 +34,7 @@ public class Note {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @UpdateTimestamp
+    
     private LocalDateTime updatedAt;
 
     @Column(nullable = false)
