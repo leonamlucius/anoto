@@ -19,6 +19,7 @@ import {
   finalize,
   map,
   combineLatest,
+  firstValueFrom,
 } from 'rxjs';
 import { ErrorComponent } from '../../../../shared/components/error/error.component';
 @Component({
@@ -28,7 +29,14 @@ import { ErrorComponent } from '../../../../shared/components/error/error.compon
   styleUrls: ['./notes.component.scss'],
 })
 export class NotesComponent implements OnInit {
-  constructor(protected noteService: NoteService) {}
+  showDeleteModal = signal(false);
+  constructor(protected noteService: NoteService) {
+    effect(() => {
+      if (!this.showDeleteModal()) {
+        this.selectedNoteId = null;
+      }
+    });
+  }
 
   private cdr = inject(ChangeDetectorRef);
 
@@ -48,13 +56,11 @@ export class NotesComponent implements OnInit {
 
   showModal = signal(false);
 
-  showDeleteModal = false;
-
   selectedNote: any = null;
 
   selectedNoteId: number | null = null;
 
-  selectedNoteIdEdited: number | null = null;
+  selectedNoteIdEdit: number | null = null;
 
   inputChange = signal(false);
 
@@ -181,24 +187,29 @@ export class NotesComponent implements OnInit {
   }
 
   public fixNote(id: number, fixed: boolean | null = null) {
+    this.cdr.detectChanges();
+
+    if (fixed === null) {
+      this.noteService.trueShowOtherView();
+    }
+
     if (fixed !== null) {
+      this.noteService.falseShowOtherView();
       this.selectedNote.fixed = fixed;
     }
 
-    this.noteService.FixNote(id).subscribe(() => {
-      this.noteService.Allnotes().subscribe();
-    });
-  }
+    const updateDOM = async () => {
+      await firstValueFrom(this.noteService.FixNote(id));
 
-  public showModalCreateNote() {
-    document.insertBefore;
-  }
+      await firstValueFrom(this.noteService.Allnotes());
+      this.cdr.detectChanges();
+    };
 
-  public createModal(note: any = null) {
-    this.selectedNoteId = note?.id || null;
-    this.selectedNote = note;
-
-    this.showModal.set(true);
+    if ('startViewTransition' in document) {
+      (document as any).startViewTransition(updateDOM);
+    } else {
+      updateDOM();
+    }
   }
 
   public createModalDelete(
@@ -208,11 +219,13 @@ export class NotesComponent implements OnInit {
     color: string,
   ) {
     this.selectedNoteId = id;
-    this.showDeleteModal = true;
+
+    this.showDeleteModal.set(true);
   }
 
   public createModalEdit(note: any = null) {
-    this.selectedNoteIdEdited = note?.id;
+    this.noteService.falseShowOtherView();
+    this.selectedNoteIdEdit = note?.id;
 
     this.cdr.detectChanges();
 
@@ -249,12 +262,12 @@ export class NotesComponent implements OnInit {
       const transition = (document as any).startViewTransition(updateDOM);
 
       transition.finished.then(() => {
-        this.selectedNoteIdEdited = null;
+        this.selectedNoteIdEdit = null;
         this.cdr.detectChanges();
       });
     } else {
       updateDOM();
-      this.selectedNoteIdEdited = null;
+      this.selectedNoteIdEdit = null;
     }
   }
 
@@ -289,7 +302,6 @@ export class NotesComponent implements OnInit {
   }
 
   public hideEdit(note: any) {
-    this.activeNoteId = null;
     this.activeNoteId = null;
   }
 }

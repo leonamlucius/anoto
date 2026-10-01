@@ -147,7 +147,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
 }
 
 .note-card-edit-content {
@@ -310,17 +309,21 @@
 .note-card-footer.full {
   justify-content: space-between;
 }
-::view-transition-group(active-note) {
+::ng-deep ::view-transition-group(active-note) {
   animation-duration: 0.28s;
   animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+  z-index: 10000;
 }
 
-::view-transition-old(active-note),
-::view-transition-new(active-note) {
+
+::ng-deep ::view-transition-old(active-note),
+::ng-deep ::view-transition-new(active-note) {
   height: 100%;
-  overflow: hidden;
+  width: 100%;
   mix-blend-mode: normal;
+  object-fit: cover;
 }
+
 
 .note-card.list {
   width: 100%;
