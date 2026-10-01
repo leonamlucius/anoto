@@ -25,15 +25,15 @@
   <div class="action-item" [class.active]="activeItem() === 'notes'">
     <p>Visualizar por:</p>
     <div class="view-buttons">
-      <button value="notes active"
+      <button value="notes"
        [class.active]="activeView() === 'notes'" 
        (click)="setActiveView('notes')"
-        [style.view-transition-name]="activeView() === 'notes' ? 'view-active' : 'none'"
+        [style.view-transition-name]="activeView() === 'notes' && activeItem() === 'notes' ? 'view-active' : 'none'"
        >Notas</button>
       <button value="list"
        [class.active]="activeView() === 'list'" 
        (click)="setActiveView('list')"
-       [style.view-transition-name]="activeView() === 'list' ? 'view-active' : 'none'"
+       [style.view-transition-name]="activeView() === 'list' && activeItem() === 'notes' ? 'view-active' : 'none'"
        >Lista</button>
     </div>
   </div>
