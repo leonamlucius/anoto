@@ -25,8 +25,16 @@
   <div class="action-item" [class.active]="activeItem() === 'notes'">
     <p>Visualizar por:</p>
     <div class="view-buttons">
-      <button value="notes" [class.active]="activeView() === 'notes'" (click)="setActiveView('notes')">Notas</button>
-      <button value="list" [class.active]="activeView() === 'list'" (click)="setActiveView('list')">Lista</button>
+      <button value="notes active"
+       [class.active]="activeView() === 'notes'" 
+       (click)="setActiveView('notes')"
+        [style.view-transition-name]="activeView() === 'notes' ? 'view-active' : 'none'"
+       >Notas</button>
+      <button value="list"
+       [class.active]="activeView() === 'list'" 
+       (click)="setActiveView('list')"
+       [style.view-transition-name]="activeView() === 'list' ? 'view-active' : 'none'"
+       >Lista</button>
     </div>
   </div>
 </div>

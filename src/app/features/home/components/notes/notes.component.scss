@@ -315,8 +315,22 @@
   animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
 }
 
+::view-transition-group(note) {
+  animation-duration: 0.28s;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+
 ::view-transition-old(active-note),
 ::view-transition-new(active-note) {
+  height: 100%;
+  overflow: hidden;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(note),
+::view-transition-new(note) {
+  z-index: -1000;
   height: 100%;
   overflow: hidden;
   mix-blend-mode: normal;

@@ -40,17 +40,19 @@
         <div
           class="note-card"
           (click)="createModalEdit(note)"
-          (mouseenter)="showEdit(note)"
-          (mouseleave)="hideEdit(note)"
+          (pointerenter)="showEdit(note)"
+          (pointerleave)="hideEdit(note)"
           [attr.data-id]="note.id"
           id="{{ note.color }}"
           [style.backgroundColor]="note.color"
           [class.list]="(view$ | async) === 'list'"
           [class.invisible]="selectedNoteIdEdited === note.id"
           [style.view-transition-name]="
-            selectedNoteIdEdited === note.id && !selectedNote
-              ? 'active-note'
-              : 'none'
+            (noteService.showOtherView$ | async) === true
+              ? 'note-' + note.id
+              : selectedNoteIdEdited === note.id && !selectedNote
+                ? 'active-note'
+                : 'none'
           "
         >
           <span
@@ -95,17 +97,19 @@
     <div
       class="note-card"
       (click)="createModalEdit(note)"
-      (mouseenter)="showEdit(note)"
-      (mouseleave)="hideEdit(note)"
+      (pointerenter)="showEdit(note)"
+      (pointerleave)="hideEdit(note)"
       [attr.data-id]="note.id"
       id="{{ note.color }}"
       [style.backgroundColor]="note.color"
       [class.list]="(view$ | async) === 'list'"
       [class.invisible]="selectedNoteIdEdited === note.id"
       [style.view-transition-name]="
-        selectedNoteIdEdited === note.id && !selectedNote
-          ? 'active-note'
-          : 'none'
+        (noteService.showOtherView$ | async) === true
+          ? 'note-' + note.id
+          : selectedNoteIdEdited === note.id && !selectedNote
+            ? 'active-note'
+            : 'none'
       "
     >
       <span

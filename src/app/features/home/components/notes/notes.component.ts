@@ -19,6 +19,7 @@ import {
   finalize,
   map,
   combineLatest,
+  firstValueFrom,
 } from 'rxjs';
 import { ErrorComponent } from '../../../../shared/components/error/error.component';
 @Component({
@@ -181,13 +182,29 @@ export class NotesComponent implements OnInit {
   }
 
   public fixNote(id: number, fixed: boolean | null = null) {
+    this.cdr.detectChanges();
+
+    if(fixed === null) {
+      this.noteService.trueShowOtherView();
+    }
+
     if (fixed !== null) {
+      this.noteService.falseShowOtherView();
       this.selectedNote.fixed = fixed;
     }
 
-    this.noteService.FixNote(id).subscribe(() => {
-      this.noteService.Allnotes().subscribe();
-    });
+    const updateDOM = async () => {
+      await firstValueFrom(this.noteService.FixNote(id));
+
+      await firstValueFrom(this.noteService.Allnotes());
+      this.cdr.detectChanges();
+    };
+
+    if ('startViewTransition' in document) {
+      (document as any).startViewTransition(updateDOM);
+    } else {
+      updateDOM();
+    }
   }
 
   public showModalCreateNote() {
@@ -212,6 +229,7 @@ export class NotesComponent implements OnInit {
   }
 
   public createModalEdit(note: any = null) {
+    this.noteService.falseShowOtherView();
     this.selectedNoteIdEdited = note?.id;
 
     this.cdr.detectChanges();

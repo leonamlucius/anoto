@@ -40,6 +40,9 @@ export class NoteService {
   private viewSubject = new BehaviorSubject<'notes' | 'list'>('notes');
   public view$ = this.viewSubject.asObservable();
 
+  private showOtherViewSubject = new BehaviorSubject<boolean>(false);
+  public showOtherView$ = this.showOtherViewSubject.asObservable();
+
   public filteredNotes$: Observable<Note[]> = combineLatest([
     this.allNotesObservable$,
     this.selectedColor$,
@@ -53,6 +56,17 @@ export class NoteService {
   );
 
   private apiUrl = environment.apiUrl;
+
+
+  public falseShowOtherView() {
+    this.showOtherViewSubject.next(false);
+  }
+  public trueShowOtherView() {
+    if (this.showOtherViewSubject.getValue() === true) {
+      return;
+    }
+    this.showOtherViewSubject.next(true);
+  }
 
   public setOrderBy(orderBy: string | null) {
     this.orderBySubject.next(orderBy);
