@@ -29,7 +29,14 @@ import { ErrorComponent } from '../../../../shared/components/error/error.compon
   styleUrls: ['./notes.component.scss'],
 })
 export class NotesComponent implements OnInit {
-  constructor(protected noteService: NoteService) {}
+  showDeleteModal = signal(false);
+  constructor(protected noteService: NoteService) {
+    effect(() => {
+      if (!this.showDeleteModal()) {
+        this.selectedNoteId = null;
+      }
+    });
+  }
 
   private cdr = inject(ChangeDetectorRef);
 
@@ -49,13 +56,11 @@ export class NotesComponent implements OnInit {
 
   showModal = signal(false);
 
-  showDeleteModal = false;
-
   selectedNote: any = null;
 
   selectedNoteId: number | null = null;
 
-  selectedNoteIdEdited: number | null = null;
+  selectedNoteIdEdit: number | null = null;
 
   inputChange = signal(false);
 
@@ -184,7 +189,7 @@ export class NotesComponent implements OnInit {
   public fixNote(id: number, fixed: boolean | null = null) {
     this.cdr.detectChanges();
 
-    if(fixed === null) {
+    if (fixed === null) {
       this.noteService.trueShowOtherView();
     }
 
@@ -207,17 +212,6 @@ export class NotesComponent implements OnInit {
     }
   }
 
-  public showModalCreateNote() {
-    document.insertBefore;
-  }
-
-  public createModal(note: any = null) {
-    this.selectedNoteId = note?.id || null;
-    this.selectedNote = note;
-
-    this.showModal.set(true);
-  }
-
   public createModalDelete(
     id: number,
     title: string,
@@ -225,12 +219,13 @@ export class NotesComponent implements OnInit {
     color: string,
   ) {
     this.selectedNoteId = id;
-    this.showDeleteModal = true;
+
+    this.showDeleteModal.set(true);
   }
 
   public createModalEdit(note: any = null) {
     this.noteService.falseShowOtherView();
-    this.selectedNoteIdEdited = note?.id;
+    this.selectedNoteIdEdit = note?.id;
 
     this.cdr.detectChanges();
 
@@ -267,12 +262,12 @@ export class NotesComponent implements OnInit {
       const transition = (document as any).startViewTransition(updateDOM);
 
       transition.finished.then(() => {
-        this.selectedNoteIdEdited = null;
+        this.selectedNoteIdEdit = null;
         this.cdr.detectChanges();
       });
     } else {
       updateDOM();
-      this.selectedNoteIdEdited = null;
+      this.selectedNoteIdEdit = null;
     }
   }
 
@@ -307,7 +302,6 @@ export class NotesComponent implements OnInit {
   }
 
   public hideEdit(note: any) {
-    this.activeNoteId = null;
     this.activeNoteId = null;
   }
 }

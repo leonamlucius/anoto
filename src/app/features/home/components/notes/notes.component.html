@@ -36,7 +36,7 @@
       class="note-card-container top"
       [class.list]="(view$ | async) === 'list'"
     >
-      @for (note of notesFixed$ | async; track note) {
+      @for (note of notesFixed$ | async; track note.id) {
         <div
           class="note-card"
           (click)="createModalEdit(note)"
@@ -46,11 +46,11 @@
           id="{{ note.color }}"
           [style.backgroundColor]="note.color"
           [class.list]="(view$ | async) === 'list'"
-          [class.invisible]="selectedNoteIdEdited === note.id"
+          [class.invisible]="selectedNoteIdEdit === note.id"
           [style.view-transition-name]="
             (noteService.showOtherView$ | async) === true
               ? 'note-' + note.id
-              : selectedNoteIdEdited === note.id && !selectedNote
+              : selectedNoteIdEdit === note.id && !selectedNote
                 ? 'active-note'
                 : 'none'
           "
@@ -93,7 +93,7 @@
   }
 }
 <div class="note-card-container" [class.list]="(view$ | async) === 'list'">
-  @for (note of notesNotFixed$ | async; track note) {
+  @for (note of notesNotFixed$ | async; track note.id) {
     <div
       class="note-card"
       (click)="createModalEdit(note)"
@@ -103,11 +103,11 @@
       id="{{ note.color }}"
       [style.backgroundColor]="note.color"
       [class.list]="(view$ | async) === 'list'"
-      [class.invisible]="selectedNoteIdEdited === note.id"
+      [class.invisible]="selectedNoteIdEdit === note.id"
       [style.view-transition-name]="
         (noteService.showOtherView$ | async) === true
           ? 'note-' + note.id
-          : selectedNoteIdEdited === note.id && !selectedNote
+          : selectedNoteIdEdit === note.id && !selectedNote
             ? 'active-note'
             : 'none'
       "
@@ -142,6 +142,14 @@
     </div>
   }
 </div>
+
+
+@if (showDeleteModal()) {
+  <app-delete
+    [noteId]="selectedNoteId!"
+    (closeModal)="showDeleteModal.set(false)"
+  ></app-delete>
+}
 
 @if (selectedNote) {
   <div
@@ -242,18 +250,4 @@
       </div>
     </div>
   </div>
-}
-
-<!-- @if (showModal) {
-  <app-modal
-    [note]="selectedNote"
-    (closeModal)="showModal = false; loadNotes()"
-  >
-  </app-modal>
-} -->
-@if (showDeleteModal) {
-  <app-delete
-    [noteId]="selectedNoteId!"
-    (closeModal)="showDeleteModal = false"
-  ></app-delete>
 }

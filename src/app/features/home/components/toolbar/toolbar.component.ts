@@ -1,18 +1,19 @@
 import { Component, signal, ChangeDetectorRef, inject } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
 import { NoteService } from '../../services/note.service';
 
 @Component({
   selector: 'app-toolbar',
-  imports: [],
+  imports: [AsyncPipe],
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss',
 })
 export class ToolbarComponent {
-  constructor(private noteService: NoteService) {}
+  constructor(protected noteService: NoteService) {}
   public activeAction = signal<boolean>(false);
   public activeItem = signal<'date' | 'notes' | string | null>(null);
 
-  public activeView = signal<'notes' | 'list' >('notes');
+  public activeView = signal<'notes' | 'list'>('notes');
 
   private cdr = inject(ChangeDetectorRef);
 
