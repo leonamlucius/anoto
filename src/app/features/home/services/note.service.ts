@@ -29,7 +29,7 @@ export class NoteService {
 
   public allNotesObservable$ = this.allNotes.asObservable();
 
-  public loadingFixed = signal(false);
+  public loading = signal(false);
 
   private selectedColorSubject = new BehaviorSubject<string | null>(null);
   public selectedColor$ = this.selectedColorSubject.asObservable();
@@ -57,6 +57,9 @@ export class NoteService {
 
   private apiUrl = environment.apiUrl;
 
+  public setLoading() {
+    this.loading.set(!this.loading().valueOf());
+  }
 
   public falseShowOtherView() {
     this.showOtherViewSubject.next(false);
@@ -84,9 +87,12 @@ export class NoteService {
       this.selectedColorSubject.next(color);
     }
   }
-  public Allnotes(): Observable<Note[]> {
+
+  public setNotes(notes: Note[]) {
+    this.allNotes.next(notes);
+  }
+  public FetchNotes(): Observable<Note[]> {
     return this.http.get<Note[]>(`${this.apiUrl}/notes`, {}).pipe(
-      tap((notes) => this.allNotes.next(notes)),
       catchError((error) => {
         console.error('Failed to fetch notes:', error);
         this.alertService.show(
@@ -95,6 +101,11 @@ export class NoteService {
         );
         return of([]);
       }),
+    );
+  }
+  public Allnotes(): Observable<Note[]> {
+    return this.FetchNotes().pipe(
+      tap((notes) => this.allNotes.next(notes))
     );
   }
 
@@ -141,9 +152,7 @@ export class NoteService {
     content: string,
     color: string,
   ): Observable<Note[]> {
-    if (this.loadingFixed()) {
-      return of([]);
-    }
+    
 
     if (!title || !content || !color) {
       this.alertService.show(
@@ -153,7 +162,6 @@ export class NoteService {
       return of([]);
     }
 
-    this.loadingFixed.set(true);
     return this.http
       .put<Note[]>(`${this.apiUrl}/notes/${id}`, { title, content, color })
       .pipe(
@@ -165,15 +173,10 @@ export class NoteService {
           );
           return of([]);
         }),
-        finalize(() => this.loadingFixed.set(false)),
       );
   }
 
   public FixNote(id: number): Observable<Note[]> {
-    if (this.loadingFixed()) {
-      return of([]);
-    }
-    this.loadingFixed.set(true);
     return this.http.put<Note[]>(`${this.apiUrl}/notes/fixed/${id}`, {}).pipe(
       catchError((error) => {
         console.error('Failed to fix note:', error);
@@ -183,7 +186,6 @@ export class NoteService {
         );
         return of([]);
       }),
-      finalize(() => this.loadingFixed.set(false)),
     );
   }
 }

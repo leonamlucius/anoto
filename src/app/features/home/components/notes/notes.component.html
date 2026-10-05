@@ -46,6 +46,7 @@
           id="{{ note.color }}"
           [style.backgroundColor]="note.color"
           [class.list]="(view$ | async) === 'list'"
+          [class.disabled]="noteService.loading() && (selectedNoteIdFixed === note.id || selectedNoteIdEdit === note.id) "
           [class.invisible]="selectedNoteIdEdit === note.id"
           [style.view-transition-name]="
             (noteService.showOtherView$ | async) === true
@@ -59,7 +60,7 @@
             class="material-symbols-outlined"
             id="fixed"
             [class.active]="activeNoteId === note.id"
-            [class.disabled]="noteService.loadingFixed()"
+            [class.disabled]="noteService.loading()"
             (click)="fixNote(note.id); $event.stopPropagation()"
           >
             keep_off
@@ -103,6 +104,7 @@
       id="{{ note.color }}"
       [style.backgroundColor]="note.color"
       [class.list]="(view$ | async) === 'list'"
+      [class.disabled]="noteService.loading() && (selectedNoteIdFixed === note.id || selectedNoteIdEdit === note.id)"
       [class.invisible]="selectedNoteIdEdit === note.id"
       [style.view-transition-name]="
         (noteService.showOtherView$ | async) === true
@@ -116,7 +118,7 @@
         class="material-symbols-outlined"
         id="fixed"
         [class.active]="activeNoteId === note.id"
-        [class.disabled]="noteService.loadingFixed()"
+        [class.disabled]="noteService.loading()"
         (click)="fixNote(note.id); $event.stopPropagation()"
       >
         keep
@@ -225,7 +227,7 @@
                 fixNote(selectedNote.id, !selectedNote.fixed);
                 $event.stopPropagation()
               "
-              [class.disabled]="noteService.loadingFixed()"
+              [class.disabled]="noteService.loading()"
             >
               @if (selectedNote.fixed) {
                 <span class="material-symbols-outlined"> keep_off </span>
