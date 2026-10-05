@@ -14,7 +14,7 @@ export class TopbarComponent {
 
   constructor(private noteService: NoteService) {
     effect(() => {
-      this.progressActivityVisible = this.noteService.loadingFixed();
+      this.progressActivityVisible = this.noteService.loading();
     });
   }
 }

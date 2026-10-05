@@ -20,6 +20,7 @@ import {
   map,
   combineLatest,
   firstValueFrom,
+  switchMap,
 } from 'rxjs';
 import { ErrorComponent } from '../../../../shared/components/error/error.component';
 @Component({
@@ -48,8 +49,6 @@ export class NotesComponent implements OnInit {
 
   public notesNotFixed$!: Observable<Note[]>;
 
-  public loadingFixed = signal(false);
-
   public view$!: Observable<string | 'notes' | 'list'>;
 
   activeNoteId: number | null = null;
@@ -61,6 +60,8 @@ export class NotesComponent implements OnInit {
   selectedNoteId: number | null = null;
 
   selectedNoteIdEdit: number | null = null;
+
+  selectedNoteIdFixed: number | null = null;
 
   inputChange = signal(false);
 
@@ -186,8 +187,10 @@ export class NotesComponent implements OnInit {
     this.pageAreLoaded = true;
   }
 
-  public fixNote(id: number, fixed: boolean | null = null) {
+  public async fixNote(id: number, fixed: boolean | null = null) {
     this.cdr.detectChanges();
+
+    this.selectedNoteIdFixed = id;
 
     if (fixed === null) {
       this.noteService.trueShowOtherView();
@@ -198,17 +201,19 @@ export class NotesComponent implements OnInit {
       this.selectedNote.fixed = fixed;
     }
 
-    const updateDOM = async () => {
-      await firstValueFrom(this.noteService.FixNote(id));
+    await firstValueFrom(this.noteService.FixNote(this.selectedNoteIdFixed));
+    const notes = await firstValueFrom(this.noteService.FetchNotes());
 
-      await firstValueFrom(this.noteService.Allnotes());
+    const updateDOM = async () => {
+      this.noteService.setNotes(notes);
       this.cdr.detectChanges();
+      this.selectedNoteIdFixed = null;
     };
 
     if ('startViewTransition' in document) {
       (document as any).startViewTransition(updateDOM);
     } else {
-      updateDOM();
+      await updateDOM();
     }
   }
 
@@ -267,7 +272,6 @@ export class NotesComponent implements OnInit {
       });
     } else {
       updateDOM();
-      this.selectedNoteIdEdit = null;
     }
   }
 
@@ -283,11 +287,11 @@ export class NotesComponent implements OnInit {
       .pipe(
         finalize(() => {
           this.inputChange.set(false);
+          this.selectedNoteIdEdit = null;
         }),
+        switchMap(() => this.noteService.Allnotes()),
       )
-      .subscribe(() => {
-        this.noteService.Allnotes().subscribe();
-      });
+      .subscribe();
   }
 
   public selectColor(color: string) {

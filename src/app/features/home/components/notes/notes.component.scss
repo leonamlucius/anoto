@@ -136,6 +136,12 @@
 .note-card.invisible p {
   opacity: 0;
 }
+
+.note-card.disabled{
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
+}
 .note-card.animate {
   animation: popOut 0.3s ease;
 }
