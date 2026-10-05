@@ -1,76 +1,175 @@
+.alert-container {
+  position: fixed;
+  bottom: 20px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: auto;
+  max-height: auto;
+}
+
 div.success,
 div.error,
 div.warning {
-  position: fixed;
+  font-weight: 500;
   display: flex;
-  height: 50px;
+  flex-direction: column;
+  height: auto;
   width: auto;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
-  gap: 10px;
-  top: 20px;
-  right: 10px;
-  padding: 10px 10px;
-  z-index: 9999;
+  padding: 10px 15px 0px 15px;
   border-radius: 12px;
-  background-color: white;
-  animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   transition:
     opacity 0.4s,
     transform 0.4s;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 9999;
+}
+
+div .alert-body {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+}
+
+div .icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  width: 30px;
+  box-sizing: border-box;
+  padding: 15px;
+  color: inherit;
+}
+
+div button {
+  display: inline-flex;
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
 }
 
 div.success.hide,
 div.error.hide,
 div.warning.hide {
-  animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 div.success {
-  border-color: #4caf50;
+  background-color: #d4edda;
   color: #4caf50;
 }
 
 div.error {
-  border-color: #f44336;
-  color: #f44336;
+  background-color: #faa0a0;
+  color: #580d14;
 }
 
 div.warning {
-  border-color: #ff9800;
-  color: #ff9800;
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+div .progress-bar {
+  display: block;
+  height: 1px;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  animation: progressBar 5s linear forwards;
+  margin-bottom: 10px;
+}
+
+@keyframes progressBar {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0;
+  }
 }
 
 @media (max-width: 600px) {
+  .alert-container {
+    width: 100%;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0 15px;
+  }
   div.success,
   div.error,
   div.warning {
-    width: 90%;
-    right: 5%;
-    font-size: 22px;
-    padding: 35px 15px;
+    width: 100%;
+    font-size: 0.95em;
     text-align: center;
     box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+    animation: slideDownMobile 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
+
+  div.success.hide,
+  div.error.hide,
+  div.warning.hide {
+    animation: slideUpMobile 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  div .progress-bar {
+  
+  margin-top: 10px;
+}
 }
 
 @keyframes slideUp {
-  0% {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
     opacity: 1;
     transform: translateY(0);
   }
-  100% {
-    opacity: 0;
-    transform: translateY(-60px);
-  }
 }
 @keyframes slideDown {
-  0% {
-    opacity: 0;
-    transform: translateY(-60px);
+  from {
+    opacity: 1;
+    transform: translateY(0);
   }
-  100% {
+  to {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+@keyframes slideUpMobile {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes slideDownMobile {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
     opacity: 1;
     transform: translateY(0);
   }
