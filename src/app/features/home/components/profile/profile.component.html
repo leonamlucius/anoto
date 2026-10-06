@@ -1,8 +1,3 @@
-<button id="back-button" (click)="toggleProfileExpanded()" [class.active]="profileExpanded()">
-  <span class="material-symbols-outlined"> chevron_backward </span>
-</button>
-
-
 <div class="profile-container" [class.active]="profileExpanded()">
   <div class="photo">
     <img
@@ -10,6 +5,4 @@
       alt="Profile Photo"
     />
   </div>
-
-  <div class="name" [class.active]="profileExpanded()">{{ (userName$ | async)?.name }}</div>
 </div>

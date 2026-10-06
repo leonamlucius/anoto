@@ -5,12 +5,13 @@ import {AddComponent} from '../../../../shared/components/add/add.component';
 import { RouterLink, ɵEmptyOutletComponent } from '@angular/router';
 import { NoteService } from '../../services/note.service';
 import { AlertService } from '../../../../shared/services/alert.service';
+import { ProfileComponent } from '../../../home/components/profile/profile.component';
 import { Observable, catchError, of, map, take} from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [ModalComponent, AddComponent, RouterLink, AsyncPipe, ɵEmptyOutletComponent],
+  imports: [ModalComponent, AddComponent, RouterLink, AsyncPipe, ɵEmptyOutletComponent, ProfileComponent],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
 })
