@@ -37,14 +37,14 @@ export class CadastrarComponent {
 
     if (password.length < 8 || confirmPassword.length < 8) {
       this.alertService.show(
-        'error',
+        'warning',
         'A senha deve conter pelo menos 8 caracteres. Por favor, tente novamente.',
       );
       return;
     }
     if (password !== confirmPassword) {
       this.alertService.show(
-        'error',
+        'warning',
         'As senhas não coincidem. Por favor, tente novamente.',
       );
       return;
