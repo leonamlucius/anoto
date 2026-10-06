@@ -23,9 +23,10 @@ import {
   switchMap,
 } from 'rxjs';
 import { ErrorComponent } from '../../../../shared/components/error/error.component';
+import { WelcomeComponent } from '../../../../shared/components/welcome/welcome.component';
 @Component({
   selector: 'app-notes',
-  imports: [AsyncPipe, ModalComponent, DeleteComponent, ErrorComponent],
+  imports: [AsyncPipe, ModalComponent, DeleteComponent, ErrorComponent, WelcomeComponent],
   templateUrl: './notes.component.html',
   styleUrls: ['./notes.component.scss'],
 })
