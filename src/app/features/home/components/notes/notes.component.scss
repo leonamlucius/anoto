@@ -69,7 +69,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  gap: 60px;
+
   text-align: center;
 }
 
@@ -79,11 +79,6 @@
   font-weight: 500;
 }
 
-.no-notes p {
-  margin: 0;
-  font-size: 22px;
-  font-weight: 500;
-}
 
 .no-notes #loading {
   font-size: 35px;
@@ -91,20 +86,7 @@
   z-index: -10;
 }
 
-.no-notes .mockup-button {
-  width: 40px;
-  height: 40px;
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background-color: #383838;
-  color: white;
-  transition: all 0.3s ease;
-  border: none;
-  vertical-align: middle;
-}
+
 .note-card {
   width: 210px;
   height: 200px;
@@ -420,12 +402,6 @@
     display: flex;
     flex-direction: column;
     gap: 5px;
-  }
-
-  .no-notes {
-    height: 70dvh;
-    word-break: break-word;
-    white-space: pre-wrap;
   }
 
   .no-notes p {

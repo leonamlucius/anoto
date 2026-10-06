@@ -7,21 +7,22 @@
   </div>
 }
 
-@if ((notes$ | async)?.length === 0 && pageAreLoaded) {
+@if (
+  (notes$ | async)?.length === 0 &&
+  pageAreLoaded &&
+  (noteService.selectedColor$ | async) === null
+) {
   <div class="no-notes">
-    <app-error></app-error>
-    <p>
-      Por favor, clique em
-      <button class="mockup-button">
-        <span class="material-symbols-outlined"> add </span>
-      </button>
-      para adicionar uma nova nota.
-    </p>
+    <app-welcome></app-welcome>
   </div>
 }
 
-@if ((notes$ | async)?.length !== 0) {
-  <div class="no-notes-color" style="display: none">
+@if (
+  (notes$ | async)?.length === 0 &&
+  pageAreLoaded &&
+  (noteService.selectedColor$ | async) !== null
+) {
+  <div class="no-notes-color">
     <app-error></app-error>
     <p>Não há notas disponíveis desssa cor.</p>
   </div>
@@ -46,7 +47,10 @@
           id="{{ note.color }}"
           [style.backgroundColor]="note.color"
           [class.list]="(view$ | async) === 'list'"
-          [class.disabled]="noteService.loading() && (selectedNoteIdFixed === note.id || selectedNoteIdEdit === note.id) "
+          [class.disabled]="
+            noteService.loading() &&
+            (selectedNoteIdFixed === note.id || selectedNoteIdEdit === note.id)
+          "
           [class.invisible]="selectedNoteIdEdit === note.id"
           [style.view-transition-name]="
             (noteService.showOtherView$ | async) === true
@@ -104,7 +108,10 @@
       id="{{ note.color }}"
       [style.backgroundColor]="note.color"
       [class.list]="(view$ | async) === 'list'"
-      [class.disabled]="noteService.loading() && (selectedNoteIdFixed === note.id || selectedNoteIdEdit === note.id)"
+      [class.disabled]="
+        noteService.loading() &&
+        (selectedNoteIdFixed === note.id || selectedNoteIdEdit === note.id)
+      "
       [class.invisible]="selectedNoteIdEdit === note.id"
       [style.view-transition-name]="
         (noteService.showOtherView$ | async) === true
@@ -144,7 +151,6 @@
     </div>
   }
 </div>
-
 
 @if (showDeleteModal()) {
   <app-delete
