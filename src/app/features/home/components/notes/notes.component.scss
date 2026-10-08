@@ -154,6 +154,30 @@
   position: relative;
   transition: all 0.3s ease;
 }
+.note-card-check {
+  background-color: #383838;
+  border: none;
+  cursor: pointer;
+  height: 1.5em;
+  width: 1.5em;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.note-card-check.visible {
+  display: flex;
+}
+
+.note-card-check span {
+  scale: 0.6;
+}
+
 .note-header {
   width: 100%;
   display: flex;
@@ -395,6 +419,10 @@
   }
 
   .note-card #delete {
+    visibility: hidden;
+  }
+
+  .note-card-check {
     visibility: hidden;
   }
 

@@ -64,6 +64,8 @@ export class NotesComponent implements OnInit {
 
   suspendNoteIdEdit = <number | null>null;
 
+  suspendNoteIdToggle = <number[]>[];
+
   private longPressTimer?: ReturnType<typeof setTimeout>;
 
   inputChange = signal(false);
@@ -136,6 +138,38 @@ export class NotesComponent implements OnInit {
     );
   }
 
+  public markNoteActionToggle(
+    id: number,
+    event: PointerEvent | null,
+    isFixed: boolean | null,
+  ) {
+    const selectedNoteActions = this.noteService.getSelectedNoteActions();
+
+    if (selectedNoteActions.some((note) => note.id === id)) {
+      const updatedSelection = selectedNoteActions.filter(
+        (note) => note.id !== id,
+      );
+      this.noteService.setSelectedNoteAction(updatedSelection);
+      this.noteService.setNumberSelected(updatedSelection.length);
+
+      if (updatedSelection.length === 0) {
+        this.suspendNoteIdToggle = [];
+        this.noteService.setActionbarActive(false);
+      }
+      return;
+    }
+
+    const updatedSelection = [
+      ...this.noteService.getSelectedNoteActions(),
+      { id },
+    ];
+    this.noteService.setSelectedNoteAction(updatedSelection);
+    this.suspendNoteIdToggle = [...(this.suspendNoteIdToggle ?? []), id];
+    this.noteService.setActionbarActive(true);
+    this.noteService.setNumberSelected(updatedSelection.length);
+    this.longPressTimer = undefined;
+  }
+
   public markNoteAction(id: number, event: PointerEvent, isFixed: boolean) {
     if (event.pointerType != 'touch') {
       return;
@@ -147,12 +181,11 @@ export class NotesComponent implements OnInit {
       const updatedSelection = selectedNoteActions.filter(
         (note) => note.id !== id,
       );
-      this.noteService.setSelectedNoteAction(updatedSelection);
-      this.suspendNoteIdEdit = id;
-      this.cancelMarkNoteAction();
+      
       this.noteService.setNumberSelected(updatedSelection.length);
 
       if (updatedSelection.length === 0) {
+        this.suspendNoteIdEdit = null;
         this.noteService.setActionbarActive(false);
       }
       return;
@@ -286,10 +319,13 @@ export class NotesComponent implements OnInit {
   }
 
   public createModalEdit(note: any = null) {
-    if (this.suspendNoteIdEdit === note?.id) {
-      this.suspendNoteIdEdit = null;
+    const selectedActions = this.noteService.getSelectedNoteActions();
+
+    if (selectedActions.length > 0) {
+      this.markNoteActionToggle(note.id, null, null);
       return;
     }
+
     this.noteService.falseShowOtherView();
     this.selectedNoteIdEdit = note?.id;
 

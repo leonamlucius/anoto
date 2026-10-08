@@ -62,7 +62,6 @@
     #ce94d8 81%
   );
   border-radius: 50px;
-  position: relative;
   transition:
     all 0.3s ease-in-out,
     background-color 0.01s ease-out;
@@ -107,7 +106,6 @@
   object-fit: cover;
   overflow: hidden;
   border-radius: 50%;
-  position: relative;
   flex-shrink: 0;
 }
 

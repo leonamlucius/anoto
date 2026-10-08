@@ -90,6 +90,19 @@
 
             <span class="date" [innerHTML]="note.createdAt"> </span>
           </div>
+
+          <button
+            (click)="
+              markNoteActionToggle(note.id, $event, note.fixed);
+              $event.stopPropagation()
+            "
+            class="note-card-check"
+            [class.visible]="activeNoteId === note.id || (noteService.selectedNoteAction$ | async)?.some(selectedNote => selectedNote.id === note.id)"
+          >
+            <span class="material-symbols-outlined" [style.color]="note.color">
+              check
+            </span>
+          </button>
         </div>
       }
     </div>
@@ -149,6 +162,19 @@
 
         <span class="date" [innerHTML]="note.createdAt"> </span>
       </div>
+
+      <button
+        (click)="
+          markNoteActionToggle(note.id, $event, note.fixed);
+          $event.stopPropagation()
+        "
+        class="note-card-check"
+        [class.visible]="activeNoteId === note.id || (noteService.selectedNoteAction$ | async)?.some(selectedNote => selectedNote.id === note.id)"
+      >
+        <span class="material-symbols-outlined" [style.color]="note.color">
+          check
+        </span>
+      </button>
     </div>
   }
 </div>
