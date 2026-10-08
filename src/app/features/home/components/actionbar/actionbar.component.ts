@@ -29,6 +29,7 @@ export class ActionbarComponent implements OnInit {
 
   selectedNoteId: Note[] = [];
 
+
   constructor(protected noteService: NoteService) {}
 
   ngOnInit() {
@@ -39,6 +40,8 @@ export class ActionbarComponent implements OnInit {
             this.closeActionbar();
             return;
           }
+
+          console.log('Actionbar active state changed:', active);
 
           this.exiting = false;
           this.actionbarActive = active;
@@ -53,6 +56,7 @@ export class ActionbarComponent implements OnInit {
         }),
       )
       .subscribe();
+
   }
 
   public createModalDelete() {

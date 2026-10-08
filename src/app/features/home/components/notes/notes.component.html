@@ -54,7 +54,7 @@
           "
           [class.disabled]="
             noteService.loading() &&
-            (selectedNoteIdFixed === note.id || selectedNoteIdEdit === note.id)
+            (selectedNoteIdFixed === note.id || selectedNoteIdEdit === note.id || (noteService.selectedNoteAction$ | async)?.some(selectedNote => selectedNote.id === note.id))
           "
           [class.invisible]="selectedNoteIdEdit === note.id"
           [style.view-transition-name]="
@@ -126,7 +126,7 @@
       "
       [class.disabled]="
         noteService.loading() &&
-        (selectedNoteIdFixed === note.id || selectedNoteIdEdit === note.id)
+        (selectedNoteIdFixed === note.id || selectedNoteIdEdit === note.id || (noteService.selectedNoteAction$ | async)?.some(selectedNote => selectedNote.id === note.id))
       "
       [class.invisible]="selectedNoteIdEdit === note.id"
       [style.view-transition-name]="

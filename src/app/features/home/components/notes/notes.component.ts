@@ -161,7 +161,7 @@ export class NotesComponent implements OnInit {
 
     const updatedSelection = [
       ...this.noteService.getSelectedNoteActions(),
-      { id },
+      { id, fixed: isFixed },
     ];
     this.noteService.setSelectedNoteAction(updatedSelection);
     this.suspendNoteIdToggle = [...(this.suspendNoteIdToggle ?? []), id];
@@ -195,7 +195,7 @@ export class NotesComponent implements OnInit {
     this.longPressTimer = setTimeout(() => {
       const updatedSelection = [
         ...this.noteService.getSelectedNoteActions(),
-        { id },
+        { id, fixed: isFixed },
       ];
       this.noteService.setSelectedNoteAction(updatedSelection);
       this.suspendNoteIdEdit = id;
