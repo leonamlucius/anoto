@@ -11,11 +11,8 @@
     <p>{{ regularizeText(numberSelected) }}</p>
   </div>
 
-  <div
-    class="actionbar-left"
-    (pointerdown)="createModalDelete(); $event.stopPropagation()"
-  >
-    <button>
+  <div class="actionbar-left">
+    <button (pointerup)="createModalDelete(); $event.stopPropagation()">
       <span class="material-symbols-outlined">delete </span>
     </button>
 
@@ -25,9 +22,6 @@
   </div>
 </div>
 
-
-@if (showDeleteModal()) {
-  <app-delete
-    (closeModal)="showDeleteModal.set(false)"
-  ></app-delete>
+@if (noteService.showDeleteModal$ | async) {
+  <app-delete (closeModal)="noteService.setShowDeleteModal(false)"></app-delete>
 }

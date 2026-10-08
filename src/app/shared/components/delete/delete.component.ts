@@ -1,20 +1,19 @@
 import { Component, EventEmitter, Output, OnInit } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
 import { NoteService } from '../../../features/home/services/note.service';
 
 import { Input } from '@angular/core';
 @Component({
   selector: 'app-delete',
-  imports: [],
+  imports: [AsyncPipe],
   templateUrl: './delete.component.html',
   styleUrls: ['./delete.component.scss'],
 })
 export class DeleteComponent implements OnInit {
-  @Output() closeModal = new EventEmitter<void>();
-
   public noteId: number[] | null = null;
   constructor(private noteService: NoteService) {}
 
-  ngOnInit(){
+  ngOnInit() {
     this.noteService.deleteNote$.subscribe((noteId) => {
       this.noteId = noteId;
     });
@@ -23,7 +22,9 @@ export class DeleteComponent implements OnInit {
   public isLoading: boolean = false;
 
   close() {
-    this.closeModal.emit();
+    this.noteService.setShowDeleteModal(false);
+    this.noteService.setSelectedNoteAction([]);
+    this.noteService.setActionbarActive(false);
   }
 
   public setLoadingState(isLoading: boolean): void {

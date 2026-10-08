@@ -38,14 +38,7 @@ import { WelcomeComponent } from '../../../../shared/components/welcome/welcome.
 })
 export class NotesComponent implements OnInit {
   showDeleteModal = signal(false);
-  constructor(protected noteService: NoteService) {
-    effect(() => {
-      if (!this.showDeleteModal()) {
-        this.noteService.setDeleteNote([]);
-      }
-    });
-    
-  }
+  constructor(protected noteService: NoteService) {}
 
   private cdr = inject(ChangeDetectorRef);
 
@@ -202,10 +195,18 @@ export class NotesComponent implements OnInit {
     const formattedDay = String(day).padStart(2, '0');
     const formattedMonth = String(month).padStart(2, '0');
 
-    if (
-      month === parseInt(actualDate?.slice(5, 7) || '0', 10) &&
-      day === parseInt(actualDate?.slice(8, 10) || '0', 10) - 1
-    ) {
+    const today = new Date();
+    const yesterday = new Date(
+      Date.UTC(
+        today.getUTCFullYear(),
+        today.getUTCMonth(),
+        today.getUTCDate() - 1,
+      ),
+    );
+
+    const yesterdayString = yesterday.toISOString().slice(0, 10);
+
+    if (dateString === yesterdayString) {
       if (includeHour) {
         return `Ontem às ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
       }
@@ -271,9 +272,17 @@ export class NotesComponent implements OnInit {
   }
 
   public createModalDelete(id: number) {
-    this.noteService.setDeleteNote([id]);
+    const selectedIds = this.noteService
+      .getSelectedNoteActions()
+      .map((note) => note.id);
 
-    this.showDeleteModal.set(true);
+    if (selectedIds.length === 0) {
+      this.noteService.setDeleteNote([id]);
+    } else {
+      this.noteService.setDeleteNote(selectedIds);
+    }
+
+    this.noteService.setShowDeleteModal(true);
   }
 
   public createModalEdit(note: any = null) {

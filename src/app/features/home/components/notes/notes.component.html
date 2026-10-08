@@ -83,12 +83,7 @@
             <span
               class="material-symbols-outlined"
               id="delete"
-              (click)="
-                createModalDelete(
-                  note.id
-                );
-                $event.stopPropagation()
-              "
+              (click)="createModalDelete(note.id); $event.stopPropagation()"
             >
               delete
             </span>
@@ -147,10 +142,7 @@
         <span
           class="material-symbols-outlined"
           id="delete"
-          (click)="
-            createModalDelete(note.id);
-            $event.stopPropagation()
-          "
+          (click)="createModalDelete(note.id); $event.stopPropagation()"
         >
           delete
         </span>
@@ -161,10 +153,8 @@
   }
 </div>
 
-@if (showDeleteModal()) {
-  <app-delete
-    (closeModal)="showDeleteModal.set(false)"
-  ></app-delete>
+@if (noteService.showDeleteModal$ | async) {
+  <app-delete (closeModal)="noteService.setShowDeleteModal(false)"></app-delete>
 }
 
 @if (selectedNote) {

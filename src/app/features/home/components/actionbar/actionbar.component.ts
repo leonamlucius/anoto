@@ -10,10 +10,11 @@ import { NoteService } from '../../services/note.service';
 import { firstValueFrom } from 'rxjs';
 import { DeleteComponent } from '../../../../shared/components/delete/delete.component';
 import { Note } from '../../models/note';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-actionbar',
-  imports: [DeleteComponent],
+  imports: [DeleteComponent, AsyncPipe],
   templateUrl: './actionbar.component.html',
   styleUrls: ['./actionbar.component.scss'],
 })
@@ -28,7 +29,6 @@ export class ActionbarComponent implements OnInit {
 
   selectedNoteId: Note[] = [];
 
-  showDeleteModal = signal(false);
 
   constructor(protected noteService: NoteService) {}
 
@@ -36,10 +36,6 @@ export class ActionbarComponent implements OnInit {
     this.noteService.actionbarActive$
       .pipe(
         tap((active) => {
-          if (!active) {
-            this.closeActionbar(active);
-            return;
-          }
           this.actionbarActive = active;
         }),
       )
@@ -62,7 +58,7 @@ export class ActionbarComponent implements OnInit {
     if (selectedIds.length === 0) return;
 
     this.noteService.setDeleteNote(selectedIds);
-    this.showDeleteModal.set(true);
+    this.noteService.setShowDeleteModal(true);
   }
 
   public async fixNote() {
@@ -99,7 +95,7 @@ export class ActionbarComponent implements OnInit {
   public closeActionbar(active: boolean) {
     this.exiting = true;
     setTimeout(() => {
-      this.actionbarActive = active;
+      this.noteService.setActionbarActive(active);
       this.noteService.setSelectedNoteAction([]);
       this.exiting = false;
     }, 200);
