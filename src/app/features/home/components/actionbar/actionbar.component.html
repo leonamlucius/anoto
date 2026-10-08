@@ -1,0 +1,33 @@
+<div
+  class="actionbar"
+  [class.active]="actionbarActive == true"
+  [class.exiting]="exiting"
+>
+  <div class="actionbar-right">
+    <button class="actionbar-button" (click)="closeActionbar(false)">
+      <span class="material-symbols-outlined"> close </span>
+    </button>
+
+    <p>{{ regularizeText(numberSelected) }}</p>
+  </div>
+
+  <div
+    class="actionbar-left"
+    (pointerdown)="createModalDelete(); $event.stopPropagation()"
+  >
+    <button>
+      <span class="material-symbols-outlined">delete </span>
+    </button>
+
+    <button (pointerup)="fixNote(); $event.stopPropagation()">
+      <span class="material-symbols-outlined"> keep </span>
+    </button>
+  </div>
+</div>
+
+
+@if (showDeleteModal()) {
+  <app-delete
+    (closeModal)="showDeleteModal.set(false)"
+  ></app-delete>
+}

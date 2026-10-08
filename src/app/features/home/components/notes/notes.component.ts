@@ -26,7 +26,13 @@ import { ErrorComponent } from '../../../../shared/components/error/error.compon
 import { WelcomeComponent } from '../../../../shared/components/welcome/welcome.component';
 @Component({
   selector: 'app-notes',
-  imports: [AsyncPipe, ModalComponent, DeleteComponent, ErrorComponent, WelcomeComponent],
+  imports: [
+    AsyncPipe,
+    ModalComponent,
+    DeleteComponent,
+    ErrorComponent,
+    WelcomeComponent,
+  ],
   templateUrl: './notes.component.html',
   styleUrls: ['./notes.component.scss'],
 })
@@ -35,9 +41,10 @@ export class NotesComponent implements OnInit {
   constructor(protected noteService: NoteService) {
     effect(() => {
       if (!this.showDeleteModal()) {
-        this.selectedNoteId = null;
+        this.noteService.setDeleteNote([]);
       }
     });
+    
   }
 
   private cdr = inject(ChangeDetectorRef);
@@ -58,11 +65,13 @@ export class NotesComponent implements OnInit {
 
   selectedNote: any = null;
 
-  selectedNoteId: number | null = null;
-
   selectedNoteIdEdit: number | null = null;
 
   selectedNoteIdFixed: number | null = null;
+
+  suspendNoteIdEdit = <number | null>null;
+
+  private longPressTimer?: ReturnType<typeof setTimeout>;
 
   inputChange = signal(false);
 
@@ -132,6 +141,49 @@ export class NotesComponent implements OnInit {
           })),
       ),
     );
+  }
+
+  public markNoteAction(id: number, event: PointerEvent, isFixed: boolean) {
+    if (event.pointerType != 'touch') {
+      return;
+    }
+
+    const selectedNoteActions = this.noteService.getSelectedNoteActions();
+
+    if (selectedNoteActions.some((note) => note.id === id)) {
+      const updatedSelection = selectedNoteActions.filter(
+        (note) => note.id !== id,
+      );
+      this.noteService.setSelectedNoteAction(updatedSelection);
+      this.suspendNoteIdEdit = id;
+      this.cancelMarkNoteAction();
+      this.noteService.setNumberSelected(updatedSelection.length);
+
+      if (updatedSelection.length === 0) {
+        this.noteService.setActionbarActive(false);
+      }
+      return;
+    }
+
+    this.cancelMarkNoteAction();
+    this.longPressTimer = setTimeout(() => {
+      const updatedSelection = [
+        ...this.noteService.getSelectedNoteActions(),
+        { id },
+      ];
+      this.noteService.setSelectedNoteAction(updatedSelection);
+      this.suspendNoteIdEdit = id;
+      this.noteService.setActionbarActive(true);
+      this.noteService.setNumberSelected(updatedSelection.length);
+      this.longPressTimer = undefined;
+    }, 600);
+  }
+
+  public cancelMarkNoteAction() {
+    if (this.longPressTimer) {
+      clearTimeout(this.longPressTimer);
+      this.longPressTimer = undefined;
+    }
   }
 
   public formatDate(date: string | any, includeHour: boolean = false): any {
@@ -218,18 +270,17 @@ export class NotesComponent implements OnInit {
     }
   }
 
-  public createModalDelete(
-    id: number,
-    title: string,
-    content: string,
-    color: string,
-  ) {
-    this.selectedNoteId = id;
+  public createModalDelete(id: number) {
+    this.noteService.setDeleteNote([id]);
 
     this.showDeleteModal.set(true);
   }
 
   public createModalEdit(note: any = null) {
+    if (this.suspendNoteIdEdit === note?.id) {
+      this.suspendNoteIdEdit = null;
+      return;
+    }
     this.noteService.falseShowOtherView();
     this.selectedNoteIdEdit = note?.id;
 

@@ -41,12 +41,17 @@
         <div
           class="note-card"
           (click)="createModalEdit(note)"
+          (pointerdown)="markNoteAction(note.id, $event, note.fixed)"
+          (pointerup)="cancelMarkNoteAction()"
+          (pointercancel)="cancelMarkNoteAction()"
           (pointerenter)="showEdit(note)"
           (pointerleave)="hideEdit(note)"
-          [attr.data-id]="note.id"
           id="{{ note.color }}"
           [style.backgroundColor]="note.color"
           [class.list]="(view$ | async) === 'list'"
+          [class.marked]="
+            (noteService.selectedNoteAction$ | async)?.some(selectedNote => selectedNote.id === note.id)
+          "
           [class.disabled]="
             noteService.loading() &&
             (selectedNoteIdFixed === note.id || selectedNoteIdEdit === note.id)
@@ -77,12 +82,10 @@
           <div class="note-footer" [class.active]="activeNoteId === note.id">
             <span
               class="material-symbols-outlined"
+              id="delete"
               (click)="
                 createModalDelete(
-                  note.id,
-                  note.title,
-                  note.content,
-                  note.color
+                  note.id
                 );
                 $event.stopPropagation()
               "
@@ -102,12 +105,17 @@
     <div
       class="note-card"
       (click)="createModalEdit(note)"
+      (pointerdown)="markNoteAction(note.id, $event, note.fixed)"
+      (pointerup)="cancelMarkNoteAction()"
+      (pointercancel)="cancelMarkNoteAction()"
       (pointerenter)="showEdit(note)"
       (pointerleave)="hideEdit(note)"
-      [attr.data-id]="note.id"
       id="{{ note.color }}"
       [style.backgroundColor]="note.color"
       [class.list]="(view$ | async) === 'list'"
+      [class.marked]="
+        (noteService.selectedNoteAction$ | async)?.some(selectedNote => selectedNote.id === note.id)
+      "
       [class.disabled]="
         noteService.loading() &&
         (selectedNoteIdFixed === note.id || selectedNoteIdEdit === note.id)
@@ -138,8 +146,9 @@
       <div class="note-footer" [class.active]="activeNoteId === note.id">
         <span
           class="material-symbols-outlined"
+          id="delete"
           (click)="
-            createModalDelete(note.id, note.title, note.content, note.color);
+            createModalDelete(note.id);
             $event.stopPropagation()
           "
         >
@@ -154,7 +163,6 @@
 
 @if (showDeleteModal()) {
   <app-delete
-    [noteId]="selectedNoteId!"
     (closeModal)="showDeleteModal.set(false)"
   ></app-delete>
 }

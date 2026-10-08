@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { NoteService } from '../../../features/home/services/note.service';
 
 import { Input } from '@angular/core';
@@ -8,11 +8,17 @@ import { Input } from '@angular/core';
   templateUrl: './delete.component.html',
   styleUrls: ['./delete.component.scss'],
 })
-export class DeleteComponent {
+export class DeleteComponent implements OnInit {
   @Output() closeModal = new EventEmitter<void>();
 
-  @Input() noteId!: number;
+  public noteId: number[] | null = null;
   constructor(private noteService: NoteService) {}
+
+  ngOnInit(){
+    this.noteService.deleteNote$.subscribe((noteId) => {
+      this.noteId = noteId;
+    });
+  }
 
   public isLoading: boolean = false;
 
@@ -28,12 +34,15 @@ export class DeleteComponent {
     if (this.isLoading) {
       return;
     }
-    if (this.noteId) {
+    if (this.noteId !== null) {
       this.setLoadingState(true);
-      this.noteService.Deletenote(this.noteId).subscribe(() => {
-        this.setLoadingState(false);
-        this.noteService.Allnotes().subscribe();
-        this.close();
+
+      this.noteId.forEach((id) => {
+        this.noteService.Deletenote(id).subscribe(() => {
+          this.setLoadingState(false);
+          this.noteService.Allnotes().subscribe();
+          this.close();
+        });
       });
     }
   }

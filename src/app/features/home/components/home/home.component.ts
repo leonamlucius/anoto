@@ -1,6 +1,7 @@
 import { Component, OnInit, DestroyRef } from '@angular/core';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { BodyComponent } from '../body/body.component';
+import { ActionbarComponent } from '../actionbar/actionbar.component';
 import { AuthService } from '../../../../core/services/auth.service';
 import { timer, merge, fromEvent, of } from 'rxjs';
 import { switchMap, throttleTime, startWith } from 'rxjs/operators';
@@ -8,7 +9,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-home',
-  imports: [SidebarComponent, BodyComponent],
+  imports: [SidebarComponent, BodyComponent, ActionbarComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
