@@ -29,13 +29,18 @@ export class ActionbarComponent implements OnInit {
 
   selectedNoteId: Note[] = [];
 
-
   constructor(protected noteService: NoteService) {}
 
   ngOnInit() {
     this.noteService.actionbarActive$
       .pipe(
         tap((active) => {
+          if (!active) {
+            this.closeActionbar();
+            return;
+          }
+
+          this.exiting = false;
           this.actionbarActive = active;
         }),
       )
@@ -82,7 +87,7 @@ export class ActionbarComponent implements OnInit {
     const updateDOM = async () => {
       this.noteService.setNotes(notes);
       this.cdr.detectChanges();
-      this.closeActionbar(false);
+      this.closeActionbar();
     };
 
     if ('startViewTransition' in document) {
@@ -92,12 +97,14 @@ export class ActionbarComponent implements OnInit {
     }
   }
 
-  public closeActionbar(active: boolean) {
+  public closeActionbar() {
     this.exiting = true;
+
     setTimeout(() => {
-      this.noteService.setActionbarActive(active);
-      this.noteService.setSelectedNoteAction([]);
+      this.actionbarActive = false;
       this.exiting = false;
+      this.noteService.setSelectedNoteAction([]);
+      this.noteService.setNumberSelected(0);
     }, 200);
   }
 
