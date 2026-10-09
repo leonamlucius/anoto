@@ -20,7 +20,7 @@
 .actionbar.exiting {
   animation: slideUp 0.3s ease-in-out;
 }
-.actionbar-right {
+.actionbar-left {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -44,12 +44,12 @@
 .actionbar-button span {
   scale: 0.6;
 }
-.actionbar-right p {
+.actionbar-left p {
   margin: 0;
   font-size: 1.2em;
 }
 
-.actionbar-left {
+.actionbar-right {
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -57,16 +57,43 @@
   width: 100%;
 }
 
-.actionbar-left button {
+.actionbar-right button {
   background-color: rgba(255, 255, 255, 0.1);
   border: none;
   cursor: pointer;
   color: white;
-  width: fit-content;
+  width: 70px;
   height: 40px;
   padding: 5px 20px;
   border-radius: 40px;
   transition: background-color 0.3s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: width 0.3s ease-in-out;
+}
+
+.actionbar-right button:hover {
+  width: 100px;
+}
+
+.actionbar-right button p {
+  flex-shrink: 0;
+  display: block;
+  max-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  opacity: 0;
+  margin: 0;
+  transition:
+    max-width 0.3s ease-in-out,
+    opacity 0.2s ease-in-out;
+}
+
+.actionbar-right button:hover p {
+  max-width: 60px;
+  opacity: 1;
 }
 
 @keyframes slideDown {
@@ -91,12 +118,36 @@
   }
 }
 
-@media (max-width: 600px) {
-  span {
-    scale: 1.1;
+@keyframes widthExpand {
+  from {
+    width: 70px;
   }
+  to {
+    width: 100px;
+  }
+}
 
+@media (max-width: 600px) {
   .actionbar-left {
     gap: 15px;
+  }
+
+  .actionbar-right button {
+    padding: 10px;
+    width: 30px;
+    height: 30px;
+  }
+
+  .actionbar-right button:hover {
+    width: 30px;
+  }
+
+  .actionbar-right button:hover p {
+    max-width: 0px;
+    opacity: 0;
+  }
+
+  button span {
+    scale: 0.9;
   }
 }

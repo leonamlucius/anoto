@@ -3,7 +3,7 @@
   [class.active]="actionbarActive == true"
   [class.exiting]="exiting"
 >
-  <div class="actionbar-right">
+  <div class="actionbar-left">
     <button class="actionbar-button" (click)="closeActionbar()">
       <span class="material-symbols-outlined"> close </span>
     </button>
@@ -11,13 +11,15 @@
     <p>{{ regularizeText(numberSelected) }}</p>
   </div>
 
-  <div class="actionbar-left">
+  <div class="actionbar-right">
     <button (pointerup)="createModalDelete(); $event.stopPropagation()">
       <span class="material-symbols-outlined">delete </span>
+      <p>Excluir</p>
     </button>
 
     <button (pointerup)="fixNote(); $event.stopPropagation()">
       <span class="material-symbols-outlined"> keep</span>
+      <p>Fixar</p>
     </button>
   </div>
 </div>
