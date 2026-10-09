@@ -8,11 +8,10 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/notes")
@@ -40,6 +39,12 @@ public class NoteController {
     public ResponseEntity<NoteResponse> update(@PathVariable Long id,
             @Valid @RequestBody NoteRequest request) {
         return ResponseEntity.ok(noteService.update(id, request));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<NoteResponse> updatePartial(@PathVariable Long id,
+            @Valid @RequestBody NoteRequest request) {
+        return ResponseEntity.ok(noteService.updatePartial(id, request));
     }
 
     @DeleteMapping("/{id}")

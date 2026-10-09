@@ -41,15 +41,20 @@
         <div
           class="note-card"
           (click)="createModalEdit(note)"
+          (pointerdown)="markNoteAction(note.id, $event, note.fixed, note.color)"
+          (pointerup)="cancelMarkNoteAction()"
+          (pointercancel)="cancelMarkNoteAction()"
           (pointerenter)="showEdit(note)"
           (pointerleave)="hideEdit(note)"
-          [attr.data-id]="note.id"
           id="{{ note.color }}"
           [style.backgroundColor]="note.color"
           [class.list]="(view$ | async) === 'list'"
+          [class.marked]="
+            (noteService.selectedNoteAction$ | async)?.some(selectedNote => selectedNote.id === note.id)
+          "
           [class.disabled]="
             noteService.loading() &&
-            (selectedNoteIdFixed === note.id || selectedNoteIdEdit === note.id)
+            (selectedNoteIdFixed === note.id || selectedNoteIdEdit === note.id || (noteService.selectedNoteAction$ | async)?.some(selectedNote => selectedNote.id === note.id))
           "
           [class.invisible]="selectedNoteIdEdit === note.id"
           [style.view-transition-name]="
@@ -77,21 +82,27 @@
           <div class="note-footer" [class.active]="activeNoteId === note.id">
             <span
               class="material-symbols-outlined"
-              (click)="
-                createModalDelete(
-                  note.id,
-                  note.title,
-                  note.content,
-                  note.color
-                );
-                $event.stopPropagation()
-              "
+              id="delete"
+              (click)="createModalDelete(note.id); $event.stopPropagation()"
             >
               delete
             </span>
 
             <span class="date" [innerHTML]="note.createdAt"> </span>
           </div>
+
+          <button
+            (click)="
+              markNoteActionToggle(note.id, $event, note.fixed, note.color);
+              $event.stopPropagation()
+            "
+            class="note-card-check"
+            [class.visible]="activeNoteId === note.id || (noteService.selectedNoteAction$ | async)?.some(selectedNote => selectedNote.id === note.id)"
+          >
+            <span class="material-symbols-outlined" [style.color]="note.color">
+              check
+            </span>
+          </button>
         </div>
       }
     </div>
@@ -102,15 +113,20 @@
     <div
       class="note-card"
       (click)="createModalEdit(note)"
+      (pointerdown)="markNoteAction(note.id, $event, note.fixed, note.color)"
+      (pointerup)="cancelMarkNoteAction()"
+      (pointercancel)="cancelMarkNoteAction()"
       (pointerenter)="showEdit(note)"
       (pointerleave)="hideEdit(note)"
-      [attr.data-id]="note.id"
       id="{{ note.color }}"
       [style.backgroundColor]="note.color"
       [class.list]="(view$ | async) === 'list'"
+      [class.marked]="
+        (noteService.selectedNoteAction$ | async)?.some(selectedNote => selectedNote.id === note.id)
+      "
       [class.disabled]="
         noteService.loading() &&
-        (selectedNoteIdFixed === note.id || selectedNoteIdEdit === note.id)
+        (selectedNoteIdFixed === note.id || selectedNoteIdEdit === note.id || (noteService.selectedNoteAction$ | async)?.some(selectedNote => selectedNote.id === note.id))
       "
       [class.invisible]="selectedNoteIdEdit === note.id"
       [style.view-transition-name]="
@@ -138,25 +154,33 @@
       <div class="note-footer" [class.active]="activeNoteId === note.id">
         <span
           class="material-symbols-outlined"
-          (click)="
-            createModalDelete(note.id, note.title, note.content, note.color);
-            $event.stopPropagation()
-          "
+          id="delete"
+          (click)="createModalDelete(note.id); $event.stopPropagation()"
         >
           delete
         </span>
 
         <span class="date" [innerHTML]="note.createdAt"> </span>
       </div>
+
+      <button
+        (click)="
+          markNoteActionToggle(note.id, $event, note.fixed, note.color);
+          $event.stopPropagation()
+        "
+        class="note-card-check"
+        [class.visible]="activeNoteId === note.id || (noteService.selectedNoteAction$ | async)?.some(selectedNote => selectedNote.id === note.id)"
+      >
+        <span class="material-symbols-outlined" [style.color]="note.color">
+          check
+        </span>
+      </button>
     </div>
   }
 </div>
 
-@if (showDeleteModal()) {
-  <app-delete
-    [noteId]="selectedNoteId!"
-    (closeModal)="showDeleteModal.set(false)"
-  ></app-delete>
+@if (noteService.showDeleteModal$ | async) {
+  <app-delete (closeModal)="noteService.setShowDeleteModal(false)"></app-delete>
 }
 
 @if (selectedNote) {

@@ -1,23 +1,30 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
 import { NoteService } from '../../../features/home/services/note.service';
 
 import { Input } from '@angular/core';
 @Component({
   selector: 'app-delete',
-  imports: [],
+  imports: [AsyncPipe],
   templateUrl: './delete.component.html',
   styleUrls: ['./delete.component.scss'],
 })
-export class DeleteComponent {
-  @Output() closeModal = new EventEmitter<void>();
-
-  @Input() noteId!: number;
+export class DeleteComponent implements OnInit {
+  public noteId: number[] | null = null;
   constructor(private noteService: NoteService) {}
+
+  ngOnInit() {
+    this.noteService.deleteNote$.subscribe((noteId) => {
+      this.noteId = noteId;
+    });
+  }
 
   public isLoading: boolean = false;
 
   close() {
-    this.closeModal.emit();
+    this.noteService.setShowDeleteModal(false);
+    this.noteService.setSelectedNoteAction([]);
+    this.noteService.setActionbarActive(false);
   }
 
   public setLoadingState(isLoading: boolean): void {
@@ -28,12 +35,15 @@ export class DeleteComponent {
     if (this.isLoading) {
       return;
     }
-    if (this.noteId) {
+    if (this.noteId !== null) {
       this.setLoadingState(true);
-      this.noteService.Deletenote(this.noteId).subscribe(() => {
-        this.setLoadingState(false);
-        this.noteService.Allnotes().subscribe();
-        this.close();
+
+      this.noteId.forEach((id) => {
+        this.noteService.Deletenote(id).subscribe(() => {
+          this.setLoadingState(false);
+          this.noteService.Allnotes().subscribe();
+          this.close();
+        });
       });
     }
   }

@@ -1,0 +1,58 @@
+<div
+  class="actionbar"
+  [class.active]="actionbarActive == true"
+  [class.exiting]="exiting"
+>
+  <div class="actionbar-left">
+    <button class="actionbar-button" (click)="closeActionbar()">
+      <span class="material-symbols-outlined"> close </span>
+    </button>
+
+    <p>{{ regularizeText(numberSelected) }}</p>
+  </div>
+
+  <div class="actionbar-right">
+    <button (pointerup)="showColorPalette(); $event.stopPropagation()">
+      <span class="material-symbols-outlined"> palette </span>
+      <p>Cor</p>
+    </button>
+    <button (pointerup)="createModalDelete(); $event.stopPropagation()">
+      <span class="material-symbols-outlined">delete </span>
+      <p>Excluir</p>
+    </button>
+
+    <button (pointerup)="fixNote(); $event.stopPropagation()">
+      <span class="material-symbols-outlined"> keep</span>
+      <p>Fixar</p>
+    </button>
+  </div>
+</div>
+
+<div
+  class="color-palette"
+  [class.active]="colorPaletteActive"
+  [class.hide]="hideColor"
+>
+  @for (color of colors; track color.color) {
+    <button
+      class="color-swatch"
+      [style.background-color]="color.color"
+      (pointerup)="selectColor(color.color)"
+    >
+      @if (selectedColor === color.color) {
+        <div
+          class="check-icon"
+          [class.disabled]="noteService.alreadyPatched$ | async"
+        >
+          <span class="material-symbols-outlined" [style.color]="color.color">
+            check
+          </span>
+        </div>
+      }
+    </button>
+  }
+</div>
+
+@if (noteService.showDeleteModal$ | async) {
+  <app-delete (closeModal)="noteService.setShowDeleteModal(false)"></app-delete>
+}

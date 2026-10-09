@@ -1,0 +1,243 @@
+.actionbar {
+  position: fixed;
+  top: -70px;
+  width: 100%;
+  background-color: #383838;
+  z-index: 1000;
+  height: 70px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 15px;
+}
+
+.actionbar.active {
+  top: 0;
+  animation: slideDown 0.3s ease-in-out;
+}
+
+.actionbar.exiting {
+  animation: slideUp 0.3s ease-in-out;
+}
+.actionbar-left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: fit-content;
+  white-space: nowrap;
+}
+
+.actionbar-button {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: none;
+  cursor: pointer;
+  color: white;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.actionbar-button span {
+  scale: 0.6;
+}
+.actionbar-left p {
+  margin: 0;
+  font-size: 1.2em;
+}
+
+.actionbar-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  width: 100%;
+}
+
+.actionbar-right button {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: none;
+  cursor: pointer;
+  color: white;
+  width: 70px;
+  height: 40px;
+  padding: 5px 20px;
+  border-radius: 40px;
+  transition: background-color 0.3s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: width 0.3s ease-in-out;
+}
+
+.actionbar-right button:hover {
+  width: 100px;
+  gap: 5px;
+}
+
+.actionbar-right button p {
+  flex-shrink: 0;
+  display: block;
+  max-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  opacity: 0;
+  margin: 0;
+  transition:
+    max-width 0.3s ease-in-out,
+    opacity 0.2s ease-in-out;
+}
+
+.actionbar-right button:hover p {
+  max-width: 60px;
+  opacity: 1;
+}
+.color-palette {
+  background-color: #383838;
+  position: fixed;
+  width: fit-content;
+  display: flex;
+  gap: 10px;
+  padding: 10px 15px;
+  border-radius: 12px;
+  display: none;
+}
+
+.color-palette.active {
+  display: flex;
+  top: 75px;
+  right: 5px;
+  animation: slideRight 0.3s ease-in-out;
+}
+
+.color-palette.hide {
+  animation: slideLeft 0.3s ease-in-out;
+}
+
+.color-palette .color-swatch {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+}
+.color-palette .color-swatch {
+  border: 2px solid transparent;
+  transition: border 0.3s ease-in-out;
+}
+
+.check-icon {
+  background-color: #383838;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  border: 1px solid rgb(104, 103, 103);
+}
+
+.check-icon span {
+  scale: 0.5;
+}
+
+.check-icon.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+@keyframes slideRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideLeft {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes widthExpand {
+  from {
+    width: 70px;
+  }
+  to {
+    width: 100px;
+  }
+}
+
+@media (max-width: 600px) {
+  .actionbar-button {
+    width: 40px;
+    height: 40px;
+  }
+  .actionbar-button span {
+    scale: 1;
+  }
+  .actionbar-left {
+    gap: 15px;
+  }
+
+  .actionbar-right button {
+    padding: 10px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .actionbar-right button:hover {
+    width: 40px;
+    gap: 0;
+  }
+
+  .actionbar-right button:hover p {
+    max-width: 0px;
+    opacity: 0;
+  }
+
+  button span {
+    scale: 1;
+  }
+}

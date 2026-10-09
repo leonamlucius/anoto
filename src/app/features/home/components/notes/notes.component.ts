@@ -26,19 +26,19 @@ import { ErrorComponent } from '../../../../shared/components/error/error.compon
 import { WelcomeComponent } from '../../../../shared/components/welcome/welcome.component';
 @Component({
   selector: 'app-notes',
-  imports: [AsyncPipe, ModalComponent, DeleteComponent, ErrorComponent, WelcomeComponent],
+  imports: [
+    AsyncPipe,
+    ModalComponent,
+    DeleteComponent,
+    ErrorComponent,
+    WelcomeComponent,
+  ],
   templateUrl: './notes.component.html',
   styleUrls: ['./notes.component.scss'],
 })
 export class NotesComponent implements OnInit {
   showDeleteModal = signal(false);
-  constructor(protected noteService: NoteService) {
-    effect(() => {
-      if (!this.showDeleteModal()) {
-        this.selectedNoteId = null;
-      }
-    });
-  }
+  constructor(protected noteService: NoteService) {}
 
   private cdr = inject(ChangeDetectorRef);
 
@@ -58,11 +58,15 @@ export class NotesComponent implements OnInit {
 
   selectedNote: any = null;
 
-  selectedNoteId: number | null = null;
-
   selectedNoteIdEdit: number | null = null;
 
   selectedNoteIdFixed: number | null = null;
+
+  suspendNoteIdEdit = <number | null>null;
+
+  suspendNoteIdToggle = <number[]>[];
+
+  private longPressTimer?: ReturnType<typeof setTimeout>;
 
   inputChange = signal(false);
 
@@ -134,6 +138,82 @@ export class NotesComponent implements OnInit {
     );
   }
 
+  public markNoteActionToggle(
+    id: number,
+    event: PointerEvent | null,
+    isFixed: boolean | null,
+    color: string | null,
+
+  ) {
+    const selectedNoteActions = this.noteService.getSelectedNoteActions();
+
+    if (selectedNoteActions.some((note) => note.id === id)) {
+      const updatedSelection = selectedNoteActions.filter(
+        (note) => note.id !== id,
+      );
+      this.noteService.setSelectedNoteAction(updatedSelection);
+      this.noteService.setNumberSelected(updatedSelection.length);
+
+      if (updatedSelection.length === 0) {
+        this.suspendNoteIdToggle = [];
+        this.noteService.setActionbarActive(false);
+      }
+      return;
+    }
+
+    const updatedSelection = [
+      ...this.noteService.getSelectedNoteActions(),
+      { id, fixed: isFixed, color },
+    ];
+    this.noteService.setSelectedNoteAction(updatedSelection);
+    this.suspendNoteIdToggle = [...(this.suspendNoteIdToggle ?? []), id];
+    this.noteService.setActionbarActive(true);
+    this.noteService.setNumberSelected(updatedSelection.length);
+    this.longPressTimer = undefined;
+  }
+
+  public markNoteAction(id: number, event: PointerEvent, isFixed: boolean, color: string | null) {
+    if (event.pointerType != 'touch') {
+      return;
+    }
+
+    const selectedNoteActions = this.noteService.getSelectedNoteActions();
+
+    if (selectedNoteActions.some((note) => note.id === id)) {
+      const updatedSelection = selectedNoteActions.filter(
+        (note) => note.id !== id,
+      );
+      
+      this.noteService.setNumberSelected(updatedSelection.length);
+
+      if (updatedSelection.length === 0) {
+        this.suspendNoteIdEdit = null;
+        this.noteService.setActionbarActive(false);
+      }
+      return;
+    }
+
+    this.cancelMarkNoteAction();
+    this.longPressTimer = setTimeout(() => {
+      const updatedSelection = [
+        ...this.noteService.getSelectedNoteActions(),
+        { id, fixed: isFixed, color },
+      ];
+      this.noteService.setSelectedNoteAction(updatedSelection);
+      this.suspendNoteIdEdit = id;
+      this.noteService.setActionbarActive(true);
+      this.noteService.setNumberSelected(updatedSelection.length);
+      this.longPressTimer = undefined;
+    }, 600);
+  }
+
+  public cancelMarkNoteAction() {
+    if (this.longPressTimer) {
+      clearTimeout(this.longPressTimer);
+      this.longPressTimer = undefined;
+    }
+  }
+
   public formatDate(date: string | any, includeHour: boolean = false): any {
     if (!date) return null;
     let dateString = date?.slice(0, 10) || '';
@@ -150,10 +230,18 @@ export class NotesComponent implements OnInit {
     const formattedDay = String(day).padStart(2, '0');
     const formattedMonth = String(month).padStart(2, '0');
 
-    if (
-      month === parseInt(actualDate?.slice(5, 7) || '0', 10) &&
-      day === parseInt(actualDate?.slice(8, 10) || '0', 10) - 1
-    ) {
+    const today = new Date();
+    const yesterday = new Date(
+      Date.UTC(
+        today.getUTCFullYear(),
+        today.getUTCMonth(),
+        today.getUTCDate() - 1,
+      ),
+    );
+
+    const yesterdayString = yesterday.toISOString().slice(0, 10);
+
+    if (dateString === yesterdayString) {
       if (includeHour) {
         return `Ontem às ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
       }
@@ -218,18 +306,28 @@ export class NotesComponent implements OnInit {
     }
   }
 
-  public createModalDelete(
-    id: number,
-    title: string,
-    content: string,
-    color: string,
-  ) {
-    this.selectedNoteId = id;
+  public createModalDelete(id: number) {
+    const selectedIds = this.noteService
+      .getSelectedNoteActions()
+      .map((note) => note.id);
 
-    this.showDeleteModal.set(true);
+    if (selectedIds.length === 0) {
+      this.noteService.setDeleteNote([id]);
+    } else {
+      this.noteService.setDeleteNote(selectedIds);
+    }
+
+    this.noteService.setShowDeleteModal(true);
   }
 
   public createModalEdit(note: any = null) {
+    const selectedActions = this.noteService.getSelectedNoteActions();
+
+    if (selectedActions.length > 0) {
+      this.markNoteActionToggle(note.id, null, null, note.color);
+      return;
+    }
+
     this.noteService.falseShowOtherView();
     this.selectedNoteIdEdit = note?.id;
 

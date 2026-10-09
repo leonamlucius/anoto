@@ -2,9 +2,9 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding: 15px 15px;
+  width: fit-content;
   gap: 10px;
-  width: 100%;
+  padding: 15px;
   overflow: hidden;
   white-space: nowrap;
   overflow-x: hidden;
@@ -62,8 +62,9 @@
     #ce94d8 81%
   );
   border-radius: 50px;
-  position: relative;
-  transition: all 0.3s ease-in-out, background-color 0.01s ease-out;
+  transition:
+    all 0.3s ease-in-out,
+    background-color 0.01s ease-out;
 }
 
 .profile-container.active {
@@ -72,7 +73,9 @@
   background-image: none !important;
   width: 40%;
   gap: 10px;
-  transition: all 0.3s ease-in-out, background-color 0.01s ease-out;
+  transition:
+    all 0.3s ease-in-out,
+    background-color 0.01s ease-out;
 }
 
 .profile-container .edit-button {
@@ -103,7 +106,6 @@
   object-fit: cover;
   overflow: hidden;
   border-radius: 50%;
-  position: relative;
   flex-shrink: 0;
 }
 
@@ -126,6 +128,12 @@
 }
 
 @media (max-width: 600px) {
+  :host {
+    padding: 0;
+    width: 40px;
+    height: 40px;
+  }
+
   .profile-container.active {
     width: 90%;
   }

@@ -31,6 +31,9 @@ export class NoteService {
 
   public loading = signal(false);
 
+  public alreadyPatchedSubject = new BehaviorSubject<boolean>(false);
+  public alreadyPatched$ = this.alreadyPatchedSubject.asObservable();
+
   private selectedColorSubject = new BehaviorSubject<string | null>(null);
   public selectedColor$ = this.selectedColorSubject.asObservable();
 
@@ -42,6 +45,21 @@ export class NoteService {
 
   private showOtherViewSubject = new BehaviorSubject<boolean>(false);
   public showOtherView$ = this.showOtherViewSubject.asObservable();
+
+  private actionbarActiveSubject = new Subject<boolean>();
+  public actionbarActive$ = this.actionbarActiveSubject.asObservable();
+
+  private numberSelectedSubject = new BehaviorSubject<number>(0);
+  public numberSelected$ = this.numberSelectedSubject.asObservable();
+
+  private selectedNoteActionSubject = new BehaviorSubject<Note[]>([]);
+  public selectedNoteAction$ = this.selectedNoteActionSubject.asObservable();
+
+  private deleteNoteSubject = new BehaviorSubject<number[]>([]);
+  public deleteNote$ = this.deleteNoteSubject.asObservable();
+
+  private showDeleteModalSubject = new BehaviorSubject<boolean>(false);
+  public showDeleteModal$ = this.showDeleteModalSubject.asObservable();
 
   public filteredNotes$: Observable<Note[]> = combineLatest([
     this.allNotesObservable$,
@@ -57,6 +75,32 @@ export class NoteService {
 
   private apiUrl = environment.apiUrl;
 
+  public setShowDeleteModal(show: boolean) {
+    this.showDeleteModalSubject.next(show);
+  }
+
+  public setDeleteNote(id: number[]) {
+    this.deleteNoteSubject.next(id);
+  }
+
+  public hasSelectedNoteAction(id: number): boolean {
+    return this.selectedNoteActionSubject.value.some((note) => note.id === id);
+  }
+
+  public getSelectedNoteActions(): Note[] {
+    return this.selectedNoteActionSubject.value;
+  }
+
+  public setSelectedNoteAction(selectedNoteAction: any) {
+    this.selectedNoteActionSubject.next(selectedNoteAction);
+  }
+  public setNumberSelected(number: number) {
+    this.numberSelectedSubject.next(number);
+  }
+
+  public setActionbarActive(active: boolean) {
+    this.actionbarActiveSubject.next(active);
+  }
   public setLoading() {
     this.loading.set(!this.loading().valueOf());
   }
@@ -104,9 +148,7 @@ export class NoteService {
     );
   }
   public Allnotes(): Observable<Note[]> {
-    return this.FetchNotes().pipe(
-      tap((notes) => this.allNotes.next(notes))
-    );
+    return this.FetchNotes().pipe(tap((notes) => this.allNotes.next(notes)));
   }
 
   public Postnote(
@@ -133,6 +175,30 @@ export class NoteService {
       );
   }
 
+  public Patchnote(
+    id: number,
+    title: string | null,
+    content: string | null,
+    color: string | null,
+  ): Observable<Note[]> {
+    if (this.alreadyPatchedSubject.getValue()) {
+      return throwError(() => new Error('Note is already being patched'));
+    }
+
+    this.alreadyPatchedSubject.next(true);
+    return this.http
+      .patch<Note[]>(`${this.apiUrl}/notes/${id}`, { title, content, color })
+      .pipe(
+        catchError((error) => {
+          console.error('Failed to patch note:', error);
+          return throwError(() => error);
+        }),
+        finalize(() => {
+          this.alreadyPatchedSubject.next(false);
+        }),
+      );
+  }
+
   public Deletenote(id: number): Observable<Note[] | void> {
     return this.http.delete<Note[]>(`${this.apiUrl}/notes/${id}`, {}).pipe(
       catchError((error) => {
@@ -152,8 +218,6 @@ export class NoteService {
     content: string,
     color: string,
   ): Observable<Note[]> {
-    
-
     if (!title || !content || !color) {
       this.alertService.show(
         'error',
@@ -176,7 +240,7 @@ export class NoteService {
       );
   }
 
-  public FixNote(id: number): Observable<Note[]> {
+  public FixNote(id: number | number[] | Note): Observable<Note[]> {
     return this.http.put<Note[]>(`${this.apiUrl}/notes/fixed/${id}`, {}).pipe(
       catchError((error) => {
         console.error('Failed to fix note:', error);

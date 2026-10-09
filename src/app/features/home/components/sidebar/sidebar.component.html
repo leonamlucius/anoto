@@ -1,15 +1,13 @@
-
-  <app-add></app-add>
-
-
+<app-add class="add-component"></app-add>
+<app-profile class="profile-component"></app-profile>
 <div class="colors">
-  @for (note of notes; track note) {
+  @for (color of colors; track color) {
     <button
       class="note"
-      [style.backgroundColor]="note.color"
+      [style.backgroundColor]="color.color"
       (click)="selectNote($event)"
-      [class.active]="(noteService.selectedColor$ | async) === note.color"
-      id="{{ note.color }}"
+      [class.active]="(noteService.selectedColor$ | async) === color.color"
+      id="{{ color.color }}"
     ></button>
   }
 </div>
