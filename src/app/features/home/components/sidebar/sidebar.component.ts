@@ -1,17 +1,24 @@
-import { Component, inject, signal} from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
-import {AddComponent} from '../../../../shared/components/add/add.component';
+import { AddComponent } from '../../../../shared/components/add/add.component';
 import { RouterLink, ɵEmptyOutletComponent } from '@angular/router';
 import { NoteService } from '../../services/note.service';
 import { AlertService } from '../../../../shared/services/alert.service';
 import { ProfileComponent } from '../../../home/components/profile/profile.component';
-import { Observable, catchError, of, map, take} from 'rxjs';
+import { Observable, catchError, of, map, take } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [ModalComponent, AddComponent, RouterLink, AsyncPipe, ɵEmptyOutletComponent, ProfileComponent],
+  imports: [
+    ModalComponent,
+    AddComponent,
+    RouterLink,
+    AsyncPipe,
+    ɵEmptyOutletComponent,
+    ProfileComponent,
+  ],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
 })
@@ -22,13 +29,13 @@ export class SidebarComponent {
   ) {}
 
   public notesGet = signal<any[]>([]);
-  notes = [
-    { id: 1, title: 'Note 1', content: 'Content of Note 1', color: '#FFF176' },
-    { id: 2, title: 'Note 2', content: 'Content of Note 2', color: '#F48FB1' },
-    { id: 3, title: 'Note 3', content: 'Content of Note 3', color: '#A5D6A7' },
-    { id: 4, title: 'Note 4', content: 'Content of Note 4', color: '#90CAF9' },
-    { id: 5, title: 'Note 5', content: 'Content of Note 5', color: '#FFCC80' },
-    { id: 6, title: 'Note 6', content: 'Content of Note 6', color: '#CE93D8' },
+  colors = [
+    { color: '#FFF176' },
+    { color: '#F48FB1' },
+    { color: '#A5D6A7' },
+    { color: '#90CAF9' },
+    { color: '#FFCC80' },
+    { color: '#CE93D8' },
   ];
 
   booleanValue = true;
@@ -73,6 +80,4 @@ export class SidebarComponent {
   public showModalCreateNote() {
     document.insertBefore;
   }
-
-
 }

@@ -92,6 +92,29 @@ public class NoteService {
         return toResponse(noteRepository.save(note));
     }
 
+    public NoteResponse updatePartial(Long id, NoteRequest request) {
+        User user = getCurrentUser();
+        Note note = noteRepository.findByIdAndUserId(id, user.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Nota não encontrada."));
+        if (request.getTitle() != null) {
+            note.setTitle(request.getTitle());
+        }
+        if (request.getContent() != null) {
+            String encryptedContent = request.getContent();
+            try {
+                encryptedContent = CryptoUtil.encrypt(request.getContent());
+            } catch (Exception e) {
+                // Se falhar, salva o conteúdo original (pode logar se quiser)
+            }
+            note.setContent(encryptedContent);
+        }
+        if (request.getColor() != null) {
+            note.setColor(request.getColor());
+        }
+        note.setUpdatedAt(LocalDateTime.now());
+        return toResponse(noteRepository.save(note));
+    }
+
     public NoteResponse fixedNote(Long id) {
         User user = getCurrentUser();
         Note note = noteRepository.findByIdAndUserId(id, user.getId())

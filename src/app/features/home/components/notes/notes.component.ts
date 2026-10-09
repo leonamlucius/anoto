@@ -142,6 +142,8 @@ export class NotesComponent implements OnInit {
     id: number,
     event: PointerEvent | null,
     isFixed: boolean | null,
+    color: string | null,
+
   ) {
     const selectedNoteActions = this.noteService.getSelectedNoteActions();
 
@@ -161,7 +163,7 @@ export class NotesComponent implements OnInit {
 
     const updatedSelection = [
       ...this.noteService.getSelectedNoteActions(),
-      { id, fixed: isFixed },
+      { id, fixed: isFixed, color },
     ];
     this.noteService.setSelectedNoteAction(updatedSelection);
     this.suspendNoteIdToggle = [...(this.suspendNoteIdToggle ?? []), id];
@@ -170,7 +172,7 @@ export class NotesComponent implements OnInit {
     this.longPressTimer = undefined;
   }
 
-  public markNoteAction(id: number, event: PointerEvent, isFixed: boolean) {
+  public markNoteAction(id: number, event: PointerEvent, isFixed: boolean, color: string | null) {
     if (event.pointerType != 'touch') {
       return;
     }
@@ -195,7 +197,7 @@ export class NotesComponent implements OnInit {
     this.longPressTimer = setTimeout(() => {
       const updatedSelection = [
         ...this.noteService.getSelectedNoteActions(),
-        { id, fixed: isFixed },
+        { id, fixed: isFixed, color },
       ];
       this.noteService.setSelectedNoteAction(updatedSelection);
       this.suspendNoteIdEdit = id;
@@ -322,7 +324,7 @@ export class NotesComponent implements OnInit {
     const selectedActions = this.noteService.getSelectedNoteActions();
 
     if (selectedActions.length > 0) {
-      this.markNoteActionToggle(note.id, null, null);
+      this.markNoteActionToggle(note.id, null, null, note.color);
       return;
     }
 

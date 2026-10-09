@@ -41,7 +41,7 @@
         <div
           class="note-card"
           (click)="createModalEdit(note)"
-          (pointerdown)="markNoteAction(note.id, $event, note.fixed)"
+          (pointerdown)="markNoteAction(note.id, $event, note.fixed, note.color)"
           (pointerup)="cancelMarkNoteAction()"
           (pointercancel)="cancelMarkNoteAction()"
           (pointerenter)="showEdit(note)"
@@ -93,7 +93,7 @@
 
           <button
             (click)="
-              markNoteActionToggle(note.id, $event, note.fixed);
+              markNoteActionToggle(note.id, $event, note.fixed, note.color);
               $event.stopPropagation()
             "
             class="note-card-check"
@@ -113,7 +113,7 @@
     <div
       class="note-card"
       (click)="createModalEdit(note)"
-      (pointerdown)="markNoteAction(note.id, $event, note.fixed)"
+      (pointerdown)="markNoteAction(note.id, $event, note.fixed, note.color)"
       (pointerup)="cancelMarkNoteAction()"
       (pointercancel)="cancelMarkNoteAction()"
       (pointerenter)="showEdit(note)"
@@ -165,7 +165,7 @@
 
       <button
         (click)="
-          markNoteActionToggle(note.id, $event, note.fixed);
+          markNoteActionToggle(note.id, $event, note.fixed, note.color);
           $event.stopPropagation()
         "
         class="note-card-check"

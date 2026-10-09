@@ -31,6 +31,9 @@ export class NoteService {
 
   public loading = signal(false);
 
+  public alreadyPatchedSubject = new BehaviorSubject<boolean>(false);
+  public alreadyPatched$ = this.alreadyPatchedSubject.asObservable();
+
   private selectedColorSubject = new BehaviorSubject<string | null>(null);
   public selectedColor$ = this.selectedColorSubject.asObservable();
 
@@ -72,12 +75,11 @@ export class NoteService {
 
   private apiUrl = environment.apiUrl;
 
-
   public setShowDeleteModal(show: boolean) {
     this.showDeleteModalSubject.next(show);
   }
 
-  public setDeleteNote(id: number[] ) {
+  public setDeleteNote(id: number[]) {
     this.deleteNoteSubject.next(id);
   }
 
@@ -169,6 +171,30 @@ export class NoteService {
         catchError((error) => {
           console.error('Failed to post note:', error);
           return throwError(() => error);
+        }),
+      );
+  }
+
+  public Patchnote(
+    id: number,
+    title: string | null,
+    content: string | null,
+    color: string | null,
+  ): Observable<Note[]> {
+    if (this.alreadyPatchedSubject.getValue()) {
+      return throwError(() => new Error('Note is already being patched'));
+    }
+
+    this.alreadyPatchedSubject.next(true);
+    return this.http
+      .patch<Note[]>(`${this.apiUrl}/notes/${id}`, { title, content, color })
+      .pipe(
+        catchError((error) => {
+          console.error('Failed to patch note:', error);
+          return throwError(() => error);
+        }),
+        finalize(() => {
+          this.alreadyPatchedSubject.next(false);
         }),
       );
   }

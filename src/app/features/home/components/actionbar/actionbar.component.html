@@ -12,6 +12,10 @@
   </div>
 
   <div class="actionbar-right">
+    <button (pointerup)="showColorPalette(); $event.stopPropagation()">
+      <span class="material-symbols-outlined"> palette </span>
+      <p>Cor</p>
+    </button>
     <button (pointerup)="createModalDelete(); $event.stopPropagation()">
       <span class="material-symbols-outlined">delete </span>
       <p>Excluir</p>
@@ -22,6 +26,31 @@
       <p>Fixar</p>
     </button>
   </div>
+</div>
+
+<div
+  class="color-palette"
+  [class.active]="colorPaletteActive"
+  [class.hide]="hideColor"
+>
+  @for (color of colors; track color.color) {
+    <button
+      class="color-swatch"
+      [style.background-color]="color.color"
+      (pointerup)="selectColor(color.color)"
+    >
+      @if (selectedColor === color.color) {
+        <div
+          class="check-icon"
+          [class.disabled]="noteService.alreadyPatched$ | async"
+        >
+          <span class="material-symbols-outlined" [style.color]="color.color">
+            check
+          </span>
+        </div>
+      }
+    </button>
+  }
 </div>
 
 @if (noteService.showDeleteModal$ | async) {
