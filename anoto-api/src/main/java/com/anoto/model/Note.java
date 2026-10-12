@@ -34,9 +34,14 @@ public class Note {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    
     private LocalDateTime updatedAt;
 
     @Column(nullable = false)
     private Boolean fixed;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "folder_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Folder folder;
 }
