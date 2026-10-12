@@ -8,7 +8,14 @@
       <span class="material-symbols-outlined"> close </span>
     </button>
 
-    <p>{{ regularizeText(numberSelected) }}</p>
+    @if (numberSelected > 0) {
+      <div class="actionbar-text-container">
+        <p class="actionbar-num">
+          {{ regularizeNumber(numberSelected) }}
+        </p>
+        <p class="actionbar-text">{{ regularizeText(numberSelected) }}</p>
+      </div>
+    }
   </div>
 
   <div class="actionbar-right">

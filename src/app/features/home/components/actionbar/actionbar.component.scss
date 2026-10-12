@@ -28,6 +28,11 @@
   width: fit-content;
   white-space: nowrap;
 }
+.actionbar-text-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+}
 
 .actionbar-button {
   background-color: rgba(255, 255, 255, 0.1);
@@ -217,8 +222,12 @@
   .actionbar-button span {
     scale: 1;
   }
+
   .actionbar-left {
     gap: 15px;
+  }
+  .actionbar-text{
+    display: none;
   }
 
   .actionbar-right button {

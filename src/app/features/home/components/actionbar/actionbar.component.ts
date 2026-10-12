@@ -31,8 +31,6 @@ export class ActionbarComponent implements OnInit {
 
   public hideColor: boolean = false;
 
-  selectedNoteId: Note[] = [];
-
   selectedColor: string | null = null;
 
   selectedIds: { id: number; color: string | null }[] = [];
@@ -188,14 +186,17 @@ export class ActionbarComponent implements OnInit {
 
     let pluralNotes = 'nota';
 
-    if (num > 9) {
-      numberString = '+' + numberString;
-    }
-
     if (num >= 2) {
       pluralNotes = 'notas';
-      return numberString + ' ' + pluralNotes + ' selecionadas';
+      return ' ' + pluralNotes + ' selecionadas';
     }
-    return numberString + ' ' + pluralNotes + ' selecionada';
+    return ' ' + pluralNotes + ' selecionada';
+  }
+
+  public regularizeNumber(num: number): string {
+    if (num > 9) {
+      return '+ 9';
+    }
+    return num.toString();
   }
 }
