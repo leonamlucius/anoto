@@ -24,12 +24,12 @@ export class ModalComponent {
   @Output() closeModal = new EventEmitter<void>();
 
   notes = [
-    { id: 1, title: 'Note 1', content: 'Content of Note 1', color: '#FFF176' },
-    { id: 2, title: 'Note 2', content: 'Content of Note 2', color: '#F48FB1' },
-    { id: 3, title: 'Note 3', content: 'Content of Note 3', color: '#A5D6A7' },
-    { id: 4, title: 'Note 4', content: 'Content of Note 4', color: '#90CAF9' },
-    { id: 5, title: 'Note 5', content: 'Content of Note 5', color: '#FFCC80' },
-    { id: 6, title: 'Note 6', content: 'Content of Note 6', color: '#CE93D8' },
+    { color: '#FFF176' },
+    { color: '#F48FB1' },
+    { color: '#A5D6A7' },
+    { color: '#90CAF9' },
+    { color: '#FFCC80' },
+    { color: '#CE93D8' },
   ];
 
   close() {

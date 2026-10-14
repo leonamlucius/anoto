@@ -14,5 +14,6 @@ public class FolderResponse {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private List<Long> noteIds;
+    private String color;
 
 }

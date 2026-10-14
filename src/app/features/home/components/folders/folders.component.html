@@ -1,1 +1,12 @@
-<p>folders works!</p>
+<div class="folder-title">
+  <span class="material-symbols-outlined"> folder </span>
+  <p>Minhas Pastas</p>
+</div>
+
+<div class="folders-container">
+  @for (folder of folders; track $index) {
+    <div class="folder" [style.background-color]="folder.color">
+      <h3>{{ folder.title }}</h3>
+    </div>
+  }
+</div>

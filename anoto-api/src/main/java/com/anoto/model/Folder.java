@@ -58,4 +58,7 @@ public class Folder {
     @EqualsAndHashCode.Exclude
     private List<Note> notes = new ArrayList<>();
 
+    @Column
+    private String color;
+
 }

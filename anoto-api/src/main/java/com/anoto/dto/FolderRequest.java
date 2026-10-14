@@ -9,5 +9,6 @@ public class FolderRequest {
     private String title;
     private String description;
     private List<Long> noteIds;
+    private String color;
 
 }

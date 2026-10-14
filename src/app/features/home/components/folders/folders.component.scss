@@ -1,0 +1,46 @@
+:host {
+  padding: 5px 15px;
+  width: 100%;
+}
+.folder-title {
+  color: #383838;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2px;
+  font-size: 1.2em;
+  font-weight: 200;
+}
+
+.folder-title span {
+  scale: 0.8;
+}
+.folders-container {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 10px;
+  padding: 10px 0;
+}
+
+.folder {
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 15px;
+  font-weight: 500;
+  height: 100px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  clip-path: polygon(0 0, 20% 0, 25% 10%, 100% 10%, 100% 100%, 0 100%);
+  z-index: -10;
+}
+
+.folder h3 {
+  font-weight: 600;
+  font-size: 1em;
+  color: #383838;
+  opacity: 0.9;
+}

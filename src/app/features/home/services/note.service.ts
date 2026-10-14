@@ -12,7 +12,7 @@ import {
   throwError,
 } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../../environments/environment.production';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Note } from '../models/note';
 
