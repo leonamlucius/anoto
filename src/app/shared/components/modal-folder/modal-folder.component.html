@@ -1,0 +1,55 @@
+@if (showModal) {
+  <div class="modal-folder">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button (click)="closeModal()">
+          <span class="material-symbols-outlined"> close </span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form (ngSubmit)="submitFolder(title.value, description.value)">
+          <input
+            #title
+            type="text"
+            placeholder="Digite o nome da pasta"
+          />
+          <textarea
+            #description
+            placeholder="Digite a descrição da pasta"
+          ></textarea>
+
+          <div class="notes">
+            <p>Selecione as notas</p>
+            @for (note of notes; track $index) {
+              <div
+                class="note"
+                [style.background]="note.color"
+                (click)="selectNote(note)"
+                [class.selected]="selectedNote.includes(note.id)"
+              >
+                {{ note.title }}
+              </div>
+            }
+          </div>
+          <div class="color-options">
+            @for (color of colors; track $index) {
+              <div
+                class="color-option"
+                [style.background]="color.color"
+                [class.selected]="color.color === selectedColor"
+                (click)="selectColor(color.color)"
+              ></div>
+            }
+          </div>
+
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">
+              <span class="material-symbols-outlined"> chevron_forward </span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+}
