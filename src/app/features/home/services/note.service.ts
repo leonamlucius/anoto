@@ -58,8 +58,7 @@ export class NoteService {
   private deleteNoteSubject = new BehaviorSubject<number[]>([]);
   public deleteNote$ = this.deleteNoteSubject.asObservable();
 
-  private showDeleteModalSubject = new BehaviorSubject<boolean>(false);
-  public showDeleteModal$ = this.showDeleteModalSubject.asObservable();
+ 
 
   public filteredNotes$: Observable<Note[]> = combineLatest([
     this.allNotesObservable$,
@@ -75,9 +74,10 @@ export class NoteService {
 
   private apiUrl = environment.apiUrl;
 
-  public setShowDeleteModal(show: boolean) {
-    this.showDeleteModalSubject.next(show);
-  }
+
+  
+
+ 
 
   public setDeleteNote(id: number[]) {
     this.deleteNoteSubject.next(id);

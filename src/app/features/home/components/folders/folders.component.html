@@ -5,8 +5,60 @@
 
 <div class="folders-container">
   @for (folder of folders; track $index) {
-    <div class="folder" [style.background-color]="folder.color">
-      <h3>{{ folder.title }}</h3>
+    <div
+      class="folder"
+      [style.--folder-color]="folder.color"
+      (mouseover)="setTrueMouseOveredFolder(folder.id)"
+      (mouseleave)="setFalseMouseOveredFolder()"
+      [class.selected]="
+        (this.folderService.selectedFolderCheck$ | async)?.includes(
+          folder.id
+        ) === true
+      "
+    >
+      <div class="folder-notes">
+        @for (noteByIdItem of noteById; track $index) {
+          @if (noteByIdItem.folderId === folder.id) {
+            @for (note of noteByIdItem.notes; track $index) {
+              <div class="note" [style.background-color]="note.color"></div>
+            }
+          }
+        }
+      </div>
+
+      <div class="folder-content">
+        <h3>{{ folder.title }}</h3>
+
+        <div class="folder-footer">
+          <p>{{ folder.noteIds.length }}</p>
+          <button
+            (click)="deleteFolder(folder.id)"
+            [class.visible]="
+              mouseOveredFolderId === folder.id ||
+              (this.folderService.selectedFolderCheck$ | async)?.includes(
+                folder.id
+              ) === true
+            "
+          >
+            <span class="material-symbols-outlined"> delete </span>
+          </button>
+        </div>
+      </div>
+
+      <button
+        class="note-card-check"
+        [class.visible]="
+          mouseOveredFolderId === folder.id ||
+          (this.folderService.selectedFolderCheck$ | async)?.includes(
+            folder.id
+          ) === true
+        "
+        (click)="setSelectedFolderCheck(folder.id)"
+      >
+        <span class="material-symbols-outlined" [style.color]="folder.color">
+          check
+        </span>
+      </button>
     </div>
   }
 </div>

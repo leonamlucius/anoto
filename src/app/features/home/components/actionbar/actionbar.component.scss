@@ -110,6 +110,7 @@
   padding: 10px 15px;
   border-radius: 12px;
   display: none;
+  z-index: 100;
 }
 
 .color-palette.active {
@@ -136,6 +137,47 @@
   transition: border 0.3s ease-in-out;
 }
 
+.folders {
+  position: fixed;
+  background-color: #383838;
+  padding: 10px 15px;
+  border-radius: 12px;
+  display: none;
+  z-index: 100;
+}
+.folders.active {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  top: 75px;
+  right: 5px;
+  animation: slideRight 0.3s ease-in-out;
+}
+
+.folders.hide {
+  animation: slideUp 0.3s ease-in-out;
+}
+
+.folder-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.2em;
+  cursor: pointer;
+  padding: 0;
+}
+
+.folder-swatch {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  position: relative;
+  flex-shrink: 0;
+}
+
 .check-icon {
   background-color: #383838;
   color: white;
@@ -153,6 +195,27 @@
 
 .check-icon span {
   scale: 0.5;
+}
+
+.folder-footer {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.folder-footer button {
+  border: none;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #ffffff1a;
+  color: white;
+  transition: all 0.3s ease;
 }
 
 .check-icon.disabled {
@@ -226,7 +289,7 @@
   .actionbar-left {
     gap: 15px;
   }
-  .actionbar-text{
+  .actionbar-text {
     display: none;
   }
 

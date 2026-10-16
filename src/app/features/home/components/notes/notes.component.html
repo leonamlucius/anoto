@@ -179,8 +179,8 @@
   }
 </div>
 
-@if (noteService.showDeleteModal$ | async) {
-  <app-delete (closeModal)="noteService.setShowDeleteModal(false)"></app-delete>
+@if (deleteService.showDeleteModal$ | async) {
+  <app-delete (closeModal)="deleteService.setShowDeleteModal(false)"></app-delete>
 }
 
 @if (selectedNote) {

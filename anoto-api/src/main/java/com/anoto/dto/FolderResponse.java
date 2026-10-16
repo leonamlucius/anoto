@@ -9,6 +9,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor 
 public class FolderResponse {
+    private Long id;
     private String title;
     private String description;
     private LocalDateTime createdAt;

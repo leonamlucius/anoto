@@ -4,6 +4,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.anoto.model.User;
 import com.anoto.model.Folder;
@@ -51,9 +53,15 @@ public class FolderService {
                         throw new IllegalArgumentException("Pasta não encontrada.");
                 }
 
+                Set<Long> existingIds = folder.getNotes().stream()
+                                .map(Note::getId)
+                                .collect(Collectors.toSet());
                 List<Long> noteIds = folderRequest.getNoteIds() == null
                                 ? List.of()
-                                : folderRequest.getNoteIds().stream().distinct().toList();
+                                : folderRequest.getNoteIds().stream()
+                                                .distinct()
+                                                .filter(noteId -> !existingIds.contains(noteId))
+                                                .toList();
                 List<Note> newNotes = noteIds.stream()
                                 .map(noteId -> noteRepository.findByIdAndUserId(noteId, user.getId())
                                                 .orElseThrow(() -> {
@@ -63,13 +71,13 @@ public class FolderService {
                                                 }))
                                 .toList();
 
-                folder.getNotes().forEach(note -> note.setFolder(null));
                 newNotes.forEach(note -> note.setFolder(folder));
                 noteRepository.saveAll(newNotes);
-                folder.setNotes(newNotes);
+                folder.getNotes().addAll(newNotes);
 
                 logger.info("Pasta vinculada: " + folder.getId());
-                return new FolderResponse(folder.getTitle(), folder.getDescription(), folder.getCreatedAt(),
+                return new FolderResponse(folder.getId(), folder.getTitle(), folder.getDescription(),
+                                folder.getCreatedAt(),
                                 folder.getUpdatedAt(), folder.getNotes().stream().map(note -> note.getId()).toList(),
                                 folder.getColor());
         }
@@ -88,16 +96,38 @@ public class FolderService {
                 if (folderRequest.getDescription() != null) {
                         folder.setDescription(folderRequest.getDescription());
                 }
+
+                if (folderRequest.getNoteIds() != null) {
+                        Set<Long> existingIds = folder.getNotes().stream()
+                                        .map(Note::getId)
+                                        .collect(Collectors.toSet());
+
+                        List<Note> toAdd = folderRequest.getNoteIds().stream()
+                                        .filter(noteId -> !existingIds.contains(noteId))
+                                        .map(noteId -> noteRepository.findById(noteId)
+                                                        .orElseThrow(() -> new IllegalArgumentException(
+                                                                        "Nota não encontrada: " + noteId)))
+                                        .toList();
+
+                        toAdd.forEach(note -> note.setFolder(folder));
+                        noteRepository.saveAll(toAdd);
+                        folder.getNotes().addAll(toAdd);
+                }
+
+                if (folderRequest.getColor() != null) {
+                        folder.setColor(folderRequest.getColor());
+                }
                 folderRepository.save(folder);
 
                 logger.info("Pasta atualizada: " + folder.getId());
-                return new FolderResponse(folder.getTitle(), folder.getDescription(), folder.getCreatedAt(),
+                return new FolderResponse(folder.getId(), folder.getTitle(), folder.getDescription(),
+                                folder.getCreatedAt(),
                                 folder.getUpdatedAt(), folder.getNotes().stream().map(note -> note.getId()).toList(),
                                 folder.getColor());
         }
 
         @Transactional
-        public String deleteFolder(Long id) {
+        public void deleteFolder(Long id) {
                 Folder folder = folderRepository.findById(id)
                                 .orElseThrow(() -> {
                                         logger.error("Pasta não encontrada.");
@@ -110,7 +140,6 @@ public class FolderService {
 
                 folderRepository.delete(folder);
                 logger.info("Pasta deletada: " + folder.getId());
-                return "Pasta deletada com sucesso.";
         }
 
         @Transactional(readOnly = true)
@@ -122,7 +151,8 @@ public class FolderService {
                                 });
 
                 logger.info("Pasta encontrada: " + folder.getId());
-                return new FolderResponse(folder.getTitle(), folder.getDescription(), folder.getCreatedAt(),
+                return new FolderResponse(folder.getId(), folder.getTitle(), folder.getDescription(),
+                                folder.getCreatedAt(),
                                 folder.getUpdatedAt(), folder.getNotes().stream().map(note -> note.getId()).toList(),
                                 folder.getColor());
         }
@@ -131,9 +161,10 @@ public class FolderService {
         public List<FolderResponse> findAll() {
 
                 User user = getCurrentUser();
-                return folderRepository.findByUserId(user.getId())
+                return folderRepository.findByUserIdOrderByIdAsc(user.getId())
                                 .stream()
-                                .map(folder -> new FolderResponse(folder.getTitle(), folder.getDescription(),
+                                .map(folder -> new FolderResponse(folder.getId(), folder.getTitle(),
+                                                folder.getDescription(),
                                                 folder.getCreatedAt(),
                                                 folder.getUpdatedAt(),
                                                 folder.getNotes().stream().map(note -> note.getId()).toList(),
@@ -174,7 +205,8 @@ public class FolderService {
 
                 logger.info("Pasta criada com sucesso! " + folder.getId());
 
-                return new FolderResponse(folder.getTitle(), folder.getDescription(), folder.getCreatedAt(),
+                return new FolderResponse(folder.getId(), folder.getTitle(), folder.getDescription(),
+                                folder.getCreatedAt(),
                                 folder.getUpdatedAt(), folder.getNotes().stream().map(note -> note.getId()).toList(),
                                 folder.getColor());
 

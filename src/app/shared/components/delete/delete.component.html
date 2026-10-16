@@ -1,6 +1,6 @@
 <div class="modal-create">
   <div class="modal-content">
-    <p>Deseja excluir esta nota?</p>
+    <p>Deseja excluir os itens selecionados?</p>
     <div class="buttons">
 
       <button class="cancel-button" (click)="close()">
@@ -8,7 +8,7 @@
           close
         </span>
       </button>
-      <button class="delete-button" (click)="deleteNote()" [class.disabled]="isLoading">
+      <button class="delete-button" (click)="delete()" [class.disabled]="isLoading">
         @if (!isLoading) {
           <span class="material-symbols-outlined">
             chevron_forward

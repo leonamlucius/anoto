@@ -6,6 +6,7 @@ import {
   inject,
   ChangeDetectorRef,
 } from '@angular/core';
+import { DeleteService } from '../../../../shared/services/delete.service';
 import { Note } from '../../models/note';
 import { AsyncPipe } from '@angular/common';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
@@ -38,7 +39,7 @@ import { WelcomeComponent } from '../../../../shared/components/welcome/welcome.
 })
 export class NotesComponent implements OnInit {
   showDeleteModal = signal(false);
-  constructor(protected noteService: NoteService) {}
+  constructor(protected noteService: NoteService, protected deleteService: DeleteService) {}
 
   private cdr = inject(ChangeDetectorRef);
 
@@ -317,7 +318,7 @@ export class NotesComponent implements OnInit {
       this.noteService.setDeleteNote(selectedIds);
     }
 
-    this.noteService.setShowDeleteModal(true);
+    this.deleteService.setShowDeleteModal(true);
   }
 
   public createModalEdit(note: any = null) {
