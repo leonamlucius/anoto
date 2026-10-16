@@ -122,6 +122,10 @@
   font-size: 1em;
   color: #383838;
   opacity: 0.9;
+  width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .folder-footer {

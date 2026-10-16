@@ -216,6 +216,25 @@
   background-color: #ffffff1a;
   color: white;
   transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.folder-footer button.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.folder-footer button #loading {
+  animation: rotate 1.5s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .check-icon.disabled {

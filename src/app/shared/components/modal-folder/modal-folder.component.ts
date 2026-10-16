@@ -24,6 +24,10 @@ export class ModalFolderComponent implements OnInit {
 
   selectedNote: number[] = [];
 
+  activeNotes: boolean = false;
+
+  isLoading: boolean = false;
+
   colors = [
     { color: '#FFF176' },
     { color: '#F48FB1' },
@@ -50,29 +54,41 @@ export class ModalFolderComponent implements OnInit {
       .subscribe();
   }
 
-  submitFolder(title: string, description: string): void {
 
- 
+  setIsLoading(isLoading: boolean): void {
+    this.isLoading = isLoading;
+  }
+
+  public toggleActiveNotes(): void {
+    this.activeNotes = !this.activeNotes;
+  }
+
+  public submitFolder(title: string, description: string): void {
+    this.setIsLoading(true);
     this.folderService
       .CreateFolder(title, description, this.selectedColor, this.selectedNote)
       .subscribe(() => {
+        this.setIsLoading(false);
         this.closeModal();
       });
   }
-  selectNote(note: Note): void {
+  public selectNote(note: Note): void {
     if (this.selectedNote.includes(note.id)) {
       this.selectedNote = this.selectedNote.filter((n) => n !== note.id);
+     
     } else {
       this.selectedNote.push(note.id);
+      
     }
   }
-  selectColor(color: string): void {
+  public selectColor(color: string): void {
     this.selectedColor = color;
   }
 
-  closeModal(): void {
+  public closeModal(): void {
     this.selectedColor = '';
     this.selectedNote = [];
     this.folderService.setShowModal(false);
+   
   }
 }

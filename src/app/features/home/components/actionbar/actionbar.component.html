@@ -90,12 +90,22 @@
   @if (this.selectedFolderId.length > 0) {
     <div class="folder-footer">
       <button (pointerup)="$event.stopPropagation(); linkFolder()">
-        <span class="material-symbols-outlined"> chevron_forward </span>
+        @if (!isLoading) {
+          <span class="material-symbols-outlined"> chevron_forward </span>
+        }
+
+        @if (isLoading) {
+          <span class="material-symbols-outlined" id="loading">
+            progress_activity
+          </span>
+        }
       </button>
     </div>
   }
 </div>
 
 @if (deleteService.showDeleteModal$ | async) {
-  <app-delete (closeModal)="deleteService.setShowDeleteModal(false)"></app-delete>
+  <app-delete
+    (closeModal)="deleteService.setShowDeleteModal(false)"
+  ></app-delete>
 }

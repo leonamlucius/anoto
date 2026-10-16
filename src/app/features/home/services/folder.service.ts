@@ -4,13 +4,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, Subject, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, finalize, switchMap } from 'rxjs/operators';
 import { tap } from 'rxjs';
+import { AlertService } from '../../../shared/services/alert.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FolderService {
   private apiUrl = environment.apiUrl;
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private alertService: AlertService) {}
 
   private folderDeletedSubject = new BehaviorSubject<number[]>([]);
 
@@ -75,12 +76,13 @@ export class FolderService {
     color: string,
     noteIds: number[],
   ): Observable<any> {
-    console.log('Creating folder with data:', {
-      title,
-      description,
-      color,
-      noteIds,
-    });
+    if (!title || !description || !color) {
+      this.alertService.show(
+        'error',
+        'Todos os campos são obrigatórios. Por favor, preencha todos os campos.',
+      );
+      return throwError(() => new Error('Invalid folder data'));
+    }
     const data = { title, description, color, noteIds };
     return this.http.post(`${this.apiUrl}/folders`, data).pipe(
       finalize(() => {

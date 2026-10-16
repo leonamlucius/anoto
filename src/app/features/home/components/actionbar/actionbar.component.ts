@@ -47,6 +47,8 @@ export class ActionbarComponent implements OnInit {
 
   selectedFolderCheck: number[] = [];
 
+  public isLoading: boolean = false;
+
   colors = [
     { color: '#FFF176' },
     { color: '#F48FB1' },
@@ -108,6 +110,10 @@ export class ActionbarComponent implements OnInit {
       .subscribe();
   }
 
+  public setIsLoading(isLoading: boolean): void {
+    this.isLoading = isLoading;
+  }
+
   public showCheck(selectedNotes: Note[]) {
     this.currentColor = selectedNotes[0]?.color ?? null;
 
@@ -119,12 +125,19 @@ export class ActionbarComponent implements OnInit {
   }
 
   public linkFolder(): void {
+    this.setIsLoading(true);
     this.folderService
       .LinkFolder(
         this.selectedFolderId[0],
         this.selectedIds.map((note) => note.id),
       )
-      .subscribe();
+      .subscribe(() => {
+        this.setIsLoading(false);
+        this.noteService.setSelectedNoteAction([]);
+        this.selectedFolderId = [];
+        this.noteService.setActionbarActive(false);
+        this.windowActive = '';
+      });
   }
   public selectFolder(folder: any): void {
     const ids = this.selectedIds.map((note) => note.id);

@@ -9,43 +9,80 @@
 
       <div class="modal-body">
         <form (ngSubmit)="submitFolder(title.value, description.value)">
-          <input
-            #title
-            type="text"
-            placeholder="Digite o nome da pasta"
-          />
+          <input #title type="text" placeholder="Digite o nome da pasta" />
           <textarea
             #description
             placeholder="Digite a descrição da pasta"
           ></textarea>
 
-          <div class="notes">
-            <p>Selecione as notas</p>
-            @for (note of notes; track $index) {
-              <div
-                class="note"
-                [style.background]="note.color"
-                (click)="selectNote(note)"
-                [class.selected]="selectedNote.includes(note.id)"
-              >
-                {{ note.title }}
-              </div>
-            }
-          </div>
           <div class="color-options">
             @for (color of colors; track $index) {
               <div
                 class="color-option"
                 [style.background]="color.color"
-                [class.selected]="color.color === selectedColor"
                 (click)="selectColor(color.color)"
-              ></div>
+              >
+                @if (color.color === selectedColor) {
+                  <div class="check">
+                    <span
+                      class="material-symbols-outlined"
+                      [style.color]="color.color"
+                    >
+                      check
+                    </span>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+
+          <div class="notes-header">
+            <p>Selecione as notas</p>
+
+            <button (click)="toggleActiveNotes(); $event.preventDefault()">
+              <span class="material-symbols-outlined">
+                keyboard_arrow_down
+              </span>
+            </button>
+          </div>
+          <div class="notes" [class.active]="activeNotes">
+            @for (note of notes; track $index) {
+              <div
+                class="note"
+                [style.background]="note.color"
+                (click)="selectNote(note)"
+              >
+                {{ note.title }}
+
+                @if (selectedNote.includes(note.id)) {
+                  <div class="check">
+                    <span
+                      class="material-symbols-outlined"
+                      [style.color]="note.color"
+                    >
+                      check
+                    </span>
+                  </div>
+                }
+              </div>
             }
           </div>
 
           <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">
-              <span class="material-symbols-outlined"> chevron_forward </span>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [class.disabled]="isLoading"
+            >
+              @if (isLoading) {
+                <span class="material-symbols-outlined" id="loading">
+                  progress_activity
+                </span>
+              }
+
+              @if (!isLoading) {
+                <span class="material-symbols-outlined"> chevron_forward </span>
+              }
             </button>
           </div>
         </form>
