@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { FolderService } from '../../services/folder.service';
 import { NoteService } from '../../services/note.service';
@@ -6,6 +6,7 @@ import { tap } from 'rxjs';
 import { Note } from '../../models/note';
 import { AsyncPipe } from '@angular/common';
 import { DeleteService } from '../../../../shared/services/delete.service';
+import { Folder } from '../../models/folder';
 @Component({
   selector: 'app-folders',
   imports: [AsyncPipe],
@@ -27,6 +28,31 @@ export class FoldersComponent implements OnInit {
 
   public mouseOveredFolderId: number | null = null;
 
+  public selectedFolderEdit: Folder[] = [];
+
+  public selectedFolderIdEdit: number | null = null;
+
+  private cdr = inject(ChangeDetectorRef);
+
+  public changedInput: boolean = false;
+
+  public selectedColor: string = '';
+
+  public showConfirmation: boolean = false;
+
+  public folderIdToDelete: number | null = null;
+
+  longPressTimeout: any;
+
+  notes = [
+    { color: '#FFF176' },
+    { color: '#F48FB1' },
+    { color: '#A5D6A7' },
+    { color: '#90CAF9' },
+    { color: '#FFCC80' },
+    { color: '#CE93D8' },
+  ];
+
   ngOnInit(): void {
     this.folderService
       .AllFolders()
@@ -45,6 +71,171 @@ export class FoldersComponent implements OnInit {
     });
   }
 
+  public showConfirmationDialog(
+    value: boolean,
+    folderId: number | null = null,
+  ): void {
+    this.showConfirmation = value;
+    if (!value) {
+      this.folderIdToDelete = null;
+      return;
+    }
+    this.folderIdToDelete = folderId;
+  }
+
+  public filterNotes(folderId: number): void {
+    this.noteById.filter((item) => {
+      item.notes = item.notes.filter(
+        (note) => note.id !== this.folderIdToDelete,
+      );
+      return true;
+    });
+
+    console.log('Filtered notes for folderId:', this.noteById);
+
+    this.changeInput(true);
+    this.showConfirmationDialog(false);
+  }
+
+  public setSelectedColor(color: string): void {
+    this.changeInput(true);
+    this.selectedColor = color;
+  }
+
+  public updateFolder(
+    folderId: number,
+    title: string,
+    description: string,
+    color: string,
+    noteIds: number[],
+  ): void {
+    const data = { title, description, color, noteIds };
+    this.folderService.PutFolder(folderId, data).subscribe({
+      error: (error) => {
+        console.error('Error updating folder:', error);
+      },
+      complete: () => {
+        this.changeInput(false);
+      },
+    });
+  }
+
+  public changeInput(value: boolean): void {
+    this.changedInput = value;
+  }
+  public formatDate(date: string | any, includeHour: boolean = false): any {
+    if (!date) return null;
+    let dateString = date?.slice(0, 10) || '';
+
+    let actualDate: string = new Date().toISOString().slice(0, 10);
+
+    let day = parseInt(dateString?.slice(8, 10) || '0', 10);
+    let month = parseInt(dateString?.slice(5, 7) || '0', 10);
+    let year = parseInt(date?.slice(0, 6) || '0', 10);
+
+    let hour = parseInt(date?.slice(11, 13) || '0', 10);
+    let minute = parseInt(date?.slice(14, 16) || '0', 10);
+
+    const formattedDay = String(day).padStart(2, '0');
+    const formattedMonth = String(month).padStart(2, '0');
+
+    const today = new Date();
+    const yesterday = new Date(
+      Date.UTC(
+        today.getUTCFullYear(),
+        today.getUTCMonth(),
+        today.getUTCDate() - 1,
+      ),
+    );
+
+    const yesterdayString = yesterday.toISOString().slice(0, 10);
+
+    if (dateString === yesterdayString) {
+      if (includeHour) {
+        return `Ontem às ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+      }
+      return 'Ontem';
+    }
+
+    if (dateString === actualDate) {
+      if (includeHour) {
+        return `Hoje às ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+      }
+      return 'Hoje';
+    }
+
+    if (month < new Date().getMonth() + 1) {
+      if (includeHour) {
+        return `${formattedDay}/${formattedMonth}/${year} às ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+      }
+      return `${formattedDay}/${formattedMonth}/${year}`;
+    }
+
+    const weekday = new Intl.DateTimeFormat('pt-BR', {
+      weekday: 'long',
+    }).format(new Date(year, month - 1, day));
+
+    if (includeHour) {
+      return `${weekday.slice(0, 3).charAt(0).toUpperCase()}${weekday.slice(1, 3)}, ${formattedDay}/${formattedMonth} às ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+    }
+
+    return `${weekday.slice(0, 3).charAt(0).toUpperCase()}${weekday.slice(1, 3)}, ${formattedDay}/${formattedMonth}`;
+  }
+  public closeFolderEdit(title: string, description: string): void {
+    if (this.changedInput) {
+      this.updateFolder(
+        this.selectedFolderEdit[0].id,
+        title,
+        description,
+        this.selectedColor,
+        this.noteById
+          .find((item) => item.folderId === this.selectedFolderEdit[0].id)
+          ?.notes.map((note) => note.id) || [],
+      );
+    }
+
+    const updateDOM = () => {
+      this.selectedFolderEdit = [];
+      this.cdr.detectChanges();
+    };
+
+    if ('startViewTransition' in document) {
+      const transition = (document as any).startViewTransition(updateDOM);
+      transition.finished.then(() => {
+        this.selectedFolderIdEdit = null;
+        this.cdr.detectChanges();
+      });
+    } else {
+      updateDOM();
+      this.selectedFolderIdEdit = null;
+    }
+  }
+
+  public showFolderEdit(folder: Folder): void {
+    const selectedFolderCheck = this.folderService.getSelectedFolderCheck();
+
+    if (selectedFolderCheck.length > 0) {
+      this.setSelectedFolderCheckToggle(folder.id);
+      return;
+    }
+
+    this.noteService.falseShowOtherView();
+    this.selectedFolderIdEdit = folder.id;
+    this.cdr.detectChanges();
+
+    const updateDOM = () => {
+      this.selectedFolderEdit = [folder];
+      this.selectedColor = folder.color;
+      this.cdr.detectChanges();
+    };
+
+    if ('startViewTransition' in document) {
+      (document as any).startViewTransition(updateDOM);
+    } else {
+      updateDOM();
+    }
+  }
+
   public deleteFolder(id: number): void {
     if (id != null) {
       this.folderService.setFolderDeleted([id]);
@@ -53,7 +244,33 @@ export class FoldersComponent implements OnInit {
     }
   }
 
-  public setSelectedFolderCheck(id: number): void {
+  public cancelSelectedFolderCheck(): void {
+    if (this.longPressTimeout) {
+      clearTimeout(this.longPressTimeout);
+      this.longPressTimeout = null;
+    }
+  }
+  public setSelectedFolderCheck(id: number, event: PointerEvent): void {
+    if (event.pointerType != 'touch') {
+      return;
+    }
+
+    const selectedFolderCheck = this.folderService.getSelectedFolderCheck();
+
+    if (selectedFolderCheck.includes(id)) {
+      return;
+    }
+
+    this.cancelSelectedFolderCheck();
+    this.longPressTimeout = setTimeout(() => {
+      this.folderService.toggleSelectedFolderCheck(id);
+
+      this.noteService.setActionbarActive(true);
+
+      this.longPressTimeout = null;
+    }, 600);
+  }
+  public setSelectedFolderCheckToggle(id: number): void {
     const selectedFolderCheck = this.folderService.getSelectedFolderCheck();
 
     if (selectedFolderCheck.some((folderId: number) => folderId === id)) {
@@ -65,7 +282,6 @@ export class FoldersComponent implements OnInit {
 
       if (updatedSelectedFolderCheck.length === 0) {
         this.noteService.setActionbarActive(false);
-        this.folderService.setSelectedFolderCheck([]);
       }
       return;
     }

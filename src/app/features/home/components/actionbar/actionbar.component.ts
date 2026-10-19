@@ -49,6 +49,9 @@ export class ActionbarComponent implements OnInit {
 
   public isLoading: boolean = false;
 
+  public haveFolders: boolean = false;
+  public haveNotes: boolean = false;
+
   colors = [
     { color: '#FFF176' },
     { color: '#F48FB1' },
@@ -83,7 +86,11 @@ export class ActionbarComponent implements OnInit {
       this.noteService.numberSelected$,
       this.folderService.numberSelected$,
     ])
-      .pipe(map(([notes, folders]) => notes + folders))
+      .pipe(map(([notes, folders]) => {
+        this.haveNotes = notes > 0;
+        this.haveFolders = folders > 0;
+        return notes + folders;
+      }))
       .subscribe((total) => {
         this.numberSelected = total;
       });

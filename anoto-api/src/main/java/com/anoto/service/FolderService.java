@@ -3,6 +3,9 @@ package com.anoto.service;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -90,33 +93,42 @@ public class FolderService {
                                         return new IllegalArgumentException("Pasta não encontrada.");
                                 });
 
-                if (folderRequest.getTitle() != null) {
-                        folder.setTitle(folderRequest.getTitle());
-                }
-                if (folderRequest.getDescription() != null) {
-                        folder.setDescription(folderRequest.getDescription());
-                }
+                folder.setTitle(folderRequest.getTitle());
+
+                folder.setDescription(folderRequest.getDescription());
 
                 if (folderRequest.getNoteIds() != null) {
-                        Set<Long> existingIds = folder.getNotes().stream()
+                        Set<Long> requestedIds = folderRequest.getNoteIds().stream()
+                                        .collect(Collectors.toSet());
+                        List<Note> currentNotes = new ArrayList<>(folder.getNotes());
+
+                        currentNotes.stream()
+                                        .filter(note -> !requestedIds.contains(note.getId()))
+                                        .forEach(note -> {
+                                                note.setFolder(null);
+                                                folder.getNotes().remove(note);
+                                        });
+
+                        Set<Long> currentIds = folder.getNotes().stream()
                                         .map(Note::getId)
                                         .collect(Collectors.toSet());
-
-                        List<Note> toAdd = folderRequest.getNoteIds().stream()
-                                        .filter(noteId -> !existingIds.contains(noteId))
+                        List<Note> toAdd = requestedIds.stream()
+                                        .filter(noteId -> !currentIds.contains(noteId))
                                         .map(noteId -> noteRepository.findById(noteId)
                                                         .orElseThrow(() -> new IllegalArgumentException(
                                                                         "Nota não encontrada: " + noteId)))
                                         .toList();
 
-                        toAdd.forEach(note -> note.setFolder(folder));
-                        noteRepository.saveAll(toAdd);
-                        folder.getNotes().addAll(toAdd);
+                        toAdd.forEach(note -> {
+                                note.setFolder(folder);
+                                folder.getNotes().add(note);
+                        });
                 }
 
-                if (folderRequest.getColor() != null) {
-                        folder.setColor(folderRequest.getColor());
-                }
+                folder.setColor(folderRequest.getColor());
+
+                folder.setUpdatedAt(LocalDateTime.now());
+
                 folderRepository.save(folder);
 
                 logger.info("Pasta atualizada: " + folder.getId());

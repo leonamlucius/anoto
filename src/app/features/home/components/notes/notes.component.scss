@@ -331,8 +331,22 @@
   z-index: 10000;
 }
 
+::ng-deep ::view-transition-group(note-) {
+  animation-duration: 0.28s;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+  z-index: 10000;
+}
+
 ::ng-deep ::view-transition-old(active-note),
 ::ng-deep ::view-transition-new(active-note) {
+  height: 100%;
+  width: 100%;
+  mix-blend-mode: normal;
+  object-fit: cover;
+}
+
+::ng-deep ::view-transition-old(note-),
+::ng-deep ::view-transition-new(note-) {
   height: 100%;
   width: 100%;
   mix-blend-mode: normal;

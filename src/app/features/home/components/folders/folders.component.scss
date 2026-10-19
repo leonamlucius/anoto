@@ -33,6 +33,15 @@
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
   transition: all 0.3s ease;
 }
+
+.folder.invisible {
+  opacity: 0.2;
+}
+
+.folder.invisible h3,
+.folder.invisible p {
+  opacity: 0;
+}
 .folder:hover {
   transform: scale(1.05);
 }
@@ -77,7 +86,7 @@
 }
 .folder-notes {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   flex-wrap: nowrap;
   width: 100%;
@@ -163,4 +172,283 @@
 .folder .folder-footer button.visible {
   display: flex;
   visibility: visible;
+}
+
+.folder-edit {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.folder-edit-content {
+  width: 90%;
+  max-width: 900px;
+  height: auto;
+  max-height: 90vh;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.folder-edit-content .close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.folder-edit-content .close:hover {
+  opacity: 1;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+form input,
+form textarea {
+  background-color: transparent;
+  border: none;
+  max-width: calc(100% - 30px);
+}
+
+form input:focus,
+form textarea:focus {
+  outline: none;
+}
+
+form input {
+  font-size: 1.3em;
+  font-weight: 600;
+}
+
+form textarea {
+  font-size: 1.1em;
+  font-weight: 400;
+  width: 100%;
+  resize: none;
+  height: 50px;
+  overflow-y: auto;
+}
+form .form-colors {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+form .form-colors .color {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid black;
+  position: relative;
+}
+
+form .form-colors .color button {
+  background-color: #383838;
+  border: none;
+  cursor: pointer;
+  height: 1.5em;
+  width: 1.5em;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+form .form-colors .color button span {
+  scale: 0.7;
+  color: white;
+}
+form .form-colors .color button.active {
+  display: flex;
+}
+
+form .form-notes {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 210px;
+  gap: 10px;
+  overflow-y: auto;
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 10px;
+  border-radius: 6px;
+}
+
+form .form-notes .note {
+  width: 110px;
+  height: 110px;
+  border-radius: 6px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+form .form-notes .note p {
+  margin: 0;
+  font-size: 0.9em;
+  font-weight: 600;
+}
+
+form .form-notes .note button {
+  background-color: red;
+  border: none;
+  cursor: pointer;
+  height: 1.5em;
+  width: 1.5em;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+form .form-notes .note button span {
+  scale: 0.55;
+  color: white;
+}
+
+form .form-footer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  opacity: 0.5;
+}
+
+.confirmation {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.confirmation-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+  width: 400px;
+  height: 200px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.confirmation-content p {
+  color: #383838;
+  font-size: 16px;
+}
+.confirmation-buttons {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-around;
+  gap: 20px;
+}
+.confirmation-buttons button {
+  border: none;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #383838;
+  color: white;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.confirmation-buttons button:hover {
+  cursor: pointer;
+  scale: 1.1;
+}
+
+::ng-deep ::view-transition-group(active-folder) {
+  animation-duration: 0.28s;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+  z-index: 999;
+}
+
+::ng-deep
+  ::view-transition-old(active-folder)
+  ::ng-deep
+  ::view-transition-new(active-folder) {
+  width: 100%;
+  mix-blend-mode: normal;
+  object-fit: cover;
+}
+::ng-deep ::view-transition-group(note-*) {
+  animation-duration: 0.28s;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+  z-index: 10000;
+}
+
+::ng-deep ::view-transition-old(note-*),
+::ng-deep ::view-transition-new(note-*) {
+  width: 100%;
+  mix-blend-mode: normal;
+  object-fit: cover;
+  z-index: 10000;
+}
+
+@media (max-width: 600px) {
+  .folders-container {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    column-gap: 15px;
+  }
+
+  .folder-notes .note {
+    width: 85px;
+    height: 85px;
+  }
+
+  .folder-notes .note:not(:first-child) {
+    margin-left: -40px;
+  }
+  .folder .note-card-check.visible {
+    display: none;
+  }
 }

@@ -19,23 +19,28 @@
   </div>
 
   <div class="actionbar-right">
-    <button (pointerup)="showFolders(); $event.stopPropagation()">
-      <span class="material-symbols-outlined"> folder </span>
-      <p>Pastas</p>
-    </button>
-    <button (pointerup)="showColorPalette(); $event.stopPropagation()">
-      <span class="material-symbols-outlined"> palette </span>
-      <p>Cor</p>
-    </button>
+    @if (haveNotes && !haveFolders) {
+      <button (pointerup)="showFolders(); $event.stopPropagation()">
+        <span class="material-symbols-outlined"> folder </span>
+        <p>Pastas</p>
+      </button>
+
+      <button (pointerup)="showColorPalette(); $event.stopPropagation()">
+        <span class="material-symbols-outlined"> palette </span>
+        <p>Cor</p>
+      </button>
+    }
     <button (pointerup)="createModalDelete(); $event.stopPropagation()">
       <span class="material-symbols-outlined">delete </span>
       <p>Excluir</p>
     </button>
 
-    <button (pointerup)="fixNote(); $event.stopPropagation()">
-      <span class="material-symbols-outlined"> keep</span>
-      <p>Fixar</p>
-    </button>
+    @if (haveNotes && !haveFolders) {
+      <button (pointerup)="fixNote(); $event.stopPropagation()">
+        <span class="material-symbols-outlined"> keep</span>
+        <p>Fixar</p>
+      </button>
+    }
   </div>
 </div>
 

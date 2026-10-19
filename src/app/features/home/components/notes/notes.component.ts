@@ -39,7 +39,10 @@ import { WelcomeComponent } from '../../../../shared/components/welcome/welcome.
 })
 export class NotesComponent implements OnInit {
   showDeleteModal = signal(false);
-  constructor(protected noteService: NoteService, protected deleteService: DeleteService) {}
+  constructor(
+    protected noteService: NoteService,
+    protected deleteService: DeleteService,
+  ) {}
 
   private cdr = inject(ChangeDetectorRef);
 
@@ -62,8 +65,6 @@ export class NotesComponent implements OnInit {
   selectedNoteIdEdit: number | null = null;
 
   selectedNoteIdFixed: number | null = null;
-
-  suspendNoteIdEdit = <number | null>null;
 
   suspendNoteIdToggle = <number[]>[];
 
@@ -144,7 +145,6 @@ export class NotesComponent implements OnInit {
     event: PointerEvent | null,
     isFixed: boolean | null,
     color: string | null,
-
   ) {
     const selectedNoteActions = this.noteService.getSelectedNoteActions();
 
@@ -173,7 +173,12 @@ export class NotesComponent implements OnInit {
     this.longPressTimer = undefined;
   }
 
-  public markNoteAction(id: number, event: PointerEvent, isFixed: boolean, color: string | null) {
+  public markNoteAction(
+    id: number,
+    event: PointerEvent,
+    isFixed: boolean,
+    color: string | null,
+  ) {
     if (event.pointerType != 'touch') {
       return;
     }
@@ -184,11 +189,10 @@ export class NotesComponent implements OnInit {
       const updatedSelection = selectedNoteActions.filter(
         (note) => note.id !== id,
       );
-      
+
       this.noteService.setNumberSelected(updatedSelection.length);
 
       if (updatedSelection.length === 0) {
-        this.suspendNoteIdEdit = null;
         this.noteService.setActionbarActive(false);
       }
       return;
@@ -201,7 +205,7 @@ export class NotesComponent implements OnInit {
         { id, fixed: isFixed, color },
       ];
       this.noteService.setSelectedNoteAction(updatedSelection);
-      this.suspendNoteIdEdit = id;
+
       this.noteService.setActionbarActive(true);
       this.noteService.setNumberSelected(updatedSelection.length);
       this.longPressTimer = undefined;

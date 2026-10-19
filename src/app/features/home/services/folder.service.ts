@@ -11,7 +11,10 @@ import { AlertService } from '../../../shared/services/alert.service';
 })
 export class FolderService {
   private apiUrl = environment.apiUrl;
-  constructor(private http: HttpClient, private alertService: AlertService) {}
+  constructor(
+    private http: HttpClient,
+    private alertService: AlertService,
+  ) {}
 
   private folderDeletedSubject = new BehaviorSubject<number[]>([]);
 
@@ -31,6 +34,19 @@ export class FolderService {
   public numberSelectedSubject = new BehaviorSubject<number>(0);
 
   public numberSelected$ = this.numberSelectedSubject.asObservable();
+
+
+  public PutFolder(folderId: number, data: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/folders/${folderId}`, data).pipe(
+      finalize(() => {
+        this.AllFolders().subscribe();
+      }),
+      catchError((error) => {
+        console.error('Error updating folder:', error);
+        return throwError(() => error);
+      }),
+    );
+  }
 
   public DeleteFolder(folderId: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/folders/${folderId}`).pipe(

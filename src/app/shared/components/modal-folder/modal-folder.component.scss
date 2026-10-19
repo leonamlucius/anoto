@@ -230,3 +230,10 @@
     transform: rotate(360deg);
   }
 }
+
+@media (max-width: 600px) {
+  .modal-content {
+    width: 90%;
+    height: auto;
+  }
+}
