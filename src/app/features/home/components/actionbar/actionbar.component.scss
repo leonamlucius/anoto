@@ -151,6 +151,7 @@
   gap: 8px;
   top: 75px;
   right: 5px;
+  width: 33.3%;
   animation: slideRight 0.3s ease-in-out;
 }
 
@@ -168,6 +169,13 @@
   font-size: 1.2em;
   cursor: pointer;
   padding: 0;
+  width: 100%;
+}
+
+.folder-option p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .folder-swatch {
@@ -297,6 +305,9 @@
 }
 
 @media (max-width: 600px) {
+  .folders.active {
+    width: 98%;
+  }
   .actionbar-button {
     width: 40px;
     height: 40px;

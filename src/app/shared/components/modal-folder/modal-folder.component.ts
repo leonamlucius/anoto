@@ -4,18 +4,18 @@ import { FolderService } from '../../../features/home/services/folder.service';
 
 import { NoteService } from '../../../features/home/services/note.service';
 import { Note } from '../../../features/home/models/note';
-import { tap } from 'rxjs';
-
+import { catchError, tap } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 @Component({
   selector: 'app-modal-folder',
-  imports: [FormsModule],
+  imports: [FormsModule, AsyncPipe],
   templateUrl: './modal-folder.component.html',
   styleUrls: ['./modal-folder.component.scss'],
 })
 export class ModalFolderComponent implements OnInit {
   constructor(
     private folderService: FolderService,
-    private noteService: NoteService,
+    protected noteService: NoteService,
   ) {}
 
   showModal: boolean = false;
@@ -54,7 +54,6 @@ export class ModalFolderComponent implements OnInit {
       .subscribe();
   }
 
-
   setIsLoading(isLoading: boolean): void {
     this.isLoading = isLoading;
   }
@@ -67,6 +66,14 @@ export class ModalFolderComponent implements OnInit {
     this.setIsLoading(true);
     this.folderService
       .CreateFolder(title, description, this.selectedColor, this.selectedNote)
+      .pipe(
+        catchError((error) => {
+          setTimeout(() => {
+            this.setIsLoading(false);
+          }, 1000);
+          throw error;
+        }),
+      )
       .subscribe(() => {
         this.setIsLoading(false);
         this.closeModal();
@@ -75,10 +82,8 @@ export class ModalFolderComponent implements OnInit {
   public selectNote(note: Note): void {
     if (this.selectedNote.includes(note.id)) {
       this.selectedNote = this.selectedNote.filter((n) => n !== note.id);
-     
     } else {
       this.selectedNote.push(note.id);
-      
     }
   }
   public selectColor(color: string): void {
@@ -89,6 +94,5 @@ export class ModalFolderComponent implements OnInit {
     this.selectedColor = '';
     this.selectedNote = [];
     this.folderService.setShowModal(false);
-   
   }
 }

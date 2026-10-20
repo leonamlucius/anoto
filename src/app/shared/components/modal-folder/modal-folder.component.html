@@ -46,7 +46,10 @@
             </button>
           </div>
           <div class="notes" [class.active]="activeNotes">
-            @for (note of notes; track $index) {
+            @for (
+              note of noteService.allNotesObservable$ | async;
+              track $index
+            ) {
               <div
                 class="note"
                 [style.background]="note.color"

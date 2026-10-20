@@ -5,7 +5,7 @@ import {
   ChangeDetectorRef,
   signal,
 } from '@angular/core';
-import { finalize, switchMap, tap, map } from 'rxjs/operators';
+import { finalize, switchMap, tap, map, catchError } from 'rxjs/operators';
 import { NoteService } from '../../services/note.service';
 import { FolderService } from '../../services/folder.service';
 import { combineLatest, firstValueFrom } from 'rxjs';
@@ -137,6 +137,14 @@ export class ActionbarComponent implements OnInit {
       .LinkFolder(
         this.selectedFolderId[0],
         this.selectedIds.map((note) => note.id),
+      )
+      .pipe(
+        catchError((error) => {
+          setTimeout(() => {
+            this.setIsLoading(false);
+          }, 1000);
+          throw error;
+        }),
       )
       .subscribe(() => {
         this.setIsLoading(false);

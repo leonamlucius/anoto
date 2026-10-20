@@ -42,6 +42,8 @@ export class FoldersComponent implements OnInit {
 
   public folderIdToDelete: number | null = null;
 
+  public showFolders: boolean = true;
+
   longPressTimeout: any;
 
   notes = [
@@ -69,6 +71,10 @@ export class FoldersComponent implements OnInit {
         this.getNotesById([folder]);
       });
     });
+  }
+
+  public toggleShowFolders(): void {
+    this.showFolders = !this.showFolders;
   }
 
   public showConfirmationDialog(
@@ -280,7 +286,10 @@ export class FoldersComponent implements OnInit {
 
       this.folderService.toggleSelectedFolderCheck(id);
 
-      if (updatedSelectedFolderCheck.length === 0 && !this.noteService.hasSelectedNoteAction()) {
+      if (
+        updatedSelectedFolderCheck.length === 0 &&
+        !this.noteService.hasSelectedNoteAction()
+      ) {
         this.noteService.setActionbarActive(false);
       }
       return;

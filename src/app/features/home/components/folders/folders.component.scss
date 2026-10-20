@@ -3,13 +3,24 @@
   width: 100%;
 }
 .folder-title {
-  color: #383838;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   gap: 2px;
-  font-size: 1.2em;
-  font-weight: 200;
+}
+.folder-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: fit-content;
+  background-color: #383838;
+  color: #ffffff;
+  height: 40px;
+  padding: 5px 20px;
+  border-radius: 40px;
+  font-size: 0.9em;
+  cursor: pointer;
 }
 
 .folder-title span {
@@ -17,13 +28,28 @@
 }
 .folders-container {
   width: 100%;
+  height: 0px;
+  overflow-y: hidden;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 30px;
   column-gap: 15px;
-  padding: 10px 0 35px 0;
+  transition: all 0.3s ease;
 }
 
+.folders-container.active {
+  height: auto;
+  padding: 10px 0 35px 0;
+  user-select: none;
+  overflow-y: visible;
+}
+#folder-toggle-icon {
+  transition: all 0.3s ease;
+  user-select: none;
+}
+#folder-toggle-icon.active {
+  transform: rotate(180deg);
+}
 .folder {
   position: relative;
   margin-top: 15px;
@@ -86,7 +112,7 @@
 }
 .folder-notes {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   flex-wrap: nowrap;
   width: 100%;
@@ -289,10 +315,10 @@ form .form-colors .color button.active {
 }
 
 form .form-notes {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
   justify-content: flex-start;
-  align-items: flex-start;
-  flex-wrap: wrap;
+  align-items: center;
   width: 100%;
   height: 210px;
   gap: 10px;
@@ -440,6 +466,10 @@ form .form-footer {
     column-gap: 15px;
   }
 
+  .folder{
+    height: 170px;
+  }
+
   .folder-notes .note {
     width: 85px;
     height: 85px;
@@ -450,5 +480,14 @@ form .form-footer {
   }
   .folder .note-card-check.visible {
     display: none;
+  }
+
+  form .form-notes {
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  }
+
+  form .form-notes .note {
+    width: 100%;
+    height: 100px;
   }
 }

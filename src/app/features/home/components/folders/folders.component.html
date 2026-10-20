@@ -1,186 +1,191 @@
-<div class="folder-title">
-  <span class="material-symbols-outlined"> folder </span>
-  <p>Minhas Pastas</p>
-</div>
+@if (folders.length > 0) {
+  <div class="folder-title">
+    <div class="folder-toggle" (click)="showFolders = !showFolders">
+      <span class="material-symbols-outlined"> folder </span>
+      <p>Minhas Pastas</p>
+      <span class="material-symbols-outlined" id="folder-toggle-icon" [class.active]="showFolders"> keyboard_arrow_up </span>
+    </div>
+  </div>
 
-<div class="folders-container">
-  @for (folder of folders; track $index) {
-    <div
-      class="folder"
-      [style.--folder-color]="folder.color"
-      [style.view-transition-name]="
-        selectedFolderIdEdit === folder.id && selectedFolderEdit.length === 0
-          ? 'active-folder'
-          : 'none'
-      "
-      (mouseover)="setTrueMouseOveredFolder(folder.id)"
-      (click)="showFolderEdit(folder)"
-      (pointerdown)="setSelectedFolderCheck(folder.id, $event)"
-      (pointerup)="cancelSelectedFolderCheck()"
-      (pointercancel)="cancelSelectedFolderCheck()"
-      (mouseleave)="setFalseMouseOveredFolder()"
-      [class.selected]="
-        (this.folderService.selectedFolderCheck$ | async)?.includes(
-          folder.id
-        ) === true
-      "
-      [class.invisible]="selectedFolderEdit[0]?.id === folder.id"
-    >
-      <div class="folder-notes">
-        @for (noteByIdItem of noteById; track $index) {
-          @if (noteByIdItem.folderId === folder.id) {
-            @for (note of noteByIdItem.notes; track $index) {
-              @if ($index < 6) {
-                <div class="note" [style.background-color]="note.color"></div>
-              }
-            }
-          }
-        }
-      </div>
-
-      <div class="folder-content">
-        <h3>{{ folder.title }}</h3>
-
-        <div class="folder-footer">
-          <p>{{ folder.noteIds.length }}</p>
-          <button
-            (pointerdown)="$event.stopPropagation()"
-            (click)="deleteFolder(folder.id); $event.stopPropagation()"
-            [class.visible]="
-              mouseOveredFolderId === folder.id ||
-              (this.folderService.selectedFolderCheck$ | async)?.includes(
-                folder.id
-              ) === true
-            "
-          >
-            <span class="material-symbols-outlined"> delete </span>
-          </button>
-        </div>
-      </div>
-
-      <button
-        class="note-card-check"
-        [class.visible]="
-          mouseOveredFolderId === folder.id ||
+  <div class="folders-container" [class.active]="showFolders">
+    @for (folder of folders; track $index) {
+      <div
+        class="folder"
+        [style.--folder-color]="folder.color"
+        [style.view-transition-name]="
+          selectedFolderIdEdit === folder.id && selectedFolderEdit.length === 0
+            ? 'active-folder'
+            : 'none'
+        "
+        (mouseover)="setTrueMouseOveredFolder(folder.id)"
+        (click)="showFolderEdit(folder)"
+        (pointerdown)="setSelectedFolderCheck(folder.id, $event)"
+        (pointerup)="cancelSelectedFolderCheck()"
+        (pointercancel)="cancelSelectedFolderCheck()"
+        (mouseleave)="setFalseMouseOveredFolder()"
+        [class.selected]="
           (this.folderService.selectedFolderCheck$ | async)?.includes(
             folder.id
           ) === true
         "
-        (pointerdown)="$event.stopPropagation()"
-        (click)="
-          setSelectedFolderCheckToggle(folder.id); $event.stopPropagation()
-        "
+        [class.invisible]="selectedFolderEdit[0]?.id === folder.id"
       >
-        <span class="material-symbols-outlined" [style.color]="folder.color">
-          check
-        </span>
-      </button>
-    </div>
-  }
-</div>
-
-@if (selectedFolderEdit.length > 0) {
-  <div
-    class="folder-edit"
-    (click)="
-      closeFolderEdit(titleInput.value, descriptionInput.value);
-      $event.stopPropagation()
-    "
-  >
-    <div
-      class="folder-edit-content"
-      style="view-transition-name: active-folder"
-      [style.background-color]="selectedColor"
-      (click)="$event.stopPropagation()"
-    >
-      <button
-        (click)="
-          closeFolderEdit(titleInput.value, descriptionInput.value);
-          $event.stopPropagation()
-        "
-        class="close"
-      >
-        <span class="material-symbols-outlined"> close </span>
-      </button>
-
-      <form>
-        <input
-          type="text"
-          [value]="selectedFolderEdit[0]?.title"
-          (change)="changeInput(true); $event.stopPropagation()"
-          #titleInput
-        />
-
-        <textarea
-          [value]="selectedFolderEdit[0]?.description"
-          (change)="changeInput(true); $event.stopPropagation()"
-          #descriptionInput
-        ></textarea>
-
-        <div class="form-colors">
-          @for (note of notes; track $index) {
-            <div
-              class="color"
-              [style.background-color]="note.color"
-              (click)="setSelectedColor(note.color); $event.stopPropagation()"
-            >
-              <button
-                type="button"
-                [class.active]="selectedColor === note.color"
-              >
-                <span class="material-symbols-outlined"> check </span>
-              </button>
-            </div>
-          }
-        </div>
-
-        <div class="form-notes">
+        <div class="folder-notes">
           @for (noteByIdItem of noteById; track $index) {
-            @if (noteByIdItem.folderId === selectedFolderEdit[0]?.id) {
+            @if (noteByIdItem.folderId === folder.id) {
               @for (note of noteByIdItem.notes; track $index) {
-                <div class="note" [style.background-color]="note.color">
-                  <p>{{ note.content }}</p>
-
-                  <button
-                    type="button"
-                    (click)="
-                      showConfirmationDialog(true, note.id);
-                      $event.stopPropagation()
-                    "
-                  >
-                    <span class="material-symbols-outlined"> remove </span>
-                  </button>
-                </div>
+                @if ($index < 6) {
+                  <div class="note" [style.background-color]="note.color"></div>
+                }
               }
             }
           }
         </div>
-        <div class="form-footer">
-          <p class="updated-at">
-            {{ formatDate(selectedFolderEdit[0]?.updatedAt, true) }}
-          </p>
 
-          <p class="created-at">
-            {{ formatDate(selectedFolderEdit[0]?.createdAt, false) }}
-          </p>
+        <div class="folder-content">
+          <h3>{{ folder.title }}</h3>
+
+          <div class="folder-footer">
+            <p>{{ folder.noteIds.length }}</p>
+            <button
+              (pointerdown)="$event.stopPropagation()"
+              (click)="deleteFolder(folder.id); $event.stopPropagation()"
+              [class.visible]="
+                mouseOveredFolderId === folder.id ||
+                (this.folderService.selectedFolderCheck$ | async)?.includes(
+                  folder.id
+                ) === true
+              "
+            >
+              <span class="material-symbols-outlined"> delete </span>
+            </button>
+          </div>
         </div>
-      </form>
-    </div>
+
+        <button
+          class="note-card-check"
+          [class.visible]="
+            mouseOveredFolderId === folder.id ||
+            (this.folderService.selectedFolderCheck$ | async)?.includes(
+              folder.id
+            ) === true
+          "
+          (pointerdown)="$event.stopPropagation()"
+          (click)="
+            setSelectedFolderCheckToggle(folder.id); $event.stopPropagation()
+          "
+        >
+          <span class="material-symbols-outlined" [style.color]="folder.color">
+            check
+          </span>
+        </button>
+      </div>
+    }
   </div>
-}
-@if (showConfirmation) {
-  <div class="confirmation">
-    <div class="confirmation-content">
-      <p>Deseja desvincular esta nota?</p>
-      <div class="confirmation-buttons">
-        <button type="button" (click)="showConfirmationDialog(false)">
+
+  @if (selectedFolderEdit.length > 0) {
+    <div
+      class="folder-edit"
+      (click)="
+        closeFolderEdit(titleInput.value, descriptionInput.value);
+        $event.stopPropagation()
+      "
+    >
+      <div
+        class="folder-edit-content"
+        style="view-transition-name: active-folder"
+        [style.background-color]="selectedColor"
+        (click)="$event.stopPropagation()"
+      >
+        <button
+          (click)="
+            closeFolderEdit(titleInput.value, descriptionInput.value);
+            $event.stopPropagation()
+          "
+          class="close"
+        >
           <span class="material-symbols-outlined"> close </span>
         </button>
 
-        <button type="button" (click)="filterNotes(folderIdToDelete!)">
-          <span class="material-symbols-outlined"> chevron_forward </span>
-        </button>
+        <form>
+          <input
+            type="text"
+            [value]="selectedFolderEdit[0]?.title"
+            (change)="changeInput(true); $event.stopPropagation()"
+            #titleInput
+          />
+
+          <textarea
+            [value]="selectedFolderEdit[0]?.description"
+            (change)="changeInput(true); $event.stopPropagation()"
+            #descriptionInput
+          ></textarea>
+
+          <div class="form-colors">
+            @for (note of notes; track $index) {
+              <div
+                class="color"
+                [style.background-color]="note.color"
+                (click)="setSelectedColor(note.color); $event.stopPropagation()"
+              >
+                <button
+                  type="button"
+                  [class.active]="selectedColor === note.color"
+                >
+                  <span class="material-symbols-outlined"> check </span>
+                </button>
+              </div>
+            }
+          </div>
+
+          <div class="form-notes">
+            @for (noteByIdItem of noteById; track $index) {
+              @if (noteByIdItem.folderId === selectedFolderEdit[0]?.id) {
+                @for (note of noteByIdItem.notes; track $index) {
+                  <div class="note" [style.background-color]="note.color">
+                    <p>{{ note.content }}</p>
+
+                    <button
+                      type="button"
+                      (click)="
+                        showConfirmationDialog(true, note.id);
+                        $event.stopPropagation()
+                      "
+                    >
+                      <span class="material-symbols-outlined"> remove </span>
+                    </button>
+                  </div>
+                }
+              }
+            }
+          </div>
+          <div class="form-footer">
+            <p class="updated-at">
+              {{ formatDate(selectedFolderEdit[0]?.updatedAt, true) }}
+            </p>
+
+            <p class="created-at">
+              {{ formatDate(selectedFolderEdit[0]?.createdAt, false) }}
+            </p>
+          </div>
+        </form>
       </div>
     </div>
-  </div>
+  }
+  @if (showConfirmation) {
+    <div class="confirmation">
+      <div class="confirmation-content">
+        <p>Deseja desvincular esta nota?</p>
+        <div class="confirmation-buttons">
+          <button type="button" (click)="showConfirmationDialog(false)">
+            <span class="material-symbols-outlined"> close </span>
+          </button>
+
+          <button type="button" (click)="filterNotes(folderIdToDelete!)">
+            <span class="material-symbols-outlined"> chevron_forward </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  }
 }

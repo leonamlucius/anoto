@@ -122,6 +122,10 @@ export class FolderService {
       .pipe(
         switchMap(() => this.AllFolders()),
         catchError((error) => {
+          this.alertService.show(
+            'error',
+            'Erro ao vincular a pasta. Por favor, tente novamente.',
+          );
           console.error('Error linking folder:', error);
           return throwError(() => error);
         }),
