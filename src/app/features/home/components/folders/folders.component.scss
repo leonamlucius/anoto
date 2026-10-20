@@ -316,9 +316,9 @@ form .form-colors .color button.active {
 
 form .form-notes {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
   width: 100%;
   height: 210px;
   gap: 10px;

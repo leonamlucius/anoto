@@ -117,6 +117,7 @@ export class FolderService {
     folderId: number | number[],
     noteIds: number[],
   ): Observable<any> {
+    
     return this.http
       .post(`${this.apiUrl}/folders/link/${folderId}`, { noteIds })
       .pipe(

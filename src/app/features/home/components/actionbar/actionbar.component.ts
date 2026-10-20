@@ -132,27 +132,32 @@ export class ActionbarComponent implements OnInit {
   }
 
   public linkFolder(): void {
+    console.log('Folders linked:', this.selectedFolderId);
     this.setIsLoading(true);
-    this.folderService
-      .LinkFolder(
-        this.selectedFolderId[0],
-        this.selectedIds.map((note) => note.id),
-      )
-      .pipe(
-        catchError((error) => {
-          setTimeout(() => {
-            this.setIsLoading(false);
-          }, 1000);
-          throw error;
-        }),
-      )
-      .subscribe(() => {
-        this.setIsLoading(false);
-        this.noteService.setSelectedNoteAction([]);
-        this.selectedFolderId = [];
-        this.noteService.setActionbarActive(false);
-        this.windowActive = '';
-      });
+
+    this.selectedFolderId.forEach((id) => {
+      this.folderService
+        .LinkFolder(
+          id,
+          this.selectedIds.map((note) => note.id),
+        )
+        .pipe(
+          catchError((error) => {
+            setTimeout(() => {
+              this.setIsLoading(false);
+            }, 1000);
+            throw error;
+          }),
+        )
+        .subscribe(() => {
+          this.setIsLoading(false);
+          this.noteService.setSelectedNoteAction([]);
+          this.selectedFolderId = [];
+          this.noteService.setActionbarActive(false);
+          this.windowActive = '';
+        });
+      console.log('Linking folder ID:', id);
+    });
   }
   public selectFolder(folder: any): void {
     const ids = this.selectedIds.map((note) => note.id);

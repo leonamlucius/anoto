@@ -74,9 +74,11 @@ public class FolderService {
                                                 }))
                                 .toList();
 
-                newNotes.forEach(note -> note.setFolder(folder));
+                newNotes.forEach(note -> {
+                        note.getFolders().add(folder);
+                        folder.getNotes().add(note);
+                });
                 noteRepository.saveAll(newNotes);
-                folder.getNotes().addAll(newNotes);
 
                 logger.info("Pasta vinculada: " + folder.getId());
                 return new FolderResponse(folder.getId(), folder.getTitle(), folder.getDescription(),
@@ -105,7 +107,8 @@ public class FolderService {
                         currentNotes.stream()
                                         .filter(note -> !requestedIds.contains(note.getId()))
                                         .forEach(note -> {
-                                                note.setFolder(null);
+                                                note.getFolders().removeIf(
+                                                                noteFolder -> noteFolder.getId().equals(folder.getId()));
                                                 folder.getNotes().remove(note);
                                         });
 
@@ -120,7 +123,7 @@ public class FolderService {
                                         .toList();
 
                         toAdd.forEach(note -> {
-                                note.setFolder(folder);
+                                note.getFolders().add(folder);
                                 folder.getNotes().add(note);
                         });
                 }
@@ -147,7 +150,10 @@ public class FolderService {
                                 });
 
                 List<Note> notes = folder.getNotes();
-                notes.forEach(note -> note.setFolder(null));
+                for (Note note : folder.getNotes()) {
+                        note.getFolders().removeIf(
+                                        noteFolder -> noteFolder.getId().equals(folder.getId()));
+                }
                 noteRepository.saveAll(notes);
 
                 folderRepository.delete(folder);
@@ -211,9 +217,11 @@ public class FolderService {
                                                                 }))
                                                 .toList();
 
-                notes.forEach(note -> note.setFolder(folder));
+                notes.forEach(note -> {
+                        note.getFolders().add(folder);
+                        folder.getNotes().add(note);
+                });
                 noteRepository.saveAll(notes);
-                folder.setNotes(notes);
 
                 logger.info("Pasta criada com sucesso! " + folder.getId());
 

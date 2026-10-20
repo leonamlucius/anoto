@@ -40,7 +40,7 @@ export class FoldersComponent implements OnInit {
 
   public showConfirmation: boolean = false;
 
-  public folderIdToDelete: number | null = null;
+  public noteIdToDelete: number | null = null;
 
   public showFolders: boolean = true;
 
@@ -79,23 +79,24 @@ export class FoldersComponent implements OnInit {
 
   public showConfirmationDialog(
     value: boolean,
-    folderId: number | null = null,
+    NoteId: number | null = null,
   ): void {
     this.showConfirmation = value;
     if (!value) {
-      this.folderIdToDelete = null;
+      this.noteIdToDelete = null;
       return;
     }
-    this.folderIdToDelete = folderId;
+    this.noteIdToDelete = NoteId;
   }
 
   public filterNotes(folderId: number): void {
-    this.noteById.filter((item) => {
-      item.notes = item.notes.filter(
-        (note) => note.id !== this.folderIdToDelete,
-      );
-      return true;
+    this.noteById = this.noteById.map((item) => {
+      if (item.folderId === this.selectedFolderEdit[0]?.id) {
+        item.notes = item.notes.filter((note) => note.id !== folderId);
+      }
+      return item;
     });
+ 
 
     console.log('Filtered notes for folderId:', this.noteById);
 
