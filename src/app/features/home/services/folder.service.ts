@@ -65,6 +65,9 @@ export class FolderService {
   public setSelectedFolderCheck(ids: number[]): void {
     this.selectedFolderCheckSubject.next(ids);
   }
+  public hasSelectedFolderCheck(): boolean {
+    return this.selectedFolderCheckSubject.getValue().length > 0;
+  }
   public getSelectedFolderCheck(): number[] {
     return this.selectedFolderCheckSubject.getValue();
   }

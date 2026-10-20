@@ -7,6 +7,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { DeleteService } from '../../../../shared/services/delete.service';
+import { FolderService } from '../../services/folder.service';
 import { Note } from '../../models/note';
 import { AsyncPipe } from '@angular/common';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
@@ -42,6 +43,7 @@ export class NotesComponent implements OnInit {
   constructor(
     protected noteService: NoteService,
     protected deleteService: DeleteService,
+    protected folderService: FolderService,
   ) {}
 
   private cdr = inject(ChangeDetectorRef);
@@ -155,7 +157,7 @@ export class NotesComponent implements OnInit {
       this.noteService.setSelectedNoteAction(updatedSelection);
       this.noteService.setNumberSelected(updatedSelection.length);
 
-      if (updatedSelection.length === 0) {
+      if (updatedSelection.length === 0 && !this.folderService.hasSelectedFolderCheck()) {
         this.suspendNoteIdToggle = [];
         this.noteService.setActionbarActive(false);
       }
@@ -192,7 +194,7 @@ export class NotesComponent implements OnInit {
 
       this.noteService.setNumberSelected(updatedSelection.length);
 
-      if (updatedSelection.length === 0) {
+      if (updatedSelection.length === 0 && !this.folderService.hasSelectedFolderCheck()) {
         this.noteService.setActionbarActive(false);
       }
       return;

@@ -280,7 +280,7 @@ export class FoldersComponent implements OnInit {
 
       this.folderService.toggleSelectedFolderCheck(id);
 
-      if (updatedSelectedFolderCheck.length === 0) {
+      if (updatedSelectedFolderCheck.length === 0 && !this.noteService.hasSelectedNoteAction()) {
         this.noteService.setActionbarActive(false);
       }
       return;

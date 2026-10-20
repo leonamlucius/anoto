@@ -58,8 +58,6 @@ export class NoteService {
   private deleteNoteSubject = new BehaviorSubject<number[]>([]);
   public deleteNote$ = this.deleteNoteSubject.asObservable();
 
- 
-
   public filteredNotes$: Observable<Note[]> = combineLatest([
     this.allNotesObservable$,
     this.selectedColor$,
@@ -74,17 +72,12 @@ export class NoteService {
 
   private apiUrl = environment.apiUrl;
 
-
-  
-
- 
-
   public setDeleteNote(id: number[]) {
     this.deleteNoteSubject.next(id);
   }
 
-  public hasSelectedNoteAction(id: number): boolean {
-    return this.selectedNoteActionSubject.value.some((note) => note.id === id);
+  public hasSelectedNoteAction(): boolean {
+    return this.selectedNoteActionSubject.value.length > 0;
   }
 
   public getSelectedNoteActions(): Note[] {

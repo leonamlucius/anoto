@@ -86,11 +86,13 @@ export class ActionbarComponent implements OnInit {
       this.noteService.numberSelected$,
       this.folderService.numberSelected$,
     ])
-      .pipe(map(([notes, folders]) => {
-        this.haveNotes = notes > 0;
-        this.haveFolders = folders > 0;
-        return notes + folders;
-      }))
+      .pipe(
+        map(([notes, folders]) => {
+          this.haveNotes = notes > 0;
+          this.haveFolders = folders > 0;
+          return notes + folders;
+        }),
+      )
       .subscribe((total) => {
         this.numberSelected = total;
       });
@@ -102,7 +104,6 @@ export class ActionbarComponent implements OnInit {
             color: note.color,
           }));
           this.showCheck(selectedNotes);
-          // this.updateSelectedFolder();
         }),
       )
       .subscribe();
@@ -111,7 +112,6 @@ export class ActionbarComponent implements OnInit {
       .pipe(
         tap((folders) => {
           this.allfolders = folders;
-          // this.updateSelectedFolder();
         }),
       )
       .subscribe();
