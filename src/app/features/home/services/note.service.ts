@@ -12,7 +12,7 @@ import {
   throwError,
 } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../../environments/environment.production';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Note } from '../models/note';
 
@@ -58,9 +58,6 @@ export class NoteService {
   private deleteNoteSubject = new BehaviorSubject<number[]>([]);
   public deleteNote$ = this.deleteNoteSubject.asObservable();
 
-  private showDeleteModalSubject = new BehaviorSubject<boolean>(false);
-  public showDeleteModal$ = this.showDeleteModalSubject.asObservable();
-
   public filteredNotes$: Observable<Note[]> = combineLatest([
     this.allNotesObservable$,
     this.selectedColor$,
@@ -75,16 +72,12 @@ export class NoteService {
 
   private apiUrl = environment.apiUrl;
 
-  public setShowDeleteModal(show: boolean) {
-    this.showDeleteModalSubject.next(show);
-  }
-
   public setDeleteNote(id: number[]) {
     this.deleteNoteSubject.next(id);
   }
 
-  public hasSelectedNoteAction(id: number): boolean {
-    return this.selectedNoteActionSubject.value.some((note) => note.id === id);
+  public hasSelectedNoteAction(): boolean {
+    return this.selectedNoteActionSubject.value.length > 0;
   }
 
   public getSelectedNoteActions(): Note[] {

@@ -2,6 +2,8 @@ package com.anoto.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.Set;
+import java.util.HashSet;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -34,9 +36,14 @@ public class Note {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    
     private LocalDateTime updatedAt;
 
     @Column(nullable = false)
     private Boolean fixed;
+
+
+    @Builder.Default
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "note_folders", joinColumns = @JoinColumn(name = "note_id"), inverseJoinColumns = @JoinColumn(name = "folder_id"))
+    private Set<Folder> folders = new HashSet<>();
 }

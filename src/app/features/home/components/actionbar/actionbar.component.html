@@ -19,25 +19,34 @@
   </div>
 
   <div class="actionbar-right">
-    <button (pointerup)="showColorPalette(); $event.stopPropagation()">
-      <span class="material-symbols-outlined"> palette </span>
-      <p>Cor</p>
-    </button>
+    @if (haveNotes && !haveFolders) {
+      <button (pointerup)="showFolders(); $event.stopPropagation()">
+        <span class="material-symbols-outlined"> folder </span>
+        <p>Pastas</p>
+      </button>
+
+      <button (pointerup)="showColorPalette(); $event.stopPropagation()">
+        <span class="material-symbols-outlined"> palette </span>
+        <p>Cor</p>
+      </button>
+    }
     <button (pointerup)="createModalDelete(); $event.stopPropagation()">
       <span class="material-symbols-outlined">delete </span>
       <p>Excluir</p>
     </button>
 
-    <button (pointerup)="fixNote(); $event.stopPropagation()">
-      <span class="material-symbols-outlined"> keep</span>
-      <p>Fixar</p>
-    </button>
+    @if (haveNotes && !haveFolders) {
+      <button (pointerup)="fixNote(); $event.stopPropagation()">
+        <span class="material-symbols-outlined"> keep</span>
+        <p>Fixar</p>
+      </button>
+    }
   </div>
 </div>
 
 <div
   class="color-palette"
-  [class.active]="colorPaletteActive"
+  [class.active]="windowActive === 'color'"
   [class.hide]="hideColor"
 >
   @for (color of colors; track color.color) {
@@ -60,6 +69,48 @@
   }
 </div>
 
-@if (noteService.showDeleteModal$ | async) {
-  <app-delete (closeModal)="noteService.setShowDeleteModal(false)"></app-delete>
+<div
+  class="folders"
+  [class.active]="windowActive === 'folder'"
+  [class.hide]="windowActive !== 'folder'"
+>
+  @for (folder of allfolders; track folder.id) {
+    <button class="folder-option" (pointerup)="selectFolder(folder)">
+      <span class="folder-swatch" [style.background-color]="folder.color">
+        @if (selectedFolderId.includes(folder.id)) {
+          <span class="check-icon">
+            <span
+              class="material-symbols-outlined"
+              [style.color]="folder.color"
+            >
+              check
+            </span>
+          </span>
+        }
+      </span>
+      <p>{{ folder.title }}</p>
+    </button>
+  }
+
+  @if (this.selectedFolderId.length > 0) {
+    <div class="folder-footer">
+      <button (pointerup)="$event.stopPropagation(); linkFolder()">
+        @if (!isLoading) {
+          <span class="material-symbols-outlined"> chevron_forward </span>
+        }
+
+        @if (isLoading) {
+          <span class="material-symbols-outlined" id="loading">
+            progress_activity
+          </span>
+        }
+      </button>
+    </div>
+  }
+</div>
+
+@if (deleteService.showDeleteModal$ | async) {
+  <app-delete
+    (closeModal)="deleteService.setShowDeleteModal(false)"
+  ></app-delete>
 }

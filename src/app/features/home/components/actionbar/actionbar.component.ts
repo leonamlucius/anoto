@@ -5,12 +5,14 @@ import {
   ChangeDetectorRef,
   signal,
 } from '@angular/core';
-import { finalize, switchMap, tap } from 'rxjs/operators';
+import { finalize, switchMap, tap, map, catchError } from 'rxjs/operators';
 import { NoteService } from '../../services/note.service';
-import { firstValueFrom } from 'rxjs';
+import { FolderService } from '../../services/folder.service';
+import { combineLatest, firstValueFrom } from 'rxjs';
 import { DeleteComponent } from '../../../../shared/components/delete/delete.component';
 import { Note } from '../../models/note';
 import { AsyncPipe } from '@angular/common';
+import { DeleteService } from '../../../../shared/services/delete.service';
 
 @Component({
   selector: 'app-actionbar',
@@ -37,6 +39,19 @@ export class ActionbarComponent implements OnInit {
 
   currentColor: string | null = null;
 
+  allfolders: any[] = [];
+
+  selectedFolderId: number[] = [];
+
+  windowActive: string | 'folder' | 'color' | 'delete' = '';
+
+  selectedFolderCheck: number[] = [];
+
+  public isLoading: boolean = false;
+
+  public haveFolders: boolean = false;
+  public haveNotes: boolean = false;
+
   colors = [
     { color: '#FFF176' },
     { color: '#F48FB1' },
@@ -46,7 +61,11 @@ export class ActionbarComponent implements OnInit {
     { color: '#CE93D8' },
   ];
 
-  constructor(protected noteService: NoteService) {}
+  constructor(
+    protected noteService: NoteService,
+    protected folderService: FolderService,
+    protected deleteService: DeleteService,
+  ) {}
 
   ngOnInit() {
     this.noteService.actionbarActive$
@@ -63,14 +82,20 @@ export class ActionbarComponent implements OnInit {
       )
       .subscribe();
 
-    this.noteService.numberSelected$
+    combineLatest([
+      this.noteService.numberSelected$,
+      this.folderService.numberSelected$,
+    ])
       .pipe(
-        tap((numberSelected) => {
-          this.numberSelected = numberSelected;
+        map(([notes, folders]) => {
+          this.haveNotes = notes > 0;
+          this.haveFolders = folders > 0;
+          return notes + folders;
         }),
       )
-      .subscribe();
-
+      .subscribe((total) => {
+        this.numberSelected = total;
+      });
     this.noteService.selectedNoteAction$
       .pipe(
         tap((selectedNotes) => {
@@ -82,6 +107,18 @@ export class ActionbarComponent implements OnInit {
         }),
       )
       .subscribe();
+
+    this.folderService.folders$
+      .pipe(
+        tap((folders) => {
+          this.allfolders = folders;
+        }),
+      )
+      .subscribe();
+  }
+
+  public setIsLoading(isLoading: boolean): void {
+    this.isLoading = isLoading;
   }
 
   public showCheck(selectedNotes: Note[]) {
@@ -92,6 +129,51 @@ export class ActionbarComponent implements OnInit {
     )
       ? this.currentColor
       : null;
+  }
+
+  public linkFolder(): void {
+    console.log('Folders linked:', this.selectedFolderId);
+    this.setIsLoading(true);
+
+    this.selectedFolderId.forEach((id) => {
+      this.folderService
+        .LinkFolder(
+          id,
+          this.selectedIds.map((note) => note.id),
+        )
+        .pipe(
+          catchError((error) => {
+            setTimeout(() => {
+              this.setIsLoading(false);
+            }, 1000);
+            throw error;
+          }),
+        )
+        .subscribe(() => {
+          this.setIsLoading(false);
+          this.noteService.setSelectedNoteAction([]);
+          this.selectedFolderId = [];
+          this.noteService.setActionbarActive(false);
+          this.windowActive = '';
+        });
+      console.log('Linking folder ID:', id);
+    });
+  }
+  public selectFolder(folder: any): void {
+    const ids = this.selectedIds.map((note) => note.id);
+    if (ids.length === 0) return;
+
+    if (this.selectedFolderId.includes(folder.id)) {
+      this.selectedFolderId = this.selectedFolderId.filter(
+        (id) => id !== folder.id,
+      );
+      return;
+    }
+    this.selectedFolderId.push(folder.id);
+  }
+
+  public showFolders(): void {
+    this.windowActive = this.windowActive === 'folder' ? '' : 'folder';
   }
   public selectColor(color: string): void {
     this.selectedColor = color;
@@ -111,30 +193,38 @@ export class ActionbarComponent implements OnInit {
     this.hideColor = true;
 
     setTimeout(() => {
-      this.colorPaletteActive = false;
+      this.windowActive = '';
       this.hideColor = false;
     }, 200);
   }
 
   public showColorPalette(): void {
-    if (this.colorPaletteActive) {
+    if (this.windowActive === 'color') {
       this.hideColorPalette();
       return;
     }
 
     this.hideColor = false;
-    this.colorPaletteActive = true;
+    this.windowActive = 'color';
   }
 
   public createModalDelete() {
-    const selectedIds = this.noteService
+    const selectedIdsNotes = this.noteService
       .getSelectedNoteActions()
       .map((note) => note.id);
 
-    if (selectedIds.length === 0) return;
+    const selectedIdsFolders = this.folderService
+      .getSelectedFolderCheck()
+      .map((id) => id);
 
-    this.noteService.setDeleteNote(selectedIds);
-    this.noteService.setShowDeleteModal(true);
+    if (selectedIdsNotes.length === 0 && selectedIdsFolders.length === 0)
+      return;
+
+    this.windowActive = 'delete';
+
+    this.noteService.setDeleteNote(selectedIdsNotes);
+    this.folderService.setFolderDeleted(selectedIdsFolders);
+    this.deleteService.setShowDeleteModal(true);
   }
 
   public async fixNote() {
@@ -176,6 +266,10 @@ export class ActionbarComponent implements OnInit {
       this.exiting = false;
       this.noteService.setSelectedNoteAction([]);
       this.noteService.setNumberSelected(0);
+      this.folderService.setSelectedFolderCheck([]);
+      this.folderService.setFolderDeleted([]);
+      this.folderService.setSelectedFolderLength(0);
+      this.numberSelected = 0;
     }, 200);
 
     this.hideColorPalette();
@@ -184,13 +278,13 @@ export class ActionbarComponent implements OnInit {
   public regularizeText(num: number): string {
     let numberString = num.toString();
 
-    let pluralNotes = 'nota';
+    let pluralNotes = 'item';
 
     if (num >= 2) {
-      pluralNotes = 'notas';
+      pluralNotes = 'itens';
       return ' ' + pluralNotes + ' selecionadas';
     }
-    return ' ' + pluralNotes + ' selecionada';
+    return ' ' + pluralNotes + ' selecionado';
   }
 
   public regularizeNumber(num: number): string {

@@ -41,7 +41,9 @@
         <div
           class="note-card"
           (click)="createModalEdit(note)"
-          (pointerdown)="markNoteAction(note.id, $event, note.fixed, note.color)"
+          (pointerdown)="
+            markNoteAction(note.id, $event, note.fixed, note.color)
+          "
           (pointerup)="cancelMarkNoteAction()"
           (pointercancel)="cancelMarkNoteAction()"
           (pointerenter)="showEdit(note)"
@@ -179,8 +181,10 @@
   }
 </div>
 
-@if (noteService.showDeleteModal$ | async) {
-  <app-delete (closeModal)="noteService.setShowDeleteModal(false)"></app-delete>
+@if (deleteService.showDeleteModal$ | async) {
+  <app-delete
+    (closeModal)="deleteService.setShowDeleteModal(false)"
+  ></app-delete>
 }
 
 @if (selectedNote) {
