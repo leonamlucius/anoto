@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AlertService } from '../../shared/services/alert.service';
-import { environment } from '../../../environments/environment.production';
+import { environment } from '../../../environments/environment';
 import { NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
