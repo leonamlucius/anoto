@@ -84,9 +84,7 @@
 }
 
 .folder.selected {
-  filter:
-    drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))
-    drop-shadow(0 0 2px black);
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1)) drop-shadow(0 0 2px black);
 }
 
 .folder .note-card-check {
@@ -201,7 +199,10 @@
   display: flex;
   visibility: visible;
 }
-
+.folder .folder-footer button.invisible {
+  opacity: 0.5;
+  pointer-events: none;
+}
 .folder-edit {
   position: fixed;
   inset: 0;
@@ -468,7 +469,7 @@ form .form-footer {
     column-gap: 15px;
   }
 
-  .folder{
+  .folder {
     height: 170px;
   }
 

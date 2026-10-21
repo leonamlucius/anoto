@@ -85,6 +85,9 @@
             <span
               class="material-symbols-outlined"
               id="delete"
+              [class.invisible]="
+                (noteService.actionbarActive$ | async) === true
+              "
               (click)="createModalDelete(note.id); $event.stopPropagation()"
             >
               delete
@@ -157,6 +160,7 @@
         <span
           class="material-symbols-outlined"
           id="delete"
+          [class.invisible]="(noteService.actionbarActive$ | async) === true"
           (click)="createModalDelete(note.id); $event.stopPropagation()"
         >
           delete
