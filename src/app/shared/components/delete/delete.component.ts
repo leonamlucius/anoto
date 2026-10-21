@@ -33,10 +33,6 @@ export class DeleteComponent implements OnInit {
       this.folderId = folderId;
     });
 
-    this.deleteService.textDeleteModal$.subscribe((text) => {
-      this.textDeleteModal = text;
-    });
-
     combineLatest([
       this.noteService.deleteNote$,
       this.folderService.folderDeleted$,

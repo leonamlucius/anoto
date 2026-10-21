@@ -16,7 +16,7 @@ import { Folder } from '../../models/folder';
 export class FoldersComponent implements OnInit {
   constructor(
     protected folderService: FolderService,
-    private noteService: NoteService,
+    protected noteService: NoteService,
     private deleteService: DeleteService,
   ) {}
 
