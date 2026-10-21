@@ -330,7 +330,9 @@ export class NotesComponent implements OnInit {
   public createModalEdit(note: any = null) {
     const selectedActions = this.noteService.getSelectedNoteActions();
 
-    if (selectedActions.length > 0) {
+    const selectecFolder = this.folderService.getSelectedFolderCheck();
+
+    if (selectedActions.length > 0 || selectecFolder.length > 0) {
       this.markNoteActionToggle(note.id, null, null, note.color);
       return;
     }

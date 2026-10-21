@@ -96,7 +96,6 @@ export class FoldersComponent implements OnInit {
       }
       return item;
     });
- 
 
     console.log('Filtered notes for folderId:', this.noteById);
 
@@ -219,9 +218,11 @@ export class FoldersComponent implements OnInit {
   }
 
   public showFolderEdit(folder: Folder): void {
-    const selectedFolderCheck = this.folderService.getSelectedFolderCheck();
+    const selectedActions = this.noteService.getSelectedNoteActions();
 
-    if (selectedFolderCheck.length > 0) {
+    const selectecFolder = this.folderService.getSelectedFolderCheck();
+
+    if (selectecFolder.length > 0 || selectedActions.length > 0) {
       this.setSelectedFolderCheckToggle(folder.id);
       return;
     }

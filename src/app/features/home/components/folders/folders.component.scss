@@ -84,7 +84,9 @@
 }
 
 .folder.selected {
-  filter: drop-shadow(0 0px 2px black);
+  filter:
+    drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))
+    drop-shadow(0 0 2px black);
 }
 
 .folder .note-card-check {
