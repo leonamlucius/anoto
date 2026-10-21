@@ -36,13 +36,14 @@
             }
           </div>
 
-          <div class="notes-header">
+          <div
+            class="notes-header"
+            (click)="toggleActiveNotes(); $event.preventDefault()"
+          >
             <p>Selecione as notas</p>
 
-            <button (click)="toggleActiveNotes(); $event.preventDefault()">
-              <span class="material-symbols-outlined">
-                keyboard_arrow_down
-              </span>
+            <button>
+              <span class="material-symbols-outlined" [class.active]="activeNotes"> keyboard_arrow_up </span>
             </button>
           </div>
           <div class="notes" [class.active]="activeNotes">

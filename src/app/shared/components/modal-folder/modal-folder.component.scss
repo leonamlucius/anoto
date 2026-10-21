@@ -126,13 +126,21 @@
   justify-content: space-between;
   align-items: center;
   color: white;
+  cursor: pointer;
 }
 
 .notes-header button {
   background-color: transparent;
   border: none;
-  cursor: pointer;
   color: white;
+}
+
+.notes-header button span {
+  transition: all 0.3s ease;
+}
+
+.notes-header button span.active {
+  transform: rotate(180deg);
 }
 .note {
   width: 100%;
