@@ -1,26 +1,24 @@
 <div class="modal-create">
   <div class="modal-content">
-    <p>Deseja excluir os itens selecionados?</p>
+    <p>{{ textDeleteModal }}</p>
     <div class="buttons">
-
       <button class="cancel-button" (click)="close()">
-        <span class="material-symbols-outlined">
-          close
-        </span>
+        <span class="material-symbols-outlined"> close </span>
       </button>
-      <button class="delete-button" (click)="delete()" [class.disabled]="isLoading">
+      <button
+        class="delete-button"
+        (click)="delete()"
+        [class.disabled]="isLoading"
+      >
         @if (!isLoading) {
-          <span class="material-symbols-outlined">
-            chevron_forward
-          </span>
+          <span class="material-symbols-outlined"> chevron_forward </span>
         }
         @if (isLoading) {
-          <span class="material-symbols-outlined" id="loading" >
+          <span class="material-symbols-outlined" id="loading">
             progress_activity
           </span>
         }
       </button>
     </div>
   </div>
-
 </div>
