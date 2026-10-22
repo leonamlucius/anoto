@@ -1,0 +1,53 @@
+:host {
+  padding: 15px 25px;
+  width: 100%;
+  border-top: 1px solid #eeeeee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #383838;
+  opacity: 0.8;
+}
+
+.footer-made {
+  opacity: 1;
+  font-size: 0.8em;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.footer-made img {
+  width: 6em;
+}
+
+.footer-made a {
+  color: black;
+}
+
+.footer-links {
+  display: flex;
+  gap: 15px;
+}
+
+.footer-links button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.3em;
+}
+@media (max-width: 600px) {
+  :host {
+    padding: 15px 15px;
+  }
+  .footer-made {
+    gap: 5px;
+    font-size: 0.7em;
+  }
+
+  .footer-links button {
+    font-size: 1.2em;
+  }
+}

@@ -1,0 +1,15 @@
+<div class="footer-made">
+  <img src="/img/anoto.svg" alt="anoto" />
+  <p>
+    Desenvolvido por
+    <a href="https://github.com/leonamlucius" target="_blank">leonamlucius</a>
+  </p>
+</div>
+
+<div class="footer-links">
+  @for (link of footerLinks; track link.name) {
+    <button title="{{ link.name }}" type="button" (click)="openLink(link.url)">
+      <i class="bi bi-{{ link.icon }}"></i>
+    </button>
+  }
+</div>

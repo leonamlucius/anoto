@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { TitleComponent } from '../../../home/components/title/title.component';
+import { TitleComponent } from '../../../../shared/components/title/title.component';
 
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
