@@ -1,6 +1,12 @@
-<app-title></app-title>
-@if (progressActivityVisible) {
-  <span class="material-symbols-outlined"> progress_activity </span>
-}
+<div class="topbar-left">
+  <app-title></app-title>
 
-<app-profile class="profile-component"></app-profile>
+  @if (progressActivityVisible) {
+    <span class="material-symbols-outlined"> progress_activity </span>
+  }
+</div>
+
+<div class="topbar-right">
+  <app-search></app-search>
+  <app-profile class="profile-component"></app-profile>
+</div>

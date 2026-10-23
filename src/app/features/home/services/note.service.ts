@@ -1,5 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { AlertService } from '../../../shared/services/alert.service';
+import { SearchService } from '../../../shared/services/search.service';
 import {
   BehaviorSubject,
   catchError,
@@ -23,7 +24,31 @@ export class NoteService {
   constructor(
     private alertService: AlertService,
     private http: HttpClient,
-  ) {}
+    private searchService: SearchService,
+  ) {
+    this.filteredNotes$ = combineLatest([
+      this.allNotesObservable$,
+      this.selectedColor$,
+      this.searchService.valueSearch$,
+    ]).pipe(
+      map(([notes, color, search]) => {
+        console.log('Filtering notes by search:', search);
+
+        if (search) {
+          if (search === '') {
+            return notes;
+          }
+          return notes.filter((note) => note.title.includes(search));
+        }
+
+        if (color) {
+          return notes.filter((note) => note.color === color);
+        }
+
+        return notes;
+      }),
+    );
+  }
 
   private readonly allNotes = new BehaviorSubject<Note[]>([]);
 
@@ -58,17 +83,7 @@ export class NoteService {
   private deleteNoteSubject = new BehaviorSubject<number[]>([]);
   public deleteNote$ = this.deleteNoteSubject.asObservable();
 
-  public filteredNotes$: Observable<Note[]> = combineLatest([
-    this.allNotesObservable$,
-    this.selectedColor$,
-  ]).pipe(
-    map(([notes, color]) => {
-      if (!color) {
-        return notes;
-      }
-      return notes.filter((note) => note.color === color);
-    }),
-  );
+  public filteredNotes$: Observable<Note[]>;
 
   private apiUrl = environment.apiUrl;
 

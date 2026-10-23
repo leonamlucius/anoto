@@ -1,0 +1,36 @@
+:host {
+  width: 100%;
+}
+.search-component {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 40px;
+  width: 100%;
+  gap: 0.5rem;
+  background-color: #383838;
+  color: white;
+  padding: 5px 20px;
+  border-radius: 40px;
+  transition: all 0.3s ease;
+}
+
+.search-component input {
+  background-color: transparent;
+  border: none;
+  color: white;
+  outline: none;
+}
+
+.search-component input::placeholder {
+  color: white;
+}
+.search-component button {
+  color: white;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+.search-component button span {
+  scale: 0.8;
+}

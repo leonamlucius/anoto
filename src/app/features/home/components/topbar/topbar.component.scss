@@ -5,6 +5,13 @@
   align-items: center;
   position: relative;
 }
+.topbar-left,
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 span {
   position: absolute;
   left: 13%;

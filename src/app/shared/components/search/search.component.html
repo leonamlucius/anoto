@@ -1,0 +1,13 @@
+<div class="search-component">
+  <span class="material-symbols-outlined"> search </span>
+  <input
+    type="text"
+    placeholder="Pesquisar..."
+    (input)="search($event.target.value)"
+  />
+  @if (this.searchService.valueSearch$ | async) {
+    <button (click)="search('')">
+      <span class="material-symbols-outlined"> close </span>
+    </button>
+  }
+</div>
