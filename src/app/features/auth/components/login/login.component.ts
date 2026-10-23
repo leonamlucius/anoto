@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { AlertService } from '../../../../shared/services/alert.service';
-import { TitleComponent } from '../../../home/components/title/title.component';
+import { TitleComponent } from '../../../../shared/components/title/title.component';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TitleComponent } from '../../../home/components/title/title.component';
+import { TitleComponent } from '../../../../shared/components/title/title.component';
 
 import { AuthService } from '../../../../core/services/auth.service';
 import { AlertService } from '../../../../shared/services/alert.service';

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TitleComponent } from '../../../home/components/title/title.component';
+import { TitleComponent } from '../../../../shared/components/title/title.component';
 import { ProfileComponent } from '../../../home/components/profile/profile.component';
 import { NoteService } from '../../../home/services/note.service';
 import { inject, effect } from '@angular/core';

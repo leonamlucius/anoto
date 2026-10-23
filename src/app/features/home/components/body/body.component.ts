@@ -7,12 +7,14 @@ import { AddComponent } from '../../../../shared/components/add/add.component';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
 import {FoldersComponent} from '../folders/folders.component';
 import { ModalFolderComponent } from '../../../../shared/components/modal-folder/modal-folder.component';
+import {FooterComponent} from '../footer/footer.component';
+import { ɵEmptyOutletComponent } from '@angular/router';
 
 
 
 @Component({
   selector: 'app-body',
-  imports: [NotesComponent, TopbarComponent, AlertComponent, AddComponent, ToolbarComponent, FoldersComponent, ModalFolderComponent],
+  imports: [NotesComponent, TopbarComponent, AlertComponent, AddComponent, ToolbarComponent, FoldersComponent, ModalFolderComponent, FooterComponent, ɵEmptyOutletComponent],
   templateUrl: './body.component.html',
   styleUrls: ['./body.component.scss'],
 })
