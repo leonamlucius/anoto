@@ -5,6 +5,7 @@ import { NoteService } from '../../../home/services/note.service';
 import { inject, effect } from '@angular/core';
 import { ɵEmptyOutletComponent } from '@angular/router';
 import { SearchComponent } from '../../../../shared/components/search/search.component';
+import { SearchService } from '../../../../shared/services/search.service';
 @Component({
   selector: 'app-topbar',
   imports: [TitleComponent, ProfileComponent, ɵEmptyOutletComponent, SearchComponent],
@@ -14,7 +15,7 @@ import { SearchComponent } from '../../../../shared/components/search/search.com
 export class TopbarComponent {
   public progressActivityVisible: boolean = true;
 
-  constructor(private noteService: NoteService) {
+  constructor(private noteService: NoteService, protected searchService: SearchService) {
     effect(() => {
       this.progressActivityVisible = this.noteService.loading();
     });

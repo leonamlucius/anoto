@@ -8,29 +8,65 @@
   height: 40px;
   width: 100%;
   gap: 0.5rem;
-  background-color: #383838;
-  color: white;
+  background-color: transparent;
+  color: #cccccc;
+  border: 1px solid #cccccc;
   padding: 5px 20px;
   border-radius: 40px;
   transition: all 0.3s ease;
+  overflow: hidden;
 }
 
 .search-component input {
   background-color: transparent;
   border: none;
-  color: white;
+  color: #cccccc;
   outline: none;
+  width: 100%;
 }
 
 .search-component input::placeholder {
-  color: white;
+  color: #cccccc;
 }
 .search-component button {
-  color: white;
+  color: #cccccc;
   background-color: transparent;
   border: none;
   cursor: pointer;
 }
 .search-component button span {
   scale: 0.8;
+}
+
+@media (max-width: 600px) {
+  .search-component {
+    width: 40px;
+    height: 40px;
+    gap: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .search-component.active {
+    width: 100%;
+    padding: 5px 20px;
+    gap: 0.5rem;
+  }
+
+  .search-component input {
+    display: block;
+    width: 0;
+    opacity: 0;
+  }
+
+  .search-component.active input {
+    width: 100%;
+    opacity: 1;
+  }
+
+  .search-component span {
+    font-size: 1.2em;
+  }
 }

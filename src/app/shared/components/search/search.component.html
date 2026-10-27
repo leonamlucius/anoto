@@ -1,12 +1,19 @@
-<div class="search-component">
+<div
+  class="search-component"
+  [class.active]="searchService.getActiveSearch()"
+  (click)="activeSearch()"
+>
   <span class="material-symbols-outlined"> search </span>
   <input
     type="text"
     placeholder="Pesquisar..."
+    [(ngModel)]="inputValue"
+    #searchInput
+    (blur)="deactivateSearch(); $event.stopPropagation()"
     (input)="search($event.target.value)"
   />
   @if (this.searchService.valueSearch$ | async) {
-    <button (click)="search('')">
+    <button (click)="clearSearch()">
       <span class="material-symbols-outlined"> close </span>
     </button>
   }

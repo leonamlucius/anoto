@@ -1,4 +1,4 @@
-<div class="topbar-left">
+<div class="topbar-left" [class.inactive]="searchService.getActiveSearch()">
   <app-title></app-title>
 
   @if (progressActivityVisible) {
@@ -6,7 +6,7 @@
   }
 </div>
 
-<div class="topbar-right">
+<div class="topbar-right" [class.active]="searchService.getActiveSearch()">
   <app-search></app-search>
   <app-profile class="profile-component"></app-profile>
 </div>
