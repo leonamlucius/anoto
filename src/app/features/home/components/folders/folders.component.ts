@@ -311,8 +311,6 @@ export class FoldersComponent implements OnInit {
   }
 
   public getNotesById(folderId: any[]): void {
-    console.log('Fetching notes for folder IDs:', folderId);
-
     this.noteService.allNotesObservable$.subscribe((notes) => {
       folderId.forEach((folderIdItem) => {
         const folderNotes = notes.filter((note) =>
@@ -333,7 +331,5 @@ export class FoldersComponent implements OnInit {
         }
       });
     });
-
-    console.log(this.noteById);
   }
 }

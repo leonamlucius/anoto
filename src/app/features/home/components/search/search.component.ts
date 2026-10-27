@@ -2,6 +2,7 @@ import { Component, NgModule, ViewChild, ElementRef } from '@angular/core';
 import { SearchService } from '../../services/search.service';
 import { AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { NoteService } from '../../services/note.service';
 
 @Component({
   selector: 'app-search',
@@ -10,7 +11,10 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './search.component.scss',
 })
 export class SearchComponent {
-  constructor(protected searchService: SearchService) {}
+  constructor(
+    protected searchService: SearchService,
+    protected noteService: NoteService,
+  ) {}
 
   public inputValue: string = '';
 
@@ -21,6 +25,7 @@ export class SearchComponent {
     this.searchService.setActiveSearch(false);
     this.searchService.setValueSearch('');
     this.inputValue = '';
+    this.noteService.setSearchFoundNotes(true);
   }
   public activeSearch(): void {
     if (this.searchService.getActiveSearch()) return;
@@ -40,8 +45,12 @@ export class SearchComponent {
   public search(value: string) {
     if (!value) {
       this.searchService.setActiveSearch(false);
+      this.noteService.setSearchFoundNotes(true);
       this.searchService.setValueSearch('');
       return;
+    }
+    if (!this.searchService.getActiveSearch()) {
+      this.searchService.setActiveSearch(true);
     }
     this.searchService.setValueSearch(value);
   }

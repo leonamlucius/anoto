@@ -4,18 +4,26 @@ import { ProfileComponent } from '../../../home/components/profile/profile.compo
 import { NoteService } from '../../../home/services/note.service';
 import { inject, effect } from '@angular/core';
 import { ɵEmptyOutletComponent } from '@angular/router';
-import { SearchComponent } from '../../../../shared/components/search/search.component';
-import { SearchService } from '../../../../shared/services/search.service';
+import { SearchComponent } from '../search/search.component';
+import { SearchService } from '../../services/search.service';
 @Component({
   selector: 'app-topbar',
-  imports: [TitleComponent, ProfileComponent, ɵEmptyOutletComponent, SearchComponent],
+  imports: [
+    TitleComponent,
+    ProfileComponent,
+    ɵEmptyOutletComponent,
+    SearchComponent,
+  ],
   templateUrl: './topbar.component.html',
   styleUrls: ['./topbar.component.scss'],
 })
 export class TopbarComponent {
   public progressActivityVisible: boolean = true;
 
-  constructor(private noteService: NoteService, protected searchService: SearchService) {
+  constructor(
+    private noteService: NoteService,
+    protected searchService: SearchService,
+  ) {
     effect(() => {
       this.progressActivityVisible = this.noteService.loading();
     });

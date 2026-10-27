@@ -1,6 +1,6 @@
 <div
   class="search-component"
-  [class.active]="searchService.getActiveSearch()"
+  [class.active]="searchService.getActiveSearch() === true"
   (click)="activeSearch()"
 >
   <span class="material-symbols-outlined"> search </span>

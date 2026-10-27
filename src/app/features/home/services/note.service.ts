@@ -1,6 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { AlertService } from '../../../shared/services/alert.service';
-import { SearchService } from '../../../shared/services/search.service';
+import { SearchService } from './search.service';
 import {
   BehaviorSubject,
   catchError,
@@ -32,13 +32,19 @@ export class NoteService {
       this.searchService.valueSearch$,
     ]).pipe(
       map(([notes, color, search]) => {
-        console.log('Filtering notes by search:', search);
-
         if (search) {
-          if (search === '') {
+          if (search.trim() === '') {
             return notes;
           }
-          return notes.filter((note) => note.title.includes(search));
+          if (search === '') {
+            this.searchFoundNotesSubject.next(false);
+            return notes;
+          }
+          const filtered = notes.filter((note) =>
+            note.title.toLowerCase().includes(search.toLowerCase()),
+          );
+          this.searchFoundNotesSubject.next(filtered.length > 0);
+          return filtered;
         }
 
         if (color) {
@@ -49,6 +55,9 @@ export class NoteService {
       }),
     );
   }
+
+  private searchFoundNotesSubject = new Subject<boolean>();
+  public searchFoundNotes$ = this.searchFoundNotesSubject.asObservable();
 
   private readonly allNotes = new BehaviorSubject<Note[]>([]);
 
@@ -87,6 +96,9 @@ export class NoteService {
 
   private apiUrl = environment.apiUrl;
 
+  public setSearchFoundNotes(value: boolean) {
+    this.searchFoundNotesSubject.next(value);
+  }
   public setDeleteNote(id: number[]) {
     this.deleteNoteSubject.next(id);
   }
