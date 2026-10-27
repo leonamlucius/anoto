@@ -122,6 +122,8 @@ export class NoteService {
     this.actionbarActiveSubject.next(active);
   }
   public setLoading() {
+    this.searchService.setActiveSearch(false);
+    this.searchService.setValueSearch('');
     this.loading.set(!this.loading().valueOf());
   }
 
