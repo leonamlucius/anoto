@@ -14,7 +14,10 @@ export class SearchComponent {
   constructor(
     protected searchService: SearchService,
     protected noteService: NoteService,
-  ) {}
+  ) {
+    this.inputValue = '';
+    searchService.valueSearch$.subscribe(value => this.inputValue = value);
+  }
 
   public inputValue: string = '';
 
@@ -52,6 +55,7 @@ export class SearchComponent {
     if (!this.searchService.getActiveSearch()) {
       this.searchService.setActiveSearch(true);
     }
+    
     this.searchService.setValueSearch(value);
   }
 }

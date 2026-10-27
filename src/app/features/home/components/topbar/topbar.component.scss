@@ -28,14 +28,20 @@ span {
 }
 
 @media (max-width: 600px) {
-  :host {
-    padding: 0 15px 0 0;
-  }
   span {
     left: 45%;
   }
   .profile-component {
     display: none;
+  }
+
+  .topbar-right {
+    padding: 0 15px 0 0;
+  }
+
+  .topbar-right.active {
+    padding: 0 10px;
+    width: 100%;
   }
 }
 
