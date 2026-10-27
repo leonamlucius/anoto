@@ -4,6 +4,22 @@
   justify-content: space-between;
   align-items: center;
   position: relative;
+  transition: all 0.3s ease;
+}
+.topbar-left,
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.topbar-left.inactive {
+  width: 0px;
+  overflow: hidden;
+}
+.topbar-right.active {
+  padding: 0 10px;
+  width: 100%;
 }
 span {
   position: absolute;
@@ -12,6 +28,9 @@ span {
 }
 
 @media (max-width: 600px) {
+  :host {
+    padding: 0 15px 0 0;
+  }
   span {
     left: 45%;
   }

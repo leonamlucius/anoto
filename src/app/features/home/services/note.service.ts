@@ -1,5 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { AlertService } from '../../../shared/services/alert.service';
+import { SearchService } from './search.service';
 import {
   BehaviorSubject,
   catchError,
@@ -23,7 +24,40 @@ export class NoteService {
   constructor(
     private alertService: AlertService,
     private http: HttpClient,
-  ) {}
+    private searchService: SearchService,
+  ) {
+    this.filteredNotes$ = combineLatest([
+      this.allNotesObservable$,
+      this.selectedColor$,
+      this.searchService.valueSearch$,
+    ]).pipe(
+      map(([notes, color, search]) => {
+        if (search) {
+          if (search.trim() === '') {
+            return notes;
+          }
+          if (search === '') {
+            this.searchFoundNotesSubject.next(false);
+            return notes;
+          }
+          const filtered = notes.filter((note) =>
+            note.title.toLowerCase().includes(search.toLowerCase()),
+          );
+          this.searchFoundNotesSubject.next(filtered.length > 0);
+          return filtered;
+        }
+
+        if (color) {
+          return notes.filter((note) => note.color === color);
+        }
+
+        return notes;
+      }),
+    );
+  }
+
+  private searchFoundNotesSubject = new Subject<boolean>();
+  public searchFoundNotes$ = this.searchFoundNotesSubject.asObservable();
 
   private readonly allNotes = new BehaviorSubject<Note[]>([]);
 
@@ -58,20 +92,13 @@ export class NoteService {
   private deleteNoteSubject = new BehaviorSubject<number[]>([]);
   public deleteNote$ = this.deleteNoteSubject.asObservable();
 
-  public filteredNotes$: Observable<Note[]> = combineLatest([
-    this.allNotesObservable$,
-    this.selectedColor$,
-  ]).pipe(
-    map(([notes, color]) => {
-      if (!color) {
-        return notes;
-      }
-      return notes.filter((note) => note.color === color);
-    }),
-  );
+  public filteredNotes$: Observable<Note[]>;
 
   private apiUrl = environment.apiUrl;
 
+  public setSearchFoundNotes(value: boolean) {
+    this.searchFoundNotesSubject.next(value);
+  }
   public setDeleteNote(id: number[]) {
     this.deleteNoteSubject.next(id);
   }

@@ -1,3 +1,9 @@
+@if ((noteService.searchFoundNotes$ | async) === false) {
+  <div class="no-notes">
+    <p>Nenhuma nota encontrada.</p>
+  </div>
+}
+
 @if ((notes$ | async)?.length === 0 && !pageAreLoaded) {
   <div class="no-notes">
     <p>Carregando notas...</p>
@@ -10,7 +16,8 @@
 @if (
   (notes$ | async)?.length === 0 &&
   pageAreLoaded &&
-  (noteService.selectedColor$ | async) === null
+  (noteService.selectedColor$ | async) === null &&
+  (noteService.searchFoundNotes$ | async) === true
 ) {
   <div class="no-notes">
     <app-welcome></app-welcome>
@@ -20,7 +27,8 @@
 @if (
   (notes$ | async)?.length === 0 &&
   pageAreLoaded &&
-  (noteService.selectedColor$ | async) !== null
+  (noteService.selectedColor$ | async) !== null &&
+  (noteService.searchFoundNotes$ | async) === true
 ) {
   <div class="no-notes-color">
     <app-error></app-error>
