@@ -44,12 +44,11 @@ export class HomeComponent implements OnInit {
     idleLoop$
       .pipe(
         switchMap(() => {
-          return this.authService.testToken(token);
+          return this.authService.testToken();
         }),
       )
       .subscribe((isValid: boolean) => {
         if (!isValid) {
-          localStorage.removeItem('token');
           window.location.href = '/login';
         }
       });

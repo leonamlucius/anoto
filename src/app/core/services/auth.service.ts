@@ -37,7 +37,6 @@ export class AuthService {
       })
       .pipe(
         tap((response) => {
-          localStorage.setItem('token', response.token);
           this.setName(response.name);
           this.alertService.show('success', 'Login realizado com sucesso!');
           this.router.navigate(['/home']);
@@ -133,21 +132,32 @@ export class AuthService {
       );
   }
 
-  public testToken(token: any): Observable<boolean> {
-    return this.http
-      .post<boolean>(`${this.apiUrl}/auth/jwtTest`, { token })
-      .pipe(
-        tap((response) => {
-          return response;
-        }),
-        catchError((error) => {
-          console.error('Failed to test token:', error);
-          this.alertService.show(
-            'error',
-            'Falha ao testar token. Por favor, tente novamente.',
-          );
-          return of(false);
-        }),
-      );
+  public testToken(): Observable<boolean> {
+    return this.http.post<boolean>(`${this.apiUrl}/auth/jwtTest`, {}).pipe(
+      tap((response) => {
+        return response;
+      }),
+      catchError((error) => {
+        console.error('Failed to test token:', error);
+        this.alertService.show(
+          'error',
+          'Falha ao testar token. Por favor, tente novamente.',
+        );
+        return of(false);
+      }),
+    );
+  }
+
+  public logout(): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/auth/logout`, {}).pipe(
+      catchError((error) => {
+        console.error('Failed to logout:', error);
+        this.alertService.show(
+          'error',
+          'Falha ao realizar logout. Por favor, tente novamente.',
+        );
+        return of(null);
+      }),
+    );
   }
 }

@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.util.List;
 
 @RestController
@@ -21,40 +23,40 @@ public class NoteController {
     private final NoteService noteService;
 
     @GetMapping
-    public ResponseEntity<List<NoteResponse>> findAll() {
+    public ResponseEntity<List<NoteResponse>> findAll(HttpServletResponse response) {
         return ResponseEntity.ok(noteService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<NoteResponse> findById(@PathVariable Long id) {
+    public ResponseEntity<NoteResponse> findById(@PathVariable Long id, HttpServletResponse response) {
         return ResponseEntity.ok(noteService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<NoteResponse> create(@Valid @RequestBody NoteRequest request) {
+    public ResponseEntity<NoteResponse> create(@Valid @RequestBody NoteRequest request, HttpServletResponse response) {
         return ResponseEntity.status(HttpStatus.CREATED).body(noteService.create(request));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<NoteResponse> update(@PathVariable Long id,
-            @Valid @RequestBody NoteRequest request) {
+            @Valid @RequestBody NoteRequest request, HttpServletResponse response) {
         return ResponseEntity.ok(noteService.update(id, request));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<NoteResponse> updatePartial(@PathVariable Long id,
-            @Valid @RequestBody NoteRequest request) {
+            @Valid @RequestBody NoteRequest request, HttpServletResponse response) {
         return ResponseEntity.ok(noteService.updatePartial(id, request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id, HttpServletResponse response) {
         noteService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("fixed/{id}")
-    public ResponseEntity<NoteResponse> fixedNote(@PathVariable Long id) {
+    public ResponseEntity<NoteResponse> fixedNote(@PathVariable Long id, HttpServletResponse response) {
         return ResponseEntity.ok(noteService.fixedNote(id));
     }
 
