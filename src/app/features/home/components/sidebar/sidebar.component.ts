@@ -1,9 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
-
+import { Router } from '@angular/router';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { AddComponent } from '../../../../shared/components/add/add.component';
 import { RouterLink, ɵEmptyOutletComponent } from '@angular/router';
 import { NoteService } from '../../services/note.service';
+import { AuthService } from '../../../../core/services/auth.service';
 import { AlertService } from '../../../../shared/services/alert.service';
 import { ProfileComponent } from '../../../home/components/profile/profile.component';
 import { Observable, catchError, of, map, take } from 'rxjs';
@@ -26,6 +27,8 @@ export class SidebarComponent {
   constructor(
     protected noteService: NoteService,
     private alertService: AlertService,
+    private authService: AuthService,
+    private router: Router,
   ) {}
 
   public notesGet = signal<any[]>([]);
@@ -41,6 +44,26 @@ export class SidebarComponent {
   booleanValue = true;
 
   public haveNotes$!: Observable<boolean>;
+
+  public logout() {
+    this.authService
+      .logout()
+      .pipe(
+        catchError((error) => {
+          console.error('Failed to logout:', error);
+          this.alertService.show(
+            'error',
+            'Falha ao realizar logout. Por favor, tente novamente.',
+          );
+          return of(null);
+        }),
+      )
+      .subscribe(
+        () => {
+          this.router.navigate(['/login']);
+        }
+      );
+  }
 
   public hiddeNoteContent() {
     const colorsDiv = document.querySelector('.colors');

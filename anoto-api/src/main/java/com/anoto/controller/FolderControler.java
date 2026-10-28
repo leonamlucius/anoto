@@ -13,10 +13,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/folders")
@@ -26,34 +27,36 @@ public class FolderControler {
     private final FolderService folderService;
 
     @GetMapping
-    public ResponseEntity<List<FolderResponse>> getFolder() {
+    public ResponseEntity<List<FolderResponse>> getFolder(HttpServletResponse response) {
         return ResponseEntity.ok(folderService.findAll());
     }
 
     @PostMapping
-    public ResponseEntity<FolderResponse> createFolder(@RequestBody FolderRequest folderRequest) {
+    public ResponseEntity<FolderResponse> createFolder(@RequestBody FolderRequest folderRequest,
+            HttpServletResponse response) {
         return ResponseEntity.ok(folderService.createFolder(folderRequest));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FolderResponse> getFolderById(@PathVariable Long id) {
+    public ResponseEntity<FolderResponse> getFolderById(@PathVariable Long id, HttpServletResponse response) {
         return ResponseEntity.ok(folderService.findById(id));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFolder(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteFolder(@PathVariable Long id, HttpServletResponse response) {
         folderService.deleteFolder(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<FolderResponse> updateFolder(@PathVariable Long id,
-            @RequestBody FolderRequest folderRequest) {
+            @RequestBody FolderRequest folderRequest, HttpServletResponse response) {
         return ResponseEntity.ok(folderService.updateFolder(id, folderRequest));
     }
 
     @PostMapping("/link/{id}")
-    public ResponseEntity<FolderResponse> linkFolder(@PathVariable Long id, @RequestBody FolderRequest folderRequest) {
+    public ResponseEntity<FolderResponse> linkFolder(@PathVariable Long id, @RequestBody FolderRequest folderRequest,
+            HttpServletResponse response) {
         return ResponseEntity.ok(folderService.linkFolder(id, folderRequest));
     }
 

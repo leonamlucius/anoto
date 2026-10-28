@@ -1,16 +1,18 @@
 package com.anoto.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.servlet.http.Cookie;
 import com.anoto.config.JwtUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.anoto.service.InfoService;
+import com.anoto.service.CookieService;
 import com.anoto.dto.InfoResponse;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/info")
@@ -23,14 +25,15 @@ public class InfoController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private CookieService cookieService;
+
     @GetMapping("get")
     public ResponseEntity<InfoResponse> getInfo(
-            @RequestHeader(value = "Authorization", required = true) String bearerToken) {
-        if (bearerToken == null || !bearerToken.startsWith("Bearer ")) {
-            return ResponseEntity.status(401).build();
-        }
-        String token = bearerToken.substring(7);
-        String userId = jwtUtil.extractUserIdFromToken(token);
+            HttpServletRequest request) {
+
+        Cookie token = cookieService.getCookie(request);
+        String userId = jwtUtil.extractUserIdFromToken(token.getValue());
         return ResponseEntity.ok(infoService.getInfo(userId));
     }
 
