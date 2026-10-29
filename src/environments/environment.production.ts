@@ -1,3 +1,3 @@
 export const environment = {
-  apiUrl: 'https://hungry-jeans-shop.loca.lt',
+  apiUrl: 'https://specialties-updated-affects-helped.trycloudflare.com',
 };
