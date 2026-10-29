@@ -2,71 +2,28 @@ import { Component } from '@angular/core';
 import { TitleComponent } from '../../../../shared/components/title/title.component';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
-
+import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-recuperar-senha',
-  imports: [TitleComponent, RouterLink],
+  imports: [TitleComponent, RouterLink, FormsModule],
   templateUrl: './recuperar-senha.component.html',
   styleUrls: ['./recuperar-senha.component.scss'],
 })
 export class RecuperarSenhaComponent {
   constructor(private authService: AuthService) {}
 
-  public renderBody(): void {
-    const body = document.querySelector('.login-form') as HTMLElement;
-
-    if (body) {
-      body.innerHTML = `
-       <form>
-            <div class="form-group">
-                <label for="code">Digite seu código</label>
-                <input type="text" #codeInput id="code" name="code" class="form-control"
-                placeholder="Digite seu código" required (input)=0>
-            </div>
-
-            <div class="form-footer">
-
-
-               <button type="submit" class="btn btn-primary" [disabled]="!codeInput.validity.valid">
-                    <span class="material-symbols-outlined">
-                        chevron_forward
-                    </span>
-                </button>
-
-            </div>
-
-        </form>
-
-      `;
-    }
-  }
+  public loading: boolean = false;
 
   postEmail(email: string) {
-    const button = document.querySelector(
-      '.login-form button',
-    ) as HTMLButtonElement;
+    this.loading = true;
 
-    button.disabled = true;
-    button.classList.add('loading');
-    button.innerHTML = `<span class="material-symbols-outlined">
-                             progress_activity
-                        </span>`;
-
-    this.authService.requestPasswordReset(email).subscribe(
-      () => {
-        button.disabled = false;
-        button.classList.remove('loading');
-        button.innerHTML = `<span class="material-symbols-outlined">
-                             check
-                        </span>`;
+    this.authService.requestPasswordReset(email).subscribe({
+      next: () => {
+        this.loading = false;
       },
-      (err) => {
-        button.disabled = false;
-        button.classList.remove('loading');
-        button.innerHTML = `<span class="material-symbols-outlined">
-                             chevron_forward
-                        </span>`;
+      error: () => {
+        this.loading = false;
       },
-    );
+    });
   }
 }

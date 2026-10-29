@@ -4,7 +4,14 @@ import { environment } from '../../../environments/environment';
 import { NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap, catchError, of, BehaviorSubject } from 'rxjs';
+import {
+  Observable,
+  tap,
+  catchError,
+  of,
+  BehaviorSubject,
+  throwError,
+} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -127,7 +134,22 @@ export class AuthService {
             'error',
             'Falha ao redefinir senha. Por favor, tente novamente.',
           );
-          return of(null);
+          return throwError(() => error);
+        }),
+      );
+  }
+
+  public testResetPassword(token: string): Observable<any> {
+    return this.http
+      .post<any>(`${this.apiUrl}/auth/test-reset-password`, { token })
+      .pipe(
+        catchError((error) => {
+          console.error('Failed to test reset password token:', error);
+          this.alertService.show(
+            'error',
+            'Token usado ou expirado',
+          );
+          return throwError(() => error);
         }),
       );
   }

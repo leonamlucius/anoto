@@ -6,12 +6,7 @@
   justify-content: center;
 }
 
-@media (max-width: 600px) {
-  :host {
-    padding: 50px;
-  }
-}
-::ng-deep .login-body {
+.login-body {
   width: 500px;
   height: 300px;
   background-color: transparent;
@@ -22,7 +17,7 @@
   justify-content: center;
 }
 
-::ng-deep .login-form {
+.login-form {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -30,7 +25,7 @@
   justify-content: center;
 }
 
-::ng-deep .login-form form {
+.login-form form {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -39,26 +34,49 @@
   gap: 5px;
 }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
+.form-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
 
-  
-  100% {
-    transform: rotate(360deg);
-  }
+.form-group label {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
-::ng-deep form .btn-primary.loading span {
-  animation: spin 1s linear infinite !important;
+
+.form-group input {
+  width: 100%;
+  height: 35px;
+  border: 1px solid #eeeeee;
+  border-radius: 6px;
+  padding: 0 10px;
+  font-weight: 400;
 }
-::ng-deep .login-form button:disabled {
+
+.form-group input:focus {
+  outline: none;
+  border: 2px solid #383838;
+}
+
+.login-form button:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
   opacity: 0.6;
 }
 
-::ng-deep .login-form button:disabled:hover {
+.login-form button.disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.login-form button:disabled:hover {
   scale: 1;
   color: white;
   width: 40px;
@@ -67,7 +85,7 @@
   animation: none;
 }
 
-::ng-deep .login-form button {
+.login-form button {
   border: none;
   width: 40px;
   height: 40px;
@@ -83,8 +101,10 @@
   animation: popOut 0.3s ease;
   cursor: pointer;
 }
-
-::ng-deep .login-form .btn-primary:hover {
+.login-form .btn-primary.loading span {
+  animation: spin 1s linear infinite !important;
+}
+.login-form .btn-primary:hover {
   scale: 1.1;
   color: #383838;
   width: 80px;
@@ -93,70 +113,7 @@
   animation: flowColors 7s steps(1) infinite;
 }
 
-@keyframes flowColors {
-  0% {
-    background-color: #fff176;
-  }
-  17% {
-    background-color: #f48fb1;
-  }
-  33% {
-    background-color: #a5d6a7;
-  }
-  50% {
-    background-color: #90caf9;
-  }
-  67% {
-    background-color: #ffcc80;
-  }
-  83% {
-    background-color: #ce93d8;
-  }
-}
-
-@keyframes popOut {
-  0% {
-    transform: scale(0);
-    opacity: 0;
-  }
-  70% {
-    transform: scale(1.2);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-::ng-deep .form-group {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-}
-
-::ng-deep .form-group label {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-::ng-deep .form-group input {
-  width: 100%;
-  height: 35px;
-  border: 1px solid #eeeeee;
-  border-radius: 6px;
-  padding: 0 10px;
-  font-weight: 400;
-}
-
-::ng-deep .form-group input:focus {
-  outline: none;
-  border: 2px solid #383838;
-}
-
-::ng-deep .form-footer {
+.form-footer {
   width: 100%;
   display: flex;
   align-items: center;
@@ -164,7 +121,7 @@
   margin-top: 10px;
 }
 
-::ng-deep .form-footer a {
+.form-footer a {
   color: #383838;
   text-decoration: none;
   font-size: 14px;
@@ -199,4 +156,54 @@
   height: 40px;
   border-radius: 12px;
   animation: flowColors 7s steps(1) infinite;
+}
+
+@media (max-width: 600px) {
+  :host {
+    padding: 50px;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes flowColors {
+  0% {
+    background-color: #fff176;
+  }
+  17% {
+    background-color: #f48fb1;
+  }
+  33% {
+    background-color: #a5d6a7;
+  }
+  50% {
+    background-color: #90caf9;
+  }
+  67% {
+    background-color: #ffcc80;
+  }
+  83% {
+    background-color: #ce93d8;
+  }
+}
+
+@keyframes popOut {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
 }
