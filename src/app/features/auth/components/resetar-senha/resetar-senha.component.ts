@@ -8,6 +8,7 @@ import { TitleComponent } from '../../../../shared/components/title/title.compon
 
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
+import { catchError, finalize } from 'rxjs';
 
 @Component({
   selector: 'app-resetar-senha',
@@ -42,6 +43,16 @@ export class ResetarSenhaComponent {
 
   ngOnInit() {
     this.token = this.route.snapshot.queryParamMap.get('token');
+
+    this.authService.testResetPassword(this.token!).subscribe({
+      next: () => {
+        console.log('Token válido');
+      },
+      error: (err) => {
+        console.error('Token inválido ou expirado', err);
+        setTimeout(() => this.router.navigate(['/login']), 2000);
+      },
+    });
   }
 
   passwordsMatchValidator(form: FormGroup) {
@@ -50,69 +61,24 @@ export class ResetarSenhaComponent {
       : { mismatch: true };
   }
 
-  onSubmit() {
-    if (!this.token) {
-      this.error = 'Token inválido ou ausente.';
-      return;
-    }
-    if (this.form.invalid) {
-      return;
-    }
+  postToken() {
     this.loading = true;
-    this.error = null;
-    this.http
-      .post('/api/auth/reset-password', {
-        token: this.token,
-        newPassword: this.form.value.newPassword,
-      })
+    this.authService
+      .requestToken(this.token!, this.form.value.newPassword)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        }),
+      )
       .subscribe({
         next: () => {
           this.success = true;
-          this.loading = false;
           setTimeout(() => this.router.navigate(['/login']), 2000);
         },
         error: (err) => {
-          this.error = err.error?.message;
-          this.loading = false;
+          console.log(err);
+          this.error = err.error.error;
         },
       });
-  }
-
-  postToken() {
-    const button = document.querySelector(
-      '.btn.btn-primary',
-    ) as HTMLButtonElement;
-
-    if (button) {
-      button.disabled = true;
-      button.classList.add('loading');
-      button.innerHTML = `<span class="material-symbols-outlined">
-        progress_activity
-        </span>`;
-    }
-    this.authService
-      .requestToken(this.token!, this.form.value.newPassword)
-      .subscribe(
-        () => {
-          this.success = true;
-          this.loading = false;
-          button!.disabled = false;
-          button!.classList.remove('loading');
-          button!.innerHTML = `<span class="material-symbols-outlined">
-                            check
-                        </span>`;
-          setTimeout(() => this.router.navigate(['/login']), 2000);
-        },
-        (err) => {
-          this.error = err.error?.message;
-          this.loading = false;
-
-          button!.disabled = false;
-          button!.classList.remove('loading');
-          button!.innerHTML = `<span class="material-symbols-outlined">
-                            check
-                        </span>`;
-        },
-      );
   }
 }

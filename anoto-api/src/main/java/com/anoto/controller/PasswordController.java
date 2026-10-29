@@ -25,4 +25,10 @@ public class PasswordController {
         passwordService.resetPassword(request.getToken(), request.getNewPassword());
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/test-reset-password")
+    public ResponseEntity<?> testResetPassword(@RequestBody ResetPasswordRequest request) {
+        passwordService.testResetPassword(request.getToken());
+        return ResponseEntity.ok().build();
+    }
 }
