@@ -11,6 +11,7 @@ import {
   finalize,
   combineLatest,
   throwError,
+  forkJoin,
 } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
@@ -198,27 +199,34 @@ export class NoteService {
   }
 
   public Patchnote(
-    id: number,
+    id: any[],
     title: string | null,
     content: string | null,
     color: string | null,
-  ): Observable<Note[]> {
+  ): Observable<Note[][]> {
     if (this.alreadyPatchedSubject.getValue()) {
       return throwError(() => new Error('Note is already being patched'));
     }
 
     this.alreadyPatchedSubject.next(true);
-    return this.http
-      .patch<Note[]>(`${this.apiUrl}/notes/${id}`, { title, content, color })
-      .pipe(
-        catchError((error) => {
-          console.error('Failed to patch note:', error);
-          return throwError(() => error);
-        }),
-        finalize(() => {
-          this.alreadyPatchedSubject.next(false);
-        }),
-      );
+
+    const requests = id.map((noteId) =>
+      this.http.patch<Note[]>(`${this.apiUrl}/notes/${noteId.id}`, {
+        title,
+        content,
+        color,
+      }),
+    );
+
+    return forkJoin(requests).pipe(
+      catchError((error) => {
+        console.error('Failed to patch notes:', error);
+        return throwError(() => error);
+      }),
+      finalize(() => {
+        this.alreadyPatchedSubject.next(false);
+      }),
+    );
   }
 
   public Deletenote(id: number): Observable<Note[] | void> {
