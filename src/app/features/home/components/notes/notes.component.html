@@ -1,40 +1,33 @@
-@if ((noteService.searchFoundNotes$ | async) === false) {
-  <div class="no-notes">
-    <p>Nenhuma nota encontrada.</p>
-  </div>
+@switch (emptyState$ | async) {
+  @case ("loading") {
+    <div class="no-notes">
+      <p>Carregando notas...</p>
+      <span class="material-symbols-outlined" id="loading">
+        progress_activity
+      </span>
+    </div>
+  }
+
+  @case ("noSearch") {
+    <div class="no-notes">
+      <p>Nenhuma nota encontrada.</p>
+    </div>
+  }
+
+  @case ("welcome") {
+    <div class="no-notes">
+      <app-welcome></app-welcome>
+    </div>
+  }
+
+  @case ("noColor") {
+    <div class="no-notes-color">
+      <app-error></app-error>
+      <p>Não há notas disponíveis desssa cor.</p>
+    </div>
+  }
 }
 
-@if ((notes$ | async)?.length === 0 && !pageAreLoaded) {
-  <div class="no-notes">
-    <p>Carregando notas...</p>
-    <span class="material-symbols-outlined" id="loading">
-      progress_activity
-    </span>
-  </div>
-}
-
-@if (
-  (notes$ | async)?.length === 0 &&
-  pageAreLoaded &&
-  (noteService.selectedColor$ | async) === null &&
-  (noteService.searchFoundNotes$ | async) === true
-) {
-  <div class="no-notes">
-    <app-welcome></app-welcome>
-  </div>
-}
-
-@if (
-  (notes$ | async)?.length === 0 &&
-  pageAreLoaded &&
-  (noteService.selectedColor$ | async) !== null &&
-  (noteService.searchFoundNotes$ | async) === true
-) {
-  <div class="no-notes-color">
-    <app-error></app-error>
-    <p>Não há notas disponíveis desssa cor.</p>
-  </div>
-}
 
 @if (notesFixed$ | async; as notesFixed) {
   @if (notesFixed.length > 0) {
