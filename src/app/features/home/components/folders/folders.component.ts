@@ -2,11 +2,21 @@ import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { FolderService } from '../../services/folder.service';
 import { NoteService } from '../../services/note.service';
-import { tap } from 'rxjs';
+import {
+  combineLatest,
+  Observable,
+  tap,
+  map,
+  BehaviorSubject,
+  finalize,
+} from 'rxjs';
 import { Note } from '../../models/note';
 import { AsyncPipe } from '@angular/common';
 import { DeleteService } from '../../../../shared/services/delete.service';
 import { Folder } from '../../models/folder';
+
+type EmptyState = 'loading' | null;
+
 @Component({
   selector: 'app-folders',
   imports: [AsyncPipe],
@@ -46,6 +56,10 @@ export class FoldersComponent implements OnInit {
 
   longPressTimeout: any;
 
+  protected emptyState$!: Observable<EmptyState>;
+
+  protected pageLoadedSubject = new BehaviorSubject<boolean>(false);
+
   notes = [
     { color: '#FFF176' },
     { color: '#F48FB1' },
@@ -58,7 +72,7 @@ export class FoldersComponent implements OnInit {
   ngOnInit(): void {
     this.folderService
       .AllFolders()
-      .pipe()
+      .pipe(finalize(() => this.pageLoadedSubject.next(true)))
       .subscribe({
         error: (error) => {
           console.error('Error fetching folders:', error);
@@ -71,6 +85,18 @@ export class FoldersComponent implements OnInit {
         this.getNotesById([folder]);
       });
     });
+
+    this.emptyState$ = combineLatest([
+      this.pageLoadedSubject,
+      this.folderService.folders$,
+    ]).pipe(
+      map(([pageLoaded, folders]): EmptyState => {
+        console.log('Empty state check:', { pageLoaded, folders });
+        if (!pageLoaded) return 'loading';
+        if (folders.length > 0) return null;
+        return null;
+      }),
+    );
   }
 
   public toggleShowFolders(): void {

@@ -1,10 +1,9 @@
 @switch (emptyState$ | async) {
   @case ("loading") {
-    <div class="no-notes">
-      <p>Carregando notas...</p>
-      <span class="material-symbols-outlined" id="loading">
-        progress_activity
-      </span>
+    <div class="note-card-container">
+      @for (_ of [].constructor(5); track $index) {
+        <div class="skeleton-loading"></div>
+      }
     </div>
   }
 
@@ -27,7 +26,6 @@
     </div>
   }
 }
-
 
 @if (notesFixed$ | async; as notesFixed) {
   @if (notesFixed.length > 0) {
@@ -114,77 +112,79 @@
     </div>
   }
 }
-<div class="note-card-container" [class.list]="(view$ | async) === 'list'">
-  @for (note of notesNotFixed$ | async; track note.id) {
-    <div
-      class="note-card"
-      (click)="createModalEdit(note)"
-      (pointerdown)="markNoteAction(note.id, $event, note.fixed, note.color)"
-      (pointerup)="cancelMarkNoteAction()"
-      (pointercancel)="cancelMarkNoteAction()"
-      (pointerenter)="showEdit(note)"
-      (pointerleave)="hideEdit(note)"
-      id="{{ note.color }}"
-      [style.backgroundColor]="note.color"
-      [class.list]="(view$ | async) === 'list'"
-      [class.marked]="
+@if (notesNotFixed$ | async; as notesNotFixed) {
+  <div class="note-card-container" [class.list]="(view$ | async) === 'list'">
+    @for (note of notesNotFixed$ | async; track note.id) {
+      <div
+        class="note-card"
+        (click)="createModalEdit(note)"
+        (pointerdown)="markNoteAction(note.id, $event, note.fixed, note.color)"
+        (pointerup)="cancelMarkNoteAction()"
+        (pointercancel)="cancelMarkNoteAction()"
+        (pointerenter)="showEdit(note)"
+        (pointerleave)="hideEdit(note)"
+        id="{{ note.color }}"
+        [style.backgroundColor]="note.color"
+        [class.list]="(view$ | async) === 'list'"
+        [class.marked]="
         (noteService.selectedNoteAction$ | async)?.some(selectedNote => selectedNote.id === note.id)
       "
-      [class.disabled]="
+        [class.disabled]="
         noteService.loading() &&
         (selectedNoteIdFixed === note.id || selectedNoteIdEdit === note.id || (noteService.selectedNoteAction$ | async)?.some(selectedNote => selectedNote.id === note.id))
       "
-      [class.invisible]="selectedNoteIdEdit === note.id"
-      [style.view-transition-name]="
-        (noteService.showOtherView$ | async) === true
-          ? 'note-' + note.id
-          : selectedNoteIdEdit === note.id && !selectedNote
-            ? 'active-note'
-            : 'none'
-      "
-    >
-      <span
-        class="material-symbols-outlined"
-        id="fixed"
-        [class.active]="activeNoteId === note.id"
-        [class.disabled]="noteService.loading()"
-        (click)="fixNote(note.id); $event.stopPropagation()"
+        [class.invisible]="selectedNoteIdEdit === note.id"
+        [style.view-transition-name]="
+          (noteService.showOtherView$ | async) === true
+            ? 'note-' + note.id
+            : selectedNoteIdEdit === note.id && !selectedNote
+              ? 'active-note'
+              : 'none'
+        "
       >
-        keep
-      </span>
-
-      <div class="note-body">
-        <h3>{{ note.title }}</h3>
-        <p>{{ note.content }}</p>
-      </div>
-      <div class="note-footer" [class.active]="activeNoteId === note.id">
         <span
           class="material-symbols-outlined"
-          id="delete"
-          [class.invisible]="(noteService.actionbarActive$ | async) === true"
-          (click)="createModalDelete(note.id); $event.stopPropagation()"
+          id="fixed"
+          [class.active]="activeNoteId === note.id"
+          [class.disabled]="noteService.loading()"
+          (click)="fixNote(note.id); $event.stopPropagation()"
         >
-          delete
+          keep
         </span>
 
-        <span class="date" [innerHTML]="note.createdAt"> </span>
+        <div class="note-body">
+          <h3>{{ note.title }}</h3>
+          <p>{{ note.content }}</p>
+        </div>
+        <div class="note-footer" [class.active]="activeNoteId === note.id">
+          <span
+            class="material-symbols-outlined"
+            id="delete"
+            [class.invisible]="(noteService.actionbarActive$ | async) === true"
+            (click)="createModalDelete(note.id); $event.stopPropagation()"
+          >
+            delete
+          </span>
+
+          <span class="date" [innerHTML]="note.createdAt"> </span>
+        </div>
+
+        <button
+          (click)="
+            markNoteActionToggle(note.id, $event, note.fixed, note.color);
+            $event.stopPropagation()
+          "
+          class="note-card-check"
+          [class.visible]="activeNoteId === note.id || (noteService.selectedNoteAction$ | async)?.some(selectedNote => selectedNote.id === note.id)"
+        >
+          <span class="material-symbols-outlined" [style.color]="note.color">
+            check
+          </span>
+        </button>
       </div>
-
-      <button
-        (click)="
-          markNoteActionToggle(note.id, $event, note.fixed, note.color);
-          $event.stopPropagation()
-        "
-        class="note-card-check"
-        [class.visible]="activeNoteId === note.id || (noteService.selectedNoteAction$ | async)?.some(selectedNote => selectedNote.id === note.id)"
-      >
-        <span class="material-symbols-outlined" [style.color]="note.color">
-          check
-        </span>
-      </button>
-    </div>
-  }
-</div>
+    }
+  </div>
+}
 
 @if (deleteService.showDeleteModal$ | async) {
   <app-delete
