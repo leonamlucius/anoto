@@ -23,9 +23,13 @@ import {
   combineLatest,
   firstValueFrom,
   switchMap,
+  BehaviorSubject,
 } from 'rxjs';
 import { ErrorComponent } from '../../../../shared/components/error/error.component';
 import { WelcomeComponent } from '../../../../shared/components/welcome/welcome.component';
+
+type EmptyState = 'loading' | 'noSearch' | 'welcome' | 'noColor' | null;
+
 @Component({
   selector: 'app-notes',
   imports: [
@@ -48,7 +52,7 @@ export class NotesComponent implements OnInit {
 
   private cdr = inject(ChangeDetectorRef);
 
-  public pageAreLoaded: boolean = false;
+  protected pageLoadedSubject = new BehaviorSubject<boolean>(false);
 
   public notes$!: Observable<Note[]>;
 
@@ -73,6 +77,8 @@ export class NotesComponent implements OnInit {
   private longPressTimer?: ReturnType<typeof setTimeout>;
 
   inputChange = signal(false);
+
+  protected emptyState$!: Observable<EmptyState>;
 
   colors = [
     { color: '#FFF176' },
@@ -140,6 +146,20 @@ export class NotesComponent implements OnInit {
           })),
       ),
     );
+
+    this.emptyState$ = combineLatest([
+      this.noteService.filteredNotes$,
+      this.noteService.selectedColor$,
+      this.noteService.searchFoundNotes$,
+      this.pageLoadedSubject.asObservable(),
+    ]).pipe(
+      map(([notes, color, searchFound, loaded]): EmptyState => {
+        if (notes.length > 0) return null;
+        if (!searchFound) return 'noSearch';
+        if (!loaded) return 'loading';
+        return color === null ? 'welcome' : 'noColor';
+      }),
+    );
   }
 
   public markNoteActionToggle(
@@ -157,7 +177,10 @@ export class NotesComponent implements OnInit {
       this.noteService.setSelectedNoteAction(updatedSelection);
       this.noteService.setNumberSelected(updatedSelection.length);
 
-      if (updatedSelection.length === 0 && !this.folderService.hasSelectedFolderCheck()) {
+      if (
+        updatedSelection.length === 0 &&
+        !this.folderService.hasSelectedFolderCheck()
+      ) {
         this.suspendNoteIdToggle = [];
         this.noteService.setActionbarActive(false);
       }
@@ -194,7 +217,10 @@ export class NotesComponent implements OnInit {
 
       this.noteService.setNumberSelected(updatedSelection.length);
 
-      if (updatedSelection.length === 0 && !this.folderService.hasSelectedFolderCheck()) {
+      if (
+        updatedSelection.length === 0 &&
+        !this.folderService.hasSelectedFolderCheck()
+      ) {
         this.noteService.setActionbarActive(false);
       }
       return;
@@ -280,7 +306,7 @@ export class NotesComponent implements OnInit {
     return `${weekday.slice(0, 3).charAt(0).toUpperCase()}${weekday.slice(1, 3)}, ${formattedDay}/${formattedMonth}`;
   }
   async loadNotes() {
-    this.pageAreLoaded = true;
+    this.pageLoadedSubject.next(true);
   }
 
   public async fixNote(id: number, fixed: boolean | null = null) {

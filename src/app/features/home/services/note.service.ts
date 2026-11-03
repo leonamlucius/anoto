@@ -57,7 +57,7 @@ export class NoteService {
     );
   }
 
-  private searchFoundNotesSubject = new Subject<boolean>();
+  private searchFoundNotesSubject = new BehaviorSubject<boolean>(true);
   public searchFoundNotes$ = this.searchFoundNotesSubject.asObservable();
 
   private readonly allNotes = new BehaviorSubject<Note[]>([]);
