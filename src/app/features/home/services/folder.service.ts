@@ -27,7 +27,7 @@ export class FolderService {
 
   public showModal$ = this.showModalSubject.asObservable();
 
-  private foldersSubject = new Subject<any[]>();
+  private foldersSubject = new BehaviorSubject<any[]>([]);
 
   public folders$ = this.foldersSubject.asObservable();
 

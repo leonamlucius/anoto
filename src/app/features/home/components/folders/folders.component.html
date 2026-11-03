@@ -1,12 +1,27 @@
-@if (folders.length > 0) {
-  <div class="folder-title">
-    <div class="folder-toggle" (click)="showFolders = !showFolders">
-      <span class="material-symbols-outlined"> folder </span>
-      <p>Minhas Pastas</p>
-      <span class="material-symbols-outlined" id="folder-toggle-icon" [class.active]="showFolders"> keyboard_arrow_up </span>
-    </div>
+<div class="folder-title">
+  <div class="folder-toggle" (click)="showFolders = !showFolders">
+    <span class="material-symbols-outlined"> folder </span>
+    <p>Minhas Pastas</p>
+    <span
+      class="material-symbols-outlined"
+      id="folder-toggle-icon"
+      [class.active]="showFolders"
+    >
+      keyboard_arrow_up
+    </span>
   </div>
+</div>
 
+@switch (emptyState$ | async) {
+  @case ("loading") {
+    <div class="folders-container active">
+      @for (_ of [].constructor(4); track $index) {
+        <div class="skeleton-loading"></div>
+      }
+    </div>
+  }
+}
+@if (folders.length > 0) {
   <div class="folders-container" [class.active]="showFolders">
     @for (folder of folders; track $index) {
       <div
@@ -56,7 +71,9 @@
                   folder.id
                 ) === true
               "
-              [class.invisible]="(noteService.actionbarActive$ | async) === true"
+              [class.invisible]="
+                (noteService.actionbarActive$ | async) === true
+              "
             >
               <span class="material-symbols-outlined"> delete </span>
             </button>

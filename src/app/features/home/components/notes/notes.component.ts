@@ -89,6 +89,7 @@ export class NotesComponent implements OnInit {
     { color: '#CE93D8' },
   ];
 
+
   ngOnInit() {
     this.view$ = this.noteService.view$;
     this.noteService
