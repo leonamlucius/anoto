@@ -178,15 +178,13 @@ export class ActionbarComponent implements OnInit {
   public selectColor(color: string): void {
     this.selectedColor = color;
 
-    this.selectedIds.forEach((note) => {
-      this.noteService
-        .Patchnote(note.id, null, null, this.selectedColor)
-        .pipe(
-          switchMap(() => this.noteService.Allnotes()),
-          finalize(() => {}),
-        )
-        .subscribe();
-    });
+    this.noteService
+      .Patchnote(this.selectedIds, null, null, this.selectedColor)
+      .pipe(
+        switchMap(() => this.noteService.Allnotes()),
+        finalize(() => {}),
+      )
+      .subscribe();
   }
 
   public hideColorPalette(): void {
