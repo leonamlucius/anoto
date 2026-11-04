@@ -11,11 +11,6 @@ export class AlertService {
   public showAlert = false;
 
   show(type: 'success' | 'error' | 'warning', message: string) {
-    if (this.showAlert) {
-      return;
-    }
-
-    console.log(`Alert: [${type}] ${message}`);
     this.showAlert = true;
     this.alertSubject.next({ type, message });
 

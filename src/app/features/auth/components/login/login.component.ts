@@ -4,12 +4,11 @@ import { TitleComponent } from '../../../../shared/components/title/title.compon
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
-import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login',
-  imports: [TitleComponent, FormsModule, RouterLink, AlertComponent],
+  imports: [TitleComponent, FormsModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
