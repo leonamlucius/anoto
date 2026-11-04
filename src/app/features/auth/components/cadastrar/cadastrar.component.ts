@@ -3,11 +3,10 @@ import { TitleComponent } from '../../../../shared/components/title/title.compon
 
 import { AuthService } from '../../../../core/services/auth.service';
 import { AlertService } from '../../../../shared/services/alert.service';
-import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-cadastrar',
-  imports: [TitleComponent, AlertComponent, RouterLink],
+  imports: [TitleComponent, RouterLink],
   templateUrl: './cadastrar.component.html',
   styleUrls: ['./cadastrar.component.scss'],
 })

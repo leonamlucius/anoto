@@ -111,6 +111,7 @@ div .progress-bar {
 @media (max-width: 600px) {
   .alert-container {
     width: 100%;
+    height: fit-content;
     top: 20px;
     left: 50%;
     transform: translateX(-50%);

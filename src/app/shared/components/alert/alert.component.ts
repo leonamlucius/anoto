@@ -52,6 +52,7 @@ export class AlertComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((alert) => {
         const alertId = this.nextAlertId++;
+
         this.alerts.push({
           id: alertId,
           type: alert.type,
@@ -60,7 +61,14 @@ export class AlertComponent implements OnInit {
           isHiding: false,
           closeIcon: `<span *ngIf="showAlert" class="material-symbols-outlined"> close </span>`,
         });
-        this.showAlert = true;
+
+        this.alerts.forEach((item, index) => {
+          if (index >= 3) {
+            this.closeAlert(item.id);
+          }
+          this.showAlert = true;
+        });
+
         setTimeout(() => {
           this.closeAlert(alertId);
         }, 5000);
