@@ -8,5 +8,7 @@
 
 <div class="topbar-right" [class.active]="searchService.getActiveSearch()">
   <app-search></app-search>
-  <app-profile class="profile-component"></app-profile>
+  <app-profile (click)="userDropdownService.toggleDropdown()" class="profile-component"></app-profile>
+  <app-user-dropdown></app-user-dropdown>
 </div>
+

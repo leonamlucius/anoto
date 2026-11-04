@@ -1,0 +1,23 @@
+@if (userDropdownService.showDropdown$ | async) {
+  <div class="user-dropdown">
+    <div class="user-info">
+      <img
+        src="/img/blank-profile-picture-973460_960_720.png"
+        alt="Profile Photo"
+      />
+      <div class="user-details">
+        <p class="user-name">{{ name }}</p>
+        <p class="user-email">{{ email }}</p>
+      </div>
+    </div>
+
+    <div class="user-actions">
+      @for (icon of icons; track icon.name) {
+        <div class="user-action" [class.logout]="icon.name === 'Logout'" (click)="icon.name === 'Logout' ? logOut() : null">
+          <span [innerHTML]="icon.icon"></span>
+          <span>{{ icon.name }}</span>
+        </div>
+      }
+    </div>
+  </div>
+}

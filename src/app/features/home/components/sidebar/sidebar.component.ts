@@ -58,11 +58,7 @@ export class SidebarComponent {
           return of(null);
         }),
       )
-      .subscribe(
-        () => {
-          this.router.navigate(['/login']);
-        }
-      );
+      .subscribe();
   }
 
   public hiddeNoteContent() {
