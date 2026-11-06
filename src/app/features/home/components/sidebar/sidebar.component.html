@@ -1,5 +1,13 @@
 <app-add class="add-component"></app-add>
-<app-profile class="profile-component"></app-profile>
+@if ((userDropdownService.showDropdown$ | async) == false) {
+  <app-profile
+    class="profile-component"
+    [style.view-transition-name]="
+      (userDropdownService.showDropdown$ | async) === false ? 'profile' : 'none'
+    "
+    (click)="showUserDropdown()"
+  ></app-profile>
+}
 <div class="colors">
   @for (color of colors; track color) {
     <button

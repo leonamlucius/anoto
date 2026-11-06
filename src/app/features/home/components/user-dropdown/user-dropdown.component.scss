@@ -1,11 +1,76 @@
-.user-dropdown {
+.user-dropdown-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: transparent;
+  z-index: 9999;
+  transition: all 0.3s ease-in-out;
+}
+.user-dropdown-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 10px;
   position: absolute;
   top: 5em;
-  right: 10px;
+  right: 0;
+}
+.profile-section {
   background-color: #383838;
   color: #ffffff;
   width: 20em;
   border-radius: 12px;
+  z-index: 10000;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+  position: relative;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.section-header i {
+  font-size: 0.6em;
+}
+.section label {
+  width: 13%;
+  font-size: 0.9em;
+}
+.section input {
+  background-color: transparent;
+  border: none;
+  font-size: 0.8em;
+  color: #cccccc;
+  width: 90%;
+}
+
+.user-dropdown {
+  background-color: #383838;
+  color: #ffffff;
+  width: 20em;
+  border-radius: 12px;
+  z-index: 10000;
+}
+
+app-profile {
+  padding: 5px;
+  flex-shrink: 0;
 }
 
 .user-info {
@@ -16,13 +81,6 @@
   padding: 10px;
   gap: 10px;
   border-bottom: 1px solid #6d6b6b;
-}
-
-.user-info img {
-  width: 33px;
-  height: 33px;
-  border-radius: 50%;
-  flex-shrink: 0;
 }
 
 .user-details {
@@ -47,6 +105,26 @@
   font-size: 0.9em;
 }
 
+.chevron {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  margin-left: auto;
+  display: none;
+  transition: transform 0.3s ease-in-out;
+}
+
+.chevron.rotate {
+  transform: rotate(180deg);
+}
+::ng-deep .chevron span {
+  font-size: 1.3em;
+}
+
+#profile-section-mobile {
+  display: none;
+}
 .user-actions .user-action {
   width: 100%;
   display: flex;
@@ -59,4 +137,62 @@
 .user-actions .user-action.logout {
   border-top: 1px solid #6d6b6b;
   color: #ff4d4d;
+}
+
+::ng-deep ::view-transition-group(profile) {
+  animation-duration: 0.28s;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+  z-index: 10000;
+}
+
+::ng-deep ::view-transition-old(profile),
+::ng-deep ::view-transition-new(profile) {
+  height: 100%;
+  width: 100%;
+  mix-blend-mode: normal;
+  object-fit: cover;
+}
+
+@media (max-width: 600px) {
+  .user-dropdown-wrapper {
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(2px);
+    touch-action: none;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .user-dropdown-container {
+    width: 100%;
+    padding: 10px;
+  }
+  .user-dropdown {
+    width: 100%;
+  }
+  #profile-section-pc {
+    display: none;
+  }
+
+  #profile-section-mobile {
+    display: block;
+    padding: 0;
+  }
+
+  .chevron {
+    display: block;
+  }
+  .section {
+    padding: 15px;
+  }
+}
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(180deg);
+  }
 }

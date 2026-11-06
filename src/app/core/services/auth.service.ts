@@ -29,7 +29,6 @@ export class AuthService {
 
   private name = new BehaviorSubject<string>('');
 
-
   public login(email: string, password: string): Observable<any> {
     return this.http
       .post<any>(`${this.apiUrl}/auth/login`, {
@@ -38,8 +37,6 @@ export class AuthService {
       })
       .pipe(
         tap((response) => {
-          localStorage.setItem('name', response.name);
-          localStorage.setItem('email', response.email);
           this.alertService.show('success', 'Login realizado com sucesso!');
           this.router.navigate(['/home']);
         }),
@@ -67,8 +64,6 @@ export class AuthService {
       })
       .pipe(
         tap((response) => {
-          localStorage.setItem('name', name);
-          localStorage.setItem('email', email);
           this.alertService.show('success', 'Cadastro realizado com sucesso!');
           this.router.navigate(['/home']);
         }),
@@ -140,10 +135,7 @@ export class AuthService {
       .pipe(
         catchError((error) => {
           console.error('Failed to test reset password token:', error);
-          this.alertService.show(
-            'error',
-            'Token usado ou expirado',
-          );
+          this.alertService.show('error', 'Token usado ou expirado');
           return throwError(() => error);
         }),
       );
@@ -177,8 +169,8 @@ export class AuthService {
       }),
 
       tap(() => {
-       this.router.navigate(['/login']);
-      })
+        this.router.navigate(['/login']);
+      }),
     );
   }
 }

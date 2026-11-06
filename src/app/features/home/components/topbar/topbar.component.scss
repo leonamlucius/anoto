@@ -11,6 +11,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  transition: all 0.3s ease;
 }
 
 .topbar-left.inactive {
@@ -43,6 +44,20 @@ span {
     padding: 0 10px;
     width: 100%;
   }
+}
+
+::ng-deep ::view-transition-group(profile) {
+  animation-duration: 0.28s;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+
+}
+
+
+::ng-deep ::view-transition-old(profile),
+::ng-deep ::view-transition-new(profile) {
+  height: 100%;
+  width: 100%;
+  mix-blend-mode: normal;
 }
 
 @keyframes rotate {

@@ -2,12 +2,13 @@ import { Component } from '@angular/core';
 import { TitleComponent } from '../../../../shared/components/title/title.component';
 import { ProfileComponent } from '../../../home/components/profile/profile.component';
 import { NoteService } from '../../../home/services/note.service';
-import { inject, effect } from '@angular/core';
+import { inject, effect, ChangeDetectorRef } from '@angular/core';
 import { ɵEmptyOutletComponent } from '@angular/router';
 import { SearchComponent } from '../search/search.component';
 import { SearchService } from '../../services/search.service';
 import { UserDropdownComponent } from '../user-dropdown/user-dropdown.component';
 import { UserDropdownService } from '../../services/user-dropdown.service';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-topbar',
@@ -16,13 +17,16 @@ import { UserDropdownService } from '../../services/user-dropdown.service';
     ProfileComponent,
     ɵEmptyOutletComponent,
     SearchComponent,
-    UserDropdownComponent,  
+    UserDropdownComponent,
+    AsyncPipe,
   ],
   templateUrl: './topbar.component.html',
   styleUrls: ['./topbar.component.scss'],
 })
 export class TopbarComponent {
   public progressActivityVisible: boolean = true;
+
+  private cdr = inject(ChangeDetectorRef);
 
   constructor(
     private noteService: NoteService,
@@ -32,5 +36,20 @@ export class TopbarComponent {
     effect(() => {
       this.progressActivityVisible = this.noteService.loading();
     });
+    ('');
+  }
+
+  public showUserDropdown(): void {
+    const updateDOM = () => {
+      
+      this.userDropdownService.toggleDropdown();
+      this.cdr.detectChanges();
+    };
+
+    if ('startViewTransition' in document) {
+      const transition = (document as any).startViewTransition(updateDOM);
+    } else {
+      updateDOM();
+    }
   }
 }
