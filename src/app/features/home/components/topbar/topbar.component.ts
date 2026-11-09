@@ -29,7 +29,7 @@ export class TopbarComponent {
   private cdr = inject(ChangeDetectorRef);
 
   constructor(
-    private noteService: NoteService,
+    protected noteService: NoteService,
     protected searchService: SearchService,
     protected userDropdownService: UserDropdownService,
   ) {
@@ -40,6 +40,8 @@ export class TopbarComponent {
   }
 
   public showUserDropdown(): void {
+
+    this.noteService.trueShowOtherView();
     const updateDOM = () => {
       
       this.userDropdownService.toggleDropdown();

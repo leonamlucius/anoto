@@ -72,12 +72,10 @@
 
             @if (icon.name === "Perfil") {
               @if (
-                activedSectiosnToogle === "profile" ||
-                activedSectiosnHover === "profile"
+                activedSectiosnToogle === "profile"
               ) {
                 <div
                   class="profile-section"
-                  (click)="$event.stopPropagation()"
                   id="profile-section-mobile"
                 >
                   <div class="section">

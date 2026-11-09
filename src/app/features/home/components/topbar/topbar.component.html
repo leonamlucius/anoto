@@ -13,7 +13,8 @@
       (click)="showUserDropdown()"
       class="profile-component"
       [style.view-transition-name]="
-        (userDropdownService.showDropdown$ | async) === false
+        (userDropdownService.showDropdown$ | async) === false &&
+        (noteService.showOtherView$ | async) === true
           ? 'profile'
           : 'none'
       "

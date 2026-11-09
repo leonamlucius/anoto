@@ -1,4 +1,10 @@
-import { Component, inject, signal, ChangeDetectorRef, ApplicationRef } from '@angular/core';
+import {
+  Component,
+  inject,
+  signal,
+  ChangeDetectorRef,
+  ApplicationRef,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { AddComponent } from '../../../../shared/components/add/add.component';
@@ -25,7 +31,7 @@ import { UserDropdownService } from '../../../home/services/user-dropdown.servic
   styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent {
-   private appRef = inject(ApplicationRef);
+  private appRef = inject(ApplicationRef);
   constructor(
     protected noteService: NoteService,
     private alertService: AlertService,
@@ -49,16 +55,7 @@ export class SidebarComponent {
   public haveNotes$!: Observable<boolean>;
 
   public showUserDropdown(): void {
-    const updateDOM = () => {
-      this.userDropdownService.toggleDropdown();
-      this.appRef.tick();
-    };
-
-    if ('startViewTransition' in document) {
-      const transition = (document as any).startViewTransition(updateDOM);
-    } else {
-      updateDOM();
-    }
+    this.userDropdownService.toggleDropdown();
   }
   public logout() {
     this.authService
