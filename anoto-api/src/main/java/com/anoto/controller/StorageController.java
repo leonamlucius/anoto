@@ -26,6 +26,16 @@ public class StorageController {
     @Autowired
     private StorageService storageService;
 
+    @PostMapping("/delete-all")
+    public ResponseEntity<Integer> deleteAll(HttpServletResponse response) {
+        try {
+            int deletedCount = storageService.deleteAll();
+            return ResponseEntity.ok(deletedCount);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
     @PostMapping("/profile-photo")
     public ResponseEntity<FileResponse> setProfilePhoto(@RequestBody FileRequest request,
             HttpServletResponse response) {

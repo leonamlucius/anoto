@@ -20,16 +20,19 @@ import java.util.ArrayList;
 import java.util.List;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
+import software.amazon.awssdk.services.s3.model.ObjectIdentifier;
 import software.amazon.awssdk.services.s3.model.S3Object;
 import java.util.stream.Collectors;
 import java.util.UUID;
 
+import software.amazon.awssdk.services.s3.model.DeleteObjectsRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.ResponseInputStream;
+import software.amazon.awssdk.services.s3.model.Delete;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,6 +59,45 @@ public class StorageService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
+    }
+
+    public int deleteAll() throws Exception {
+        List<User> users = userRepository.findAll();
+        users.forEach(user -> user.setProfilePhoto(null));
+        userRepository.saveAll(users);
+
+        int deletedCount = 0;
+        ListObjectsV2Request request = ListObjectsV2Request.builder()
+                .bucket(bucketName)
+                .build();
+
+        for (ListObjectsV2Response page : s3Client.listObjectsV2Paginator(request)) {
+            List<ObjectIdentifier> objects = page.contents().stream()
+                    .map(object -> ObjectIdentifier.builder()
+                            .key(object.key())
+                            .build())
+                    .toList();
+
+            if (objects.isEmpty()) {
+                continue;
+            }
+
+            var response = s3Client.deleteObjects(DeleteObjectsRequest.builder()
+                    .bucket(bucketName)
+                    .delete(Delete.builder().objects(objects).build())
+                    .build());
+
+            if (!response.errors().isEmpty()) {
+                throw new IllegalStateException(
+                        "Falha ao apagar alguns objetos do bucket: " + response.errors());
+            }
+
+            deletedCount += objects.size();
+        }
+
+        storageRepository.deleteAll();
+        logger.info("{} objetos removidos do bucket {}", deletedCount, bucketName);
+        return deletedCount;
     }
 
     public FileResponse setProfilePhoto(FileRequest fileDTO) throws Exception {
@@ -119,13 +161,7 @@ public class StorageService {
             throw new Exception("No files found in the bucket");
         }
 
-        S3Object defaultImage = objects.stream()
-                .filter(obj -> obj.key().contains("15fad3ac-2fe6-4a4e-85f3-c2af960b1205_user-icon_6.png"))
-                .findFirst()
-                .orElseThrow(() -> {
-                    logger.error("Imagem padrão não encontrada no bucket.");
-                    return new Exception("Default image not found in the bucket");
-                });
+        S3Object defaultImage = objects.get(0);
 
         String fileName = defaultImage.key();
 

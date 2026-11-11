@@ -7,7 +7,7 @@ import {
   inject,
 } from '@angular/core';
 import { AuthService } from '../../../../core/services/auth.service';
-import { catchError, finalize, Observable, of, tap } from 'rxjs';
+import { catchError, finalize, Observable, of, switchMap, tap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { UserDropdownService } from '../../services/user-dropdown.service';
 import { ProfileComponent } from '../../components/profile/profile.component';
@@ -27,7 +27,6 @@ export class UserDropdownComponent implements OnInit, OnDestroy {
     protected userDropdownService: UserDropdownService,
     private alertService: AlertService,
   ) {}
-
 
   private appRef = inject(ApplicationRef);
 
@@ -55,15 +54,26 @@ export class UserDropdownComponent implements OnInit, OnDestroy {
     },
   ];
 
-  protected activedSectiosnToogle: 'profile' | 'logout' | null = null;
+  protected activedSectiosnToogle: 'profile' | 'picture' | null = null;
 
-  protected activedSectiosnHover: 'profile' | 'logout' | null = null;
+  protected activedSectiosnHover: 'profile' | 'picture' | null = null;
 
   protected showmodal: boolean = false;
 
   private alreadyUpdated: boolean = false;
 
+  public allImages = [] as any[];
+
+  protected currentProfilePhotoFileName: string | null = null;
+
+  protected hasSelectedProfilePhoto: boolean = false;
+
   ngOnInit(): void {
+    if (this.allImages.length === 0) {
+      this.userDropdownService.getAllImages().subscribe((images) => {
+        this.allImages = images;
+      });
+    }
     this.userDropdownService.showDropdown$
       .pipe(
         tap((show) => {
@@ -90,6 +100,22 @@ export class UserDropdownComponent implements OnInit, OnDestroy {
     this.userDropdownService.setDropdown(false);
   }
 
+  public postProfilePhoto(fileName: string | null): void {
+    this.userDropdownService
+      .postProfilePhoto(fileName)
+      .pipe(
+        switchMap(() => this.userDropdownService.getProfilePhoto()),
+        tap(() => this.deactivateAll()),
+      )
+      .subscribe(() => {
+        this.userDropdownService.getProfilePhoto().subscribe();
+      });
+  }
+
+  public pickProfilePhoto(fileName: string): void {
+    this.hasSelectedProfilePhoto = true;
+    this.currentProfilePhotoFileName = fileName;
+  }
   public markAsUpdated(): void {
     this.alreadyUpdated = true;
   }
@@ -119,6 +145,8 @@ export class UserDropdownComponent implements OnInit, OnDestroy {
     const updateDOM = () => {
       this.activedSectiosnToogle = null;
       this.activedSectiosnHover = null;
+      this.hasSelectedProfilePhoto = false;
+      this.currentProfilePhotoFileName = null;
       this.userDropdownService.setDropdown(false);
       this.appRef.tick();
     };
@@ -129,17 +157,34 @@ export class UserDropdownComponent implements OnInit, OnDestroy {
     }
   }
 
-  public activateSectionHover(section: 'profile' | 'logout'): void {
-    if (this.activedSectiosnHover || this.activedSectiosnToogle) {
+  public activateSectionHover(section: 'profile' | 'picture'): void {
+    if (this.activedSectiosnToogle) return;
+    if (section === 'picture') {
+      this.userDropdownService.profilePhoto$.subscribe((photo) => {
+        this.currentProfilePhotoFileName = photo?.fileName ?? null;
+      });
+    }
+    if (
+      this.activedSectiosnHover == section ||
+      this.activedSectiosnToogle == section
+    ) {
       this.activedSectiosnHover = null;
+
       return;
     }
     this.activedSectiosnHover = section;
   }
 
-  public activateSectionToggle(section: 'profile' | 'logout'): void {
+  public activateSectionToggle(section: 'profile' | 'picture'): void {
+    if (section === 'picture') {
+      this.userDropdownService.profilePhoto$.subscribe((photo) => {
+        this.currentProfilePhotoFileName = photo?.fileName ?? null;
+      });
+    }
     if (this.activedSectiosnToogle) {
       this.activedSectiosnToogle = null;
+      this.currentProfilePhotoFileName = null;
+      this.hasSelectedProfilePhoto = false;
 
       return;
     }

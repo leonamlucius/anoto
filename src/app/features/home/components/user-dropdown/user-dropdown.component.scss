@@ -43,6 +43,7 @@
   align-items: center;
   justify-content: flex-start;
   gap: 10px;
+  width: 100%;
 }
 
 .section-header i {
@@ -50,6 +51,11 @@
 }
 .section label {
   width: 13%;
+  font-size: 0.9em;
+}
+
+.section p {
+  margin: 0;
   font-size: 0.9em;
 }
 .section input {
@@ -152,6 +158,95 @@ app-profile {
   mix-blend-mode: normal;
   object-fit: cover;
 }
+.all-images {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.all-images .image-wrapper {
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+  border-radius: 50%;
+  flex-shrink: 0;
+  cursor: pointer;
+  background: conic-gradient(
+    from 45deg,
+    #fff176 14%,
+    #f490b1 28%,
+    #a5d6a7 41%,
+    #91caf9 56%,
+    #ffcc80 70%,
+    #ce94d8 81%
+  );
+  border-radius: 50px;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.all-images .image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50px;
+}
+
+.all-images .check {
+  position: absolute;
+  right: 15px;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 0;
+  height: 0;
+  background-color: black;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  display: none;
+}
+
+.all-images .check span {
+  font-size: 0.6em;
+  color: #fff;
+}
+.all-images .check.active {
+  width: 15px;
+  height: 15px;
+  top: 0;
+  right: -13px;
+  display: flex;
+}
+.profile-section-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+}
+
+.profile-section-footer button {
+  border: none;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1019607843);
+  color: white;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.profile-section-footer button span {
+  font-size: 1.3em;
+  width: 100%;
+}
 
 @media (max-width: 600px) {
   .user-dropdown-wrapper {
@@ -177,8 +272,13 @@ app-profile {
   }
 
   #profile-section-mobile {
+    width: 100%;
     display: block;
     padding: 0;
+  }
+
+  .profile-section-footer{
+    padding: 10px;
   }
 
   .chevron {
@@ -186,6 +286,10 @@ app-profile {
   }
   .section {
     padding: 15px;
+  }
+
+  .all-images {
+    justify-content: space-evenly;
   }
 }
 @keyframes rotate {
