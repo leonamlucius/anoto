@@ -20,13 +20,6 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const token = localStorage.getItem('token');
-
-    if (!token) {
-      window.location.href = '/login';
-      return;
-    }
-
     const minutes = 30 * 60 * 1000;
 
     const idleCheck$ = merge(

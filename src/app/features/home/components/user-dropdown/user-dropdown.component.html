@@ -1,0 +1,214 @@
+@if (showmodal) {
+  <div
+    class="user-dropdown-wrapper"
+    (click)="deactivateAll(); $event.stopPropagation()"
+  >
+    <div class="user-dropdown-container">
+      @if (
+        activedSectiosnToogle === "profile" ||
+        activedSectiosnHover === "profile"
+      ) {
+        <div
+          class="profile-section"
+          (click)="$event.stopPropagation()"
+          id="profile-section-pc"
+        >
+          <div class="section">
+            <div class="section-header">
+              <label>Nome </label>
+              <i class="bi bi-pencil-square"></i>
+            </div>
+
+            <input
+              type="text"
+              [(ngModel)]="nameInput"
+              (change)="markAsUpdated()"
+            />
+          </div>
+          <div class="section">
+            <div class="section-header">
+              <label>Email </label>
+            </div>
+            <input type="text" [(ngModel)]="emailInput" readonly />
+          </div>
+        </div>
+      }
+
+      @if (
+        activedSectiosnToogle === "picture" ||
+        activedSectiosnHover === "picture"
+      ) {
+        <div
+          class="profile-section"
+          (click)="$event.stopPropagation()"
+          id="profile-section-pc"
+        >
+          <div class="section">
+            <div class="section-header">
+              <p>Selecione uma foto de perfil</p>
+            </div>
+          </div>
+
+          <div class="all-images">
+            @for (image of allImages; track image.fileName) {
+              <div
+                class="image-wrapper"
+                (click)="pickProfilePhoto(image.fileName)"
+              >
+                <img
+                  [src]="`data:${image.contentType};base64,${image.base64Data}`"
+                />
+
+                <div
+                  class="check"
+                  [class.active]="
+                    currentProfilePhotoFileName === image.fileName
+                  "
+                >
+                  <span
+                    _ngcontent-ng-c2851059024=""
+                    class="material-symbols-outlined"
+                  >
+                    check
+                  </span>
+                </div>
+              </div>
+            }
+          </div>
+
+          @if (hasSelectedProfilePhoto) {
+            <div class="profile-section-footer">
+              <button (click)="postProfilePhoto(currentProfilePhotoFileName)">
+                <span class="material-symbols-outlined"> chevron_forward </span>
+              </button>
+            </div>
+          }
+        </div>
+      }
+
+      <div class="user-dropdown" (click)="$event.stopPropagation()">
+        <div class="user-info">
+          <app-profile
+            (mouseenter)="activateSectionHover('picture')"
+            (mouseleave)="activateSectionHover('picture')"
+            (click)="activateSectionToggle('picture'); $event.stopPropagation()"
+            [style.view-transition-name]="
+              (userDropdownService.showDropdown$ | async) === true
+                ? 'profile'
+                : 'none'
+            "
+          ></app-profile>
+          <div class="user-details">
+            <p class="user-name">{{ name }}</p>
+            <p class="user-email">{{ email }}</p>
+          </div>
+        </div>
+
+        @if (activedSectiosnToogle === "picture") {
+          <div class="profile-section" id="profile-section-mobile">
+            <div class="section">
+              <div class="section-header">
+                <p>Selecione uma foto de perfil</p>
+              </div>
+            </div>
+
+            <div class="all-images">
+              @for (image of allImages; track image.fileName) {
+                <div
+                  class="image-wrapper"
+                  (click)="pickProfilePhoto(image.fileName)"
+                >
+                  <img
+                    [src]="
+                      `data:${image.contentType};base64,${image.base64Data}`
+                    "
+                  />
+
+                  <div
+                    class="check"
+                    [class.active]="
+                      currentProfilePhotoFileName === image.fileName
+                    "
+                  >
+                    <span
+                      _ngcontent-ng-c2851059024=""
+                      class="material-symbols-outlined"
+                    >
+                      check
+                    </span>
+                  </div>
+                </div>
+              }
+            </div>
+
+            @if (hasSelectedProfilePhoto) {
+              <div class="profile-section-footer">
+                <button (click)="postProfilePhoto(currentProfilePhotoFileName)">
+                  <span class="material-symbols-outlined">
+                    chevron_forward
+                  </span>
+                </button>
+              </div>
+            }
+          </div>
+        }
+
+        <div class="user-actions">
+          @for (icon of icons; track icon.name) {
+            <div
+              class="user-action"
+              [class.logout]="icon.name === 'Logout'"
+              (pointerdown)="icon.action()"
+              (mouseenter)="
+                activateSectionHover(
+                  icon.name === 'Perfil' ? 'profile' : 'picture'
+                )
+              "
+              (mouseleave)="
+                activateSectionHover(
+                  icon.name === 'Perfil' ? 'profile' : 'picture'
+                )
+              "
+            >
+              <span [innerHTML]="icon.icon"></span>
+              <span>{{ icon.name }}</span>
+
+              @if (icon.chevron) {
+                <button
+                  class="chevron"
+                  [innerHTML]="icon.chevron"
+                  [class.rotate]="activedSectiosnToogle === 'profile'"
+                ></button>
+              }
+            </div>
+
+            @if (icon.name === "Perfil") {
+              @if (activedSectiosnToogle === "profile") {
+                <div class="profile-section" id="profile-section-mobile">
+                  <div class="section">
+                    <div class="section-header">
+                      <label>Nome </label>
+                      <i class="bi bi-pencil-square"></i>
+                    </div>
+
+                    <input
+                      type="text"
+                      [(ngModel)]="nameInput"
+                      (change)="markAsUpdated()"
+                    />
+                  </div>
+                  <div class="section">
+                    <div class="section-header">
+                      <label>Email </label>
+                    </div>
+                    <input type="text" [(ngModel)]="emailInput" readonly />
+                  </div>
+                </div>
+              }
+            }
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}

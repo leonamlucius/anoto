@@ -8,5 +8,17 @@
 
 <div class="topbar-right" [class.active]="searchService.getActiveSearch()">
   <app-search></app-search>
-  <app-profile class="profile-component"></app-profile>
+  @if ((userDropdownService.showDropdown$ | async) == false) {
+    <app-profile
+      (click)="showUserDropdown()"
+      class="profile-component"
+      [style.view-transition-name]="
+        (userDropdownService.showDropdown$ | async) === false &&
+        (noteService.showOtherView$ | async) === true
+          ? 'profile'
+          : 'none'
+      "
+    ></app-profile>
+  }
+  <app-user-dropdown></app-user-dropdown>
 </div>

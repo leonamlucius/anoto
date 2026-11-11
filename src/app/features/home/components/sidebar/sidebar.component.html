@@ -1,5 +1,10 @@
 <app-add class="add-component"></app-add>
-<app-profile class="profile-component"></app-profile>
+
+<app-profile
+  class="profile-component"
+  (click)="showUserDropdown()"
+></app-profile>
+
 <div class="colors">
   @for (color of colors; track color) {
     <button

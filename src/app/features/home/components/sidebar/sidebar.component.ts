@@ -1,4 +1,10 @@
-import { Component, inject, signal } from '@angular/core';
+import {
+  Component,
+  inject,
+  signal,
+  ChangeDetectorRef,
+  ApplicationRef,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { AddComponent } from '../../../../shared/components/add/add.component';
@@ -9,6 +15,7 @@ import { AlertService } from '../../../../shared/services/alert.service';
 import { ProfileComponent } from '../../../home/components/profile/profile.component';
 import { Observable, catchError, of, map, take } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
+import { UserDropdownService } from '../../../home/services/user-dropdown.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -24,11 +31,13 @@ import { AsyncPipe } from '@angular/common';
   styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent {
+  private appRef = inject(ApplicationRef);
   constructor(
     protected noteService: NoteService,
     private alertService: AlertService,
     private authService: AuthService,
     private router: Router,
+    protected userDropdownService: UserDropdownService,
   ) {}
 
   public notesGet = signal<any[]>([]);
@@ -45,6 +54,9 @@ export class SidebarComponent {
 
   public haveNotes$!: Observable<boolean>;
 
+  public showUserDropdown(): void {
+    this.userDropdownService.toggleDropdown();
+  }
   public logout() {
     this.authService
       .logout()
@@ -58,11 +70,7 @@ export class SidebarComponent {
           return of(null);
         }),
       )
-      .subscribe(
-        () => {
-          this.router.navigate(['/login']);
-        }
-      );
+      .subscribe();
   }
 
   public hiddeNoteContent() {

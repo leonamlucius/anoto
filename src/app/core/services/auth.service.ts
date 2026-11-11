@@ -11,6 +11,7 @@ import {
   of,
   BehaviorSubject,
   throwError,
+  finalize,
 } from 'rxjs';
 
 @Injectable({
@@ -28,14 +29,6 @@ export class AuthService {
 
   private name = new BehaviorSubject<string>('');
 
-  public getName(): Observable<string> {
-    return this.name.asObservable();
-  }
-
-  public setName(name: string): void {
-    this.name.next(name);
-  }
-
   public login(email: string, password: string): Observable<any> {
     return this.http
       .post<any>(`${this.apiUrl}/auth/login`, {
@@ -44,7 +37,6 @@ export class AuthService {
       })
       .pipe(
         tap((response) => {
-          this.setName(response.name);
           this.alertService.show('success', 'Login realizado com sucesso!');
           this.router.navigate(['/home']);
         }),
@@ -72,8 +64,6 @@ export class AuthService {
       })
       .pipe(
         tap((response) => {
-          localStorage.setItem('token', response.token);
-          this.setName(response.name);
           this.alertService.show('success', 'Cadastro realizado com sucesso!');
           this.router.navigate(['/home']);
         }),
@@ -145,10 +135,7 @@ export class AuthService {
       .pipe(
         catchError((error) => {
           console.error('Failed to test reset password token:', error);
-          this.alertService.show(
-            'error',
-            'Token usado ou expirado',
-          );
+          this.alertService.show('error', 'Token usado ou expirado');
           return throwError(() => error);
         }),
       );
@@ -179,6 +166,10 @@ export class AuthService {
           'Falha ao realizar logout. Por favor, tente novamente.',
         );
         return of(null);
+      }),
+
+      tap(() => {
+        this.router.navigate(['/login']);
       }),
     );
   }

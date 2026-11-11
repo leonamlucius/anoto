@@ -11,12 +11,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.anoto.service.StorageService;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final StorageService storageService;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
@@ -33,6 +35,12 @@ public class AuthService {
                 .build();
 
         userRepository.save(user);
+
+        try {
+            storageService.setDefaultImage(user);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao definir a imagem padrão.", e);
+        }
 
         return new LoginResponse(user.getId(), user.getEmail(), user.getName());
     }

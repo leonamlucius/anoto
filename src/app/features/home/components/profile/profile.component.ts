@@ -1,9 +1,6 @@
-import { Component, signal } from '@angular/core';
-import { InfoService } from '../../../../features/home/services/info.service';
+import { Component, signal, OnInit } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
-import { OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Info } from '../../../../features/home/models/info';
+import { UserDropdownService } from '../../services/user-dropdown.service';
 
 @Component({
   selector: 'app-profile',
@@ -12,20 +9,16 @@ import { Info } from '../../../../features/home/models/info';
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
-  constructor(private infoService: InfoService) {}
+  profilePhoto = '/img/blank-profile-picture-973460_960_720.png';
+  constructor(protected userDropdownService: UserDropdownService) {}
 
-  protected profileExpanded = signal<boolean>(false);
-
-  protected userName$!: Observable<Info>;
-
-  
   ngOnInit(): void {
-    this.infoService.getInfo().subscribe();
-    this.userName$ = this.infoService.getName();
-  }
+    this.userDropdownService.profilePhoto$.subscribe((photo) => {
+      if (photo) {
+        this.profilePhoto = `data:${photo.contentType};base64,${photo.base64Data}`;
+      }
+    });
 
-
-  public toggleProfileExpanded(): void {
-    this.profileExpanded.set(!this.profileExpanded());
+    this.userDropdownService.getProfilePhoto().subscribe();
   }
 }

@@ -28,4 +28,8 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Note> notes;
+
+    @ManyToOne
+    @JoinColumn(name = "profile_photo_id")
+    private Storage profilePhoto;
 }
