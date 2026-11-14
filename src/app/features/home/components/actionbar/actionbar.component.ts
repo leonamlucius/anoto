@@ -4,8 +4,10 @@ import {
   OnInit,
   ChangeDetectorRef,
   signal,
+  DestroyRef,
 } from '@angular/core';
 import { finalize, switchMap, tap, map, catchError } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NoteService } from '../../services/note.service';
 import { FolderService } from '../../services/folder.service';
 import { combineLatest, firstValueFrom } from 'rxjs';
@@ -21,6 +23,7 @@ import { DeleteService } from '../../../../shared/services/delete.service';
   styleUrls: ['./actionbar.component.scss'],
 })
 export class ActionbarComponent implements OnInit {
+  private destroyRef = inject(DestroyRef);
   public actionbarActive: boolean = false;
 
   public exiting: boolean = false;
@@ -79,6 +82,8 @@ export class ActionbarComponent implements OnInit {
           this.exiting = false;
           this.actionbarActive = active;
         }),
+
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe();
 
@@ -92,6 +97,7 @@ export class ActionbarComponent implements OnInit {
           this.haveFolders = folders > 0;
           return notes + folders;
         }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe((total) => {
         this.numberSelected = total;
@@ -105,6 +111,7 @@ export class ActionbarComponent implements OnInit {
           }));
           this.showCheck(selectedNotes);
         }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe();
 
@@ -113,6 +120,7 @@ export class ActionbarComponent implements OnInit {
         tap((folders) => {
           this.allfolders = folders;
         }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe();
   }

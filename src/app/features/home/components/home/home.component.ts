@@ -39,6 +39,7 @@ export class HomeComponent implements OnInit {
         switchMap(() => {
           return this.authService.testToken();
         }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe((isValid: boolean) => {
         if (!isValid) {

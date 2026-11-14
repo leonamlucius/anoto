@@ -34,6 +34,8 @@ export class AlertComponent implements OnInit {
 
   private nextAlertId = 0;
 
+  
+
   alerts: {
     id: number;
     type: 'success' | 'error' | 'warning';
