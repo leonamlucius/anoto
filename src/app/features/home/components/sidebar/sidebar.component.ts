@@ -14,7 +14,7 @@ import { NoteService } from '../../services/note.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { AlertService } from '../../../../shared/services/alert.service';
 import { ProfileComponent } from '../../../home/components/profile/profile.component';
-import { Observable, catchError, of, map, take } from 'rxjs';
+import { Observable, catchError, of, map, take, finalize } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { UserDropdownService } from '../../../home/services/user-dropdown.service';
 
@@ -74,8 +74,12 @@ export class SidebarComponent implements OnDestroy {
           );
           return of(null);
         }),
+    
       )
-      .subscribe(() => this.userDropdownService.clearProfilePhoto());
+      .subscribe(() => {
+        this.userDropdownService.clearProfilePhoto();
+        this.router.navigate(['/login']);
+      });
   }
 
   public hiddeNoteContent() {

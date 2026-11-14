@@ -160,16 +160,15 @@ export class AuthService {
   public logout(): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/auth/logout`, {}).pipe(
       catchError((error) => {
+        tap(() => {
+          return true;
+        });
         console.error('Failed to logout:', error);
         this.alertService.show(
           'error',
           'Falha ao realizar logout. Por favor, tente novamente.',
         );
         return of(null);
-      }),
-
-      tap(() => {
-        this.router.navigate(['/login']);
       }),
     );
   }

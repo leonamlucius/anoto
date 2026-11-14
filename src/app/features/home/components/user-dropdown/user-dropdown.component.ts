@@ -16,6 +16,7 @@ import { AlertService } from '../../../../shared/services/alert.service';
 import { Info } from '../../models/info';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-dropdown',
@@ -28,6 +29,7 @@ export class UserDropdownComponent implements OnInit {
     private authService: AuthService,
     protected userDropdownService: UserDropdownService,
     private alertService: AlertService,
+    private router: Router,
   ) {}
 
   private destroyRef = inject(DestroyRef);
@@ -209,6 +211,9 @@ export class UserDropdownComponent implements OnInit {
           return of(null);
         }),
       )
-      .subscribe();
+      .subscribe(() => {
+        this.router.navigate(['/login']);
+        this.userDropdownService.clearProfilePhoto();
+      });
   }
 }
