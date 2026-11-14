@@ -5,6 +5,7 @@ import {
   signal,
   inject,
   ChangeDetectorRef,
+  DestroyRef,
 } from '@angular/core';
 import { DeleteService } from '../../../../shared/services/delete.service';
 import { FolderService } from '../../services/folder.service';
@@ -27,6 +28,7 @@ import {
 } from 'rxjs';
 import { ErrorComponent } from '../../../../shared/components/error/error.component';
 import { WelcomeComponent } from '../../../../shared/components/welcome/welcome.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 type EmptyState = 'loading' | 'noSearch' | 'welcome' | 'noColor' | null;
 
@@ -42,13 +44,15 @@ type EmptyState = 'loading' | 'noSearch' | 'welcome' | 'noColor' | null;
   templateUrl: './notes.component.html',
   styleUrls: ['./notes.component.scss'],
 })
-export class NotesComponent implements OnInit , OnDestroy {
+export class NotesComponent implements OnInit, OnDestroy {
   showDeleteModal = signal(false);
   constructor(
     protected noteService: NoteService,
     protected deleteService: DeleteService,
     protected folderService: FolderService,
   ) {}
+
+  private destroyRef = inject(DestroyRef);
 
   private cdr = inject(ChangeDetectorRef);
 
@@ -89,12 +93,16 @@ export class NotesComponent implements OnInit , OnDestroy {
     { color: '#CE93D8' },
   ];
 
-
   ngOnInit() {
-    this.view$ = this.noteService.view$;
+    this.view$ = this.noteService.view$.pipe(
+      takeUntilDestroyed(this.destroyRef),
+    );
     this.noteService
       .Allnotes()
-      .pipe(finalize(() => this.loadNotes()))
+      .pipe(
+        finalize(() => this.loadNotes()),
+        takeUntilDestroyed(this.destroyRef),
+      )
       .subscribe();
     this.notes$ = this.noteService.filteredNotes$;
 
@@ -121,6 +129,7 @@ export class NotesComponent implements OnInit , OnDestroy {
             ),
           })),
       ),
+      takeUntilDestroyed(this.destroyRef),
     );
 
     this.notesFixed$ = combineLatest([
@@ -146,6 +155,7 @@ export class NotesComponent implements OnInit , OnDestroy {
             ),
           })),
       ),
+      takeUntilDestroyed(this.destroyRef),
     );
 
     this.emptyState$ = combineLatest([
@@ -160,6 +170,7 @@ export class NotesComponent implements OnInit , OnDestroy {
         if (!loaded) return 'loading';
         return color === null ? 'welcome' : 'noColor';
       }),
+      takeUntilDestroyed(this.destroyRef),
     );
   }
 

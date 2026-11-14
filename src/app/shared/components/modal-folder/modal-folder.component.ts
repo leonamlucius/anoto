@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FolderService } from '../../../features/home/services/folder.service';
 
@@ -6,6 +6,7 @@ import { NoteService } from '../../../features/home/services/note.service';
 import { Note } from '../../../features/home/models/note';
 import { catchError, tap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app-modal-folder',
   imports: [FormsModule, AsyncPipe],
@@ -18,6 +19,7 @@ export class ModalFolderComponent implements OnInit {
     protected noteService: NoteService,
   ) {}
 
+  private destroyRef = inject(DestroyRef);
   showModal: boolean = false;
 
   selectedColor: string = '';
@@ -40,9 +42,11 @@ export class ModalFolderComponent implements OnInit {
   notes: Note[] = [];
 
   ngOnInit(): void {
-    this.folderService.showModal$.subscribe((show: boolean) => {
-      this.showModal = show;
-    });
+    this.folderService.showModal$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((show: boolean) => {
+        this.showModal = show;
+      });
 
     this.noteService
       .Allnotes()
@@ -50,6 +54,7 @@ export class ModalFolderComponent implements OnInit {
         tap((notes: Note[]) => {
           this.notes = notes;
         }),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();
   }

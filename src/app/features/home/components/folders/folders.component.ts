@@ -1,4 +1,9 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  inject,
+} from '@angular/core';
 import { OnInit, OnDestroy } from '@angular/core';
 import { FolderService } from '../../services/folder.service';
 import { NoteService } from '../../services/note.service';
@@ -14,6 +19,7 @@ import { Note } from '../../models/note';
 import { AsyncPipe } from '@angular/common';
 import { DeleteService } from '../../../../shared/services/delete.service';
 import { Folder } from '../../models/folder';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 type EmptyState = 'loading' | null;
 
@@ -29,6 +35,8 @@ export class FoldersComponent implements OnInit, OnDestroy {
     protected noteService: NoteService,
     private deleteService: DeleteService,
   ) {}
+
+  private destroyRef = inject(DestroyRef);
 
   public folders: any[] = [];
 
@@ -72,19 +80,24 @@ export class FoldersComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.folderService
       .AllFolders()
-      .pipe(finalize(() => this.pageLoadedSubject.next(true)))
+      .pipe(
+        finalize(() => this.pageLoadedSubject.next(true)),
+        takeUntilDestroyed(this.destroyRef),
+      )
       .subscribe({
         error: (error) => {
           console.error('Error fetching folders:', error);
         },
       });
 
-    this.folderService.folders$.subscribe((folders) => {
-      this.folders = folders;
-      this.folders.forEach((folder) => {
-        this.getNotesById([folder]);
+    this.folderService.folders$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((folders) => {
+        this.folders = folders;
+        this.folders.forEach((folder) => {
+          this.getNotesById([folder]);
+        });
       });
-    });
 
     this.emptyState$ = combineLatest([
       this.pageLoadedSubject,
@@ -96,6 +109,7 @@ export class FoldersComponent implements OnInit, OnDestroy {
         if (folders.length > 0) return null;
         return null;
       }),
+      takeUntilDestroyed(this.destroyRef),
     );
   }
   ngOnDestroy(): void {
@@ -341,7 +355,9 @@ export class FoldersComponent implements OnInit, OnDestroy {
   }
 
   public getNotesById(folderId: any[]): void {
-    this.noteService.allNotesObservable$.subscribe((notes) => {
+    this.noteService.allNotesObservable$
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe((notes) => {
       folderId.forEach((folderIdItem) => {
         const folderNotes = notes.filter((note) =>
           folderIdItem.noteIds.includes(note.id),

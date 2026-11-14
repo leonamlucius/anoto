@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Output,
+  OnInit,
+  OnDestroy,
+  DestroyRef,
+  inject,
+} from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { map } from 'rxjs/operators';
 import { NoteService } from '../../../features/home/services/note.service';
@@ -7,6 +15,7 @@ import { DeleteService } from '../../services/delete.service';
 
 import { Input } from '@angular/core';
 import { combineLatest } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app-delete',
   imports: [AsyncPipe],
@@ -14,9 +23,7 @@ import { combineLatest } from 'rxjs';
   styleUrls: ['./delete.component.scss'],
 })
 export class DeleteComponent implements OnInit, OnDestroy {
-  ngOnDestroy(): void {
-    this.deleteService.setShowDeleteModal(false);
-  }
+  private destroyRef = inject(DestroyRef);
   public noteId: number[] | null = null;
 
   public folderId: number[] | null = null;
@@ -29,12 +36,16 @@ export class DeleteComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.noteService.deleteNote$.subscribe((noteId) => {
-      this.noteId = noteId;
-    });
-    this.folderService.folderDeleted$.subscribe((folderId) => {
-      this.folderId = folderId;
-    });
+    this.noteService.deleteNote$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((noteId) => {
+        this.noteId = noteId;
+      });
+    this.folderService.folderDeleted$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((folderId) => {
+        this.folderId = folderId;
+      });
 
     combineLatest([
       this.noteService.deleteNote$,
@@ -60,8 +71,13 @@ export class DeleteComponent implements OnInit, OnDestroy {
 
           return totalLength;
         }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe();
+  }
+
+  ngOnDestroy(): void {
+    this.deleteService.setShowDeleteModal(false);
   }
 
   public isLoading: boolean = false;

@@ -168,7 +168,9 @@ export class UserDropdownComponent implements OnInit {
   public activateSectionHover(section: 'profile' | 'picture'): void {
     if (this.activedSectiosnToogle) return;
     if (section === 'picture') {
-      this.userDropdownService.profilePhoto$.subscribe((photo) => {
+      this.userDropdownService.profilePhoto$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((photo) => {
         this.currentProfilePhotoFileName = photo?.fileName ?? null;
       });
     }
@@ -185,7 +187,9 @@ export class UserDropdownComponent implements OnInit {
 
   public activateSectionToggle(section: 'profile' | 'picture'): void {
     if (section === 'picture') {
-      this.userDropdownService.profilePhoto$.subscribe((photo) => {
+      this.userDropdownService.profilePhoto$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((photo) => {
         this.currentProfilePhotoFileName = photo?.fileName ?? null;
       });
     }

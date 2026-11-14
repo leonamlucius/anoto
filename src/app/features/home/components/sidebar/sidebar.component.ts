@@ -32,7 +32,6 @@ import { UserDropdownService } from '../../../home/services/user-dropdown.servic
   styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent implements OnDestroy {
-  private appRef = inject(ApplicationRef);
   constructor(
     protected noteService: NoteService,
     private alertService: AlertService,
@@ -57,7 +56,6 @@ export class SidebarComponent implements OnDestroy {
 
   booleanValue = true;
 
-  public haveNotes$!: Observable<boolean>;
 
   public showUserDropdown(): void {
     this.userDropdownService.toggleDropdown();

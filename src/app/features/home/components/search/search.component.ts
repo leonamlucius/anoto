@@ -1,8 +1,16 @@
-import { Component, NgModule, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  NgModule,
+  ViewChild,
+  ElementRef,
+  inject,
+  DestroyRef,
+} from '@angular/core';
 import { SearchService } from '../../services/search.service';
 import { AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NoteService } from '../../services/note.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-search',
@@ -16,8 +24,12 @@ export class SearchComponent {
     protected noteService: NoteService,
   ) {
     this.inputValue = '';
-    searchService.valueSearch$.subscribe(value => this.inputValue = value);
+    searchService.valueSearch$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((value) => (this.inputValue = value));
   }
+
+  private destroyRef = inject(DestroyRef);
 
   public inputValue: string = '';
 
@@ -55,7 +67,7 @@ export class SearchComponent {
     if (!this.searchService.getActiveSearch()) {
       this.searchService.setActiveSearch(true);
     }
-    
+
     this.searchService.setValueSearch(value);
   }
 }

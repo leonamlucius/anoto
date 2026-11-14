@@ -4,11 +4,13 @@ import {
   ChangeDetectorRef,
   inject,
   OnInit,
+  DestroyRef,
 } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { NoteService } from '../../services/note.service';
 import { FolderService } from '../../services/folder.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-toolbar',
@@ -17,30 +19,34 @@ import { FolderService } from '../../services/folder.service';
   styleUrl: './toolbar.component.scss',
 })
 export class ToolbarComponent implements OnInit, OnDestroy {
-  ngOnDestroy(): void {
-    this.noteService.setOrderBy("newest");
-    this.noteService.setView('notes');
-  }
   constructor(
     protected noteService: NoteService,
     protected folderService: FolderService,
   ) {}
+
+  ngOnInit(): void {
+    this.folderService.showModal$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((show: boolean) => {
+        if (!show) {
+          this.activeItem.set(null);
+          this.activeAction.set(false);
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.noteService.setOrderBy('newest');
+    this.noteService.setView('notes');
+  }
+
+  private destroyRef = inject(DestroyRef);
   public activeAction = signal<boolean>(false);
   public activeItem = signal<'date' | 'notes' | string | null>(null);
 
   public activeView = signal<'notes' | 'list'>('notes');
 
   private cdr = inject(ChangeDetectorRef);
-
-  ngOnInit(): void {
-    this.folderService.showModal$.subscribe((show: boolean) => {
-      if (!show) {
-        this.activeItem.set(null);
-        this.activeAction.set(false);
-      }
-    });
-  }
-
   public items = [
     {
       label: 'date',
