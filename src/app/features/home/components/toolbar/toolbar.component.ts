@@ -5,6 +5,7 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
+import { OnDestroy } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { NoteService } from '../../services/note.service';
 import { FolderService } from '../../services/folder.service';
@@ -15,7 +16,11 @@ import { FolderService } from '../../services/folder.service';
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss',
 })
-export class ToolbarComponent implements OnInit {
+export class ToolbarComponent implements OnInit, OnDestroy {
+  ngOnDestroy(): void {
+    this.noteService.setOrderBy("newest");
+    this.noteService.setView('notes');
+  }
   constructor(
     protected noteService: NoteService,
     protected folderService: FolderService,

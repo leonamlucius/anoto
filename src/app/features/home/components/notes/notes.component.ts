@@ -42,7 +42,7 @@ type EmptyState = 'loading' | 'noSearch' | 'welcome' | 'noColor' | null;
   templateUrl: './notes.component.html',
   styleUrls: ['./notes.component.scss'],
 })
-export class NotesComponent implements OnInit {
+export class NotesComponent implements OnInit , OnDestroy {
   showDeleteModal = signal(false);
   constructor(
     protected noteService: NoteService,
@@ -163,6 +163,10 @@ export class NotesComponent implements OnInit {
     );
   }
 
+  ngOnDestroy(): void {
+    this.noteService.setSelectedNoteAction([]);
+    this.noteService.setNumberSelected(0);
+  }
   public markNoteActionToggle(
     id: number,
     event: PointerEvent | null,

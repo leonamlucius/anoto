@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { map } from 'rxjs/operators';
 import { NoteService } from '../../../features/home/services/note.service';
@@ -13,7 +13,10 @@ import { combineLatest } from 'rxjs';
   templateUrl: './delete.component.html',
   styleUrls: ['./delete.component.scss'],
 })
-export class DeleteComponent implements OnInit {
+export class DeleteComponent implements OnInit, OnDestroy {
+  ngOnDestroy(): void {
+    this.deleteService.setShowDeleteModal(false);
+  }
   public noteId: number[] | null = null;
 
   public folderId: number[] | null = null;
