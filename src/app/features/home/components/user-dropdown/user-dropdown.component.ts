@@ -5,6 +5,7 @@ import {
   ApplicationRef,
   ChangeDetectorRef,
   inject,
+  DestroyRef,
 } from '@angular/core';
 import { AuthService } from '../../../../core/services/auth.service';
 import { catchError, finalize, Observable, of, switchMap, tap } from 'rxjs';
@@ -14,6 +15,7 @@ import { ProfileComponent } from '../../components/profile/profile.component';
 import { AlertService } from '../../../../shared/services/alert.service';
 import { Info } from '../../models/info';
 import { FormsModule } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-user-dropdown',
@@ -21,12 +23,14 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './user-dropdown.component.html',
   styleUrls: ['./user-dropdown.component.scss'],
 })
-export class UserDropdownComponent implements OnInit, OnDestroy {
+export class UserDropdownComponent implements OnInit {
   constructor(
     private authService: AuthService,
     protected userDropdownService: UserDropdownService,
     private alertService: AlertService,
   ) {}
+
+  private destroyRef = inject(DestroyRef);
 
   private appRef = inject(ApplicationRef);
 
@@ -79,6 +83,8 @@ export class UserDropdownComponent implements OnInit, OnDestroy {
         tap((show) => {
           this.showmodal = show;
         }),
+
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe((show) => {
         if (!show) {

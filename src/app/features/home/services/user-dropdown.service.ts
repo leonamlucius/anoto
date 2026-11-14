@@ -16,7 +16,10 @@ import { AlertService } from '../../../shared/services/alert.service';
   providedIn: 'root',
 })
 export class UserDropdownService {
-  constructor(private http: HttpClient, private alertService: AlertService) {}
+  constructor(
+    private http: HttpClient,
+    private alertService: AlertService,
+  ) {}
 
   private showDropdown = new BehaviorSubject<boolean>(false);
 
@@ -30,6 +33,11 @@ export class UserDropdownService {
   public profilePhoto$ = this.profilePhotoSubject.asObservable();
 
   private allImagesRequest?: Observable<any>;
+
+  public clearProfilePhoto(): void {
+    this.profilePhotoRequest = undefined;
+    this.profilePhotoSubject.next(null);
+  }
 
   public postProfilePhoto(fileName: string | null): Observable<any> {
     return this.http

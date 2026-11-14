@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
-import { OnInit } from '@angular/core';
+import { OnInit, OnDestroy } from '@angular/core';
 import { FolderService } from '../../services/folder.service';
 import { NoteService } from '../../services/note.service';
 import {
@@ -23,7 +23,7 @@ type EmptyState = 'loading' | null;
   templateUrl: './folders.component.html',
   styleUrls: ['./folders.component.scss'],
 })
-export class FoldersComponent implements OnInit {
+export class FoldersComponent implements OnInit, OnDestroy {
   constructor(
     protected folderService: FolderService,
     protected noteService: NoteService,
@@ -97,6 +97,10 @@ export class FoldersComponent implements OnInit {
         return null;
       }),
     );
+  }
+  ngOnDestroy(): void {
+    this.folderService.setSelectedFolderCheck([]);
+    this.folderService.setSelectedFolderLength(0);
   }
 
   public toggleShowFolders(): void {

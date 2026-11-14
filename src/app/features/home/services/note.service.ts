@@ -97,6 +97,7 @@ export class NoteService {
 
   private apiUrl = environment.apiUrl;
 
+  
   public setSearchFoundNotes(value: boolean) {
     this.searchFoundNotesSubject.next(value);
   }

@@ -5,6 +5,7 @@ import {
   ChangeDetectorRef,
   ApplicationRef,
 } from '@angular/core';
+import { OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { AddComponent } from '../../../../shared/components/add/add.component';
@@ -30,7 +31,7 @@ import { UserDropdownService } from '../../../home/services/user-dropdown.servic
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnDestroy {
   private appRef = inject(ApplicationRef);
   constructor(
     protected noteService: NoteService,
@@ -39,6 +40,10 @@ export class SidebarComponent {
     private router: Router,
     protected userDropdownService: UserDropdownService,
   ) {}
+
+  ngOnDestroy(): void {
+    this.noteService.toggleColorFilter(null);
+  }
 
   public notesGet = signal<any[]>([]);
   colors = [
@@ -70,7 +75,7 @@ export class SidebarComponent {
           return of(null);
         }),
       )
-      .subscribe();
+      .subscribe(() => this.userDropdownService.clearProfilePhoto());
   }
 
   public hiddeNoteContent() {
@@ -103,7 +108,6 @@ export class SidebarComponent {
         return;
       }
 
-      // Alterna a cor selecionada no serviço de forma limpa
       this.noteService.toggleColorFilter(clicked.getAttribute('id'));
     });
   }
