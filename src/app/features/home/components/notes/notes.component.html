@@ -137,6 +137,7 @@
         (selectedNoteIdFixed === note.id || selectedNoteIdEdit === note.id || (noteService.selectedNoteAction$ | async)?.some(selectedNote => selectedNote.id === note.id))
       "
           [class.invisible]="selectedNoteIdEdit === note.id"
+          
           [style.view-transition-name]="
             (noteService.showOtherView$ | async) === true
               ? 'note-' + note.id
