@@ -165,14 +165,14 @@ export class UserDropdownComponent implements OnInit {
     }
   }
 
-  public activateSectionHover(section: 'profile' | 'picture'): void {
-    if (this.activedSectiosnToogle) return;
+  public activateSectionHover(section: 'profile' | 'picture' | 'none'): void {
+    if (this.activedSectiosnToogle || section === 'none') return;
     if (section === 'picture') {
       this.userDropdownService.profilePhoto$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((photo) => {
-        this.currentProfilePhotoFileName = photo?.fileName ?? null;
-      });
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((photo) => {
+          this.currentProfilePhotoFileName = photo?.fileName ?? null;
+        });
     }
     if (
       this.activedSectiosnHover == section ||
@@ -186,19 +186,21 @@ export class UserDropdownComponent implements OnInit {
   }
 
   public activateSectionToggle(section: 'profile' | 'picture'): void {
+    if (this.activedSectiosnHover) {
+      this.activedSectiosnHover = null;
+    }
     if (section === 'picture') {
       this.userDropdownService.profilePhoto$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((photo) => {
-        this.currentProfilePhotoFileName = photo?.fileName ?? null;
-      });
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((photo) => {
+          this.currentProfilePhotoFileName = photo?.fileName ?? null;
+        });
     }
     if (this.activedSectiosnToogle) {
       this.activedSectiosnToogle = null;
       this.currentProfilePhotoFileName = null;
       this.hasSelectedProfilePhoto = false;
-
-      return;
+      this.activedSectiosnToogle = null;
     }
     this.activedSectiosnToogle = section;
   }
