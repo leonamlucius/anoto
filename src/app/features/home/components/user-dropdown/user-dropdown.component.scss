@@ -145,10 +145,11 @@ app-profile {
   color: #ff4d4d;
 }
 
+
 ::ng-deep ::view-transition-group(profile) {
   animation-duration: 0.28s;
   animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
-  z-index: 10000;
+  z-index: 20001;
 }
 
 ::ng-deep ::view-transition-old(profile),
@@ -277,7 +278,7 @@ app-profile {
     padding: 0;
   }
 
-  .profile-section-footer{
+  .profile-section-footer {
     padding: 10px;
   }
 

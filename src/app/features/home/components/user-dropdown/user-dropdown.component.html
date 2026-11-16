@@ -3,7 +3,10 @@
     class="user-dropdown-wrapper"
     (click)="deactivateAll(); $event.stopPropagation()"
   >
-    <div class="user-dropdown-container">
+    <div
+      class="user-dropdown-container"
+      style="view-transition-name: user-menu"
+    >
       @if (
         activedSectiosnToogle === "profile" ||
         activedSectiosnHover === "profile"
@@ -92,11 +95,7 @@
             (mouseenter)="activateSectionHover('picture')"
             (mouseleave)="activateSectionHover('picture')"
             (click)="activateSectionToggle('picture'); $event.stopPropagation()"
-            [style.view-transition-name]="
-              (userDropdownService.showDropdown$ | async) === true
-                ? 'profile'
-                : 'none'
-            "
+            [style.view-transition-name]="'profile'"
           ></app-profile>
           <div class="user-details">
             <p class="user-name">{{ name }}</p>

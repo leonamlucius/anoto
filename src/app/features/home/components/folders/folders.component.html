@@ -1,3 +1,12 @@
+@switch (emptyState$ | async) {
+  @case ("loading") {
+    <div class="folders-container active">
+      @for (_ of [].constructor(4); track $index) {
+        <div class="skeleton-loading"></div>
+      }
+    </div>
+  }
+}
 @if (folders.length > 0) {
   <div class="folder-title">
     <div class="folder-toggle" (click)="showFolders = !showFolders">
@@ -12,16 +21,6 @@
       </span>
     </div>
   </div>
-
-  @switch (emptyState$ | async) {
-    @case ("loading") {
-      <div class="folders-container active">
-        @for (_ of [].constructor(4); track $index) {
-          <div class="skeleton-loading"></div>
-        }
-      </div>
-    }
-  }
 
   <div class="folders-container" [class.active]="showFolders">
     @for (folder of folders; track $index) {

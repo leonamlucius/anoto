@@ -7,6 +7,7 @@ import {
   ChangeDetectorRef,
   DestroyRef,
 } from '@angular/core';
+import { UserDropdownService } from '../../services/user-dropdown.service';
 import { DeleteService } from '../../../../shared/services/delete.service';
 import { FolderService } from '../../services/folder.service';
 import { Note } from '../../models/note';
@@ -50,6 +51,7 @@ export class NotesComponent implements OnInit, OnDestroy {
     protected noteService: NoteService,
     protected deleteService: DeleteService,
     protected folderService: FolderService,
+    protected userDropdownService: UserDropdownService
   ) {}
 
   private destroyRef = inject(DestroyRef);
