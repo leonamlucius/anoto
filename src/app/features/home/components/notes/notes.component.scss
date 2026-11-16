@@ -390,6 +390,7 @@
   font-weight: 600;
   width: calc(100% - 30px);
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .note-card p {
