@@ -1,6 +1,5 @@
 package com.anoto.service;
 
-import java.io.File;
 import java.io.IOException;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
@@ -13,6 +12,9 @@ import com.anoto.dto.FileRequest;
 import com.anoto.model.Storage;
 import com.anoto.model.User;
 import com.anoto.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
+
 import com.anoto.repository.StorageRepository;
 
 import java.util.Base64;
@@ -22,7 +24,6 @@ import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
 import software.amazon.awssdk.services.s3.model.ObjectIdentifier;
 import software.amazon.awssdk.services.s3.model.S3Object;
-import java.util.stream.Collectors;
 import java.util.UUID;
 
 import software.amazon.awssdk.services.s3.model.DeleteObjectsRequest;
@@ -38,6 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Service
+@RequiredArgsConstructor
 public class StorageService {
 
     private static final Logger logger = LoggerFactory.getLogger(StorageService.class);
@@ -48,12 +50,6 @@ public class StorageService {
 
     @Value("${app.s3.bucket-name:anoto-bucket}")
     private String bucketName;
-
-    public StorageService(S3Client s3Client, UserRepository userRepository, StorageRepository storageRepository) {
-        this.s3Client = s3Client;
-        this.userRepository = userRepository;
-        this.storageRepository = storageRepository;
-    }
 
     private User getCurrentUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();

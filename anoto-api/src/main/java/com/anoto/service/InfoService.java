@@ -4,15 +4,18 @@ import org.springframework.stereotype.Service;
 import com.anoto.dto.InfoResponse;
 import com.anoto.model.User;
 import com.anoto.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
+
 import com.anoto.dto.InfoRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 @Service
+@RequiredArgsConstructor
 public class InfoService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     private User getCurrentUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -32,11 +35,11 @@ public class InfoService {
     public InfoResponse updateInfo(InfoRequest infoRequest) {
         User currentUser = getCurrentUser();
 
-        if (infoRequest.getEmail() != null) {
-            currentUser.setEmail(infoRequest.getEmail());
+        if (infoRequest.email() != null) {
+            currentUser.setEmail(infoRequest.email());
         }
-        if (infoRequest.getName() != null) {
-            currentUser.setName(infoRequest.getName());
+        if (infoRequest.name() != null) {
+            currentUser.setName(infoRequest.name());
         }
         userRepository.save(currentUser);
 

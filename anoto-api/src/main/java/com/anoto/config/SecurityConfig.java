@@ -1,6 +1,8 @@
 package com.anoto.config;
 
 import com.anoto.repository.UserRepository;
+import com.anoto.service.UserDetailsServiceImpl;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -4,17 +4,18 @@ import org.springframework.stereotype.Service;
 import com.anoto.config.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Service
+@RequiredArgsConstructor
 public class CookieService {
 
     private static final Logger logger = LoggerFactory.getLogger(CookieService.class);
 
-    @Autowired
-    private JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
     public Cookie createCookie(String email, Long userId) {
 

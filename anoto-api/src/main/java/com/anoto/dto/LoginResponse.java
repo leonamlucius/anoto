@@ -1,12 +1,7 @@
 package com.anoto.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
-@Data
-@AllArgsConstructor
-public class LoginResponse {
-    private Long id;
-    private String email;
-    private String name;
+public record LoginResponse(
+        Long id,
+        String email,
+        String name) {
 }

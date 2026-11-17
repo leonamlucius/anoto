@@ -1,14 +1,11 @@
 package com.anoto.dto;
 
-import lombok.Data;
 import java.util.List;
 
-@Data
-public class FolderRequest {
+public record FolderRequest(
 
-    private String title;
-    private String description;
-    private List<Long> noteIds;
-    private String color;
-
+        String title,
+        String description,
+        List<Long> noteIds,
+        String color) {
 }

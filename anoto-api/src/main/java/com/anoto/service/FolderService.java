@@ -59,9 +59,9 @@ public class FolderService {
                 Set<Long> existingIds = folder.getNotes().stream()
                                 .map(Note::getId)
                                 .collect(Collectors.toSet());
-                List<Long> noteIds = folderRequest.getNoteIds() == null
+                List<Long> noteIds = folderRequest.noteIds() == null
                                 ? List.of()
-                                : folderRequest.getNoteIds().stream()
+                                : folderRequest.noteIds().stream()
                                                 .distinct()
                                                 .filter(noteId -> !existingIds.contains(noteId))
                                                 .toList();
@@ -95,12 +95,12 @@ public class FolderService {
                                         return new IllegalArgumentException("Pasta não encontrada.");
                                 });
 
-                folder.setTitle(folderRequest.getTitle());
+                folder.setTitle(folderRequest.title());
 
-                folder.setDescription(folderRequest.getDescription());
+                folder.setDescription(folderRequest.description());
 
-                if (folderRequest.getNoteIds() != null) {
-                        Set<Long> requestedIds = folderRequest.getNoteIds().stream()
+                if (folderRequest.noteIds() != null) {
+                        Set<Long> requestedIds = folderRequest.noteIds().stream()
                                         .collect(Collectors.toSet());
                         List<Note> currentNotes = new ArrayList<>(folder.getNotes());
 
@@ -128,7 +128,7 @@ public class FolderService {
                         });
                 }
 
-                folder.setColor(folderRequest.getColor());
+                folder.setColor(folderRequest.color());
 
                 folder.setUpdatedAt(LocalDateTime.now());
 
@@ -196,17 +196,17 @@ public class FolderService {
                 User user = getCurrentUser();
 
                 Folder folder = Folder.builder()
-                                .title(folderRequest.getTitle())
-                                .description(folderRequest.getDescription())
+                                .title(folderRequest.title())
+                                .description(folderRequest.description())
                                 .user(user)
-                                .color(folderRequest.getColor())
+                                .color(folderRequest.color())
                                 .build();
 
                 folderRepository.save(folder);
 
-                List<Note> notes = folderRequest.getNoteIds() == null
+                List<Note> notes = folderRequest.noteIds() == null
                                 ? List.of()
-                                : folderRequest.getNoteIds().stream()
+                                : folderRequest.noteIds().stream()
                                                 .distinct()
                                                 .map(noteId -> noteRepository.findByIdAndUserId(noteId, user.getId())
                                                                 .orElseThrow(() -> {

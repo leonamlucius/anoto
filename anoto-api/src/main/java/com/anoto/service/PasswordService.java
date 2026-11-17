@@ -3,8 +3,10 @@ package com.anoto.service;
 import com.anoto.model.User;
 import com.anoto.model.PasswordResetToken;
 import com.anoto.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
+
 import com.anoto.repository.PasswordResetTokenRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,16 +17,14 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class PasswordService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private PasswordResetTokenRepository tokenRepository;
+    private final PasswordResetTokenRepository tokenRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Value("${brevo.api.key}")
     private String brevoApiKey;

@@ -1,14 +1,11 @@
 package com.anoto.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import jakarta.servlet.http.Cookie;
-import com.anoto.config.JwtUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 import com.anoto.service.InfoService;
-import com.anoto.service.CookieService;
+
 import com.anoto.dto.InfoResponse;
 import com.anoto.dto.InfoRequest;
 
@@ -24,14 +21,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @RequiredArgsConstructor
 public class InfoController {
 
-    @Autowired
-    private InfoService infoService;
-
-    @Autowired
-    private JwtUtil jwtUtil;
-
-    @Autowired
-    private CookieService cookieService;
+    private final InfoService infoService;
 
     @GetMapping("get")
     public ResponseEntity<InfoResponse> getInfo(
