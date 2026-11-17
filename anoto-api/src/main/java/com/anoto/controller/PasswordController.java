@@ -3,32 +3,34 @@ package com.anoto.controller;
 import com.anoto.dto.ForgotPasswordRequest;
 import com.anoto.dto.ResetPasswordRequest;
 import com.anoto.service.PasswordService;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class PasswordController {
 
-    @Autowired
-    private PasswordService passwordService;
+    private final PasswordService passwordService;
 
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest request) {
-        passwordService.sendResetPasswordEmail(request.getEmail());
+        passwordService.sendResetPasswordEmail(request.email());
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest request) {
-        passwordService.resetPassword(request.getToken(), request.getNewPassword());
+        passwordService.resetPassword(request.token(), request.newPassword());
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/test-reset-password")
     public ResponseEntity<?> testResetPassword(@RequestBody ResetPasswordRequest request) {
-        passwordService.testResetPassword(request.getToken());
+        passwordService.testResetPassword(request.token());
         return ResponseEntity.ok().build();
     }
 }

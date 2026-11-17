@@ -7,7 +7,7 @@ import com.anoto.dto.FileRequest;
 
 import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.ResponseEntity;
 
 import com.anoto.service.StorageService;
@@ -18,13 +18,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/storage")
+@RequiredArgsConstructor
 public class StorageController {
 
-    @Autowired
-    private StorageService storageService;
+    private final StorageService storageService;
 
     @PostMapping("/delete-all")
     public ResponseEntity<Integer> deleteAll(HttpServletResponse response) {

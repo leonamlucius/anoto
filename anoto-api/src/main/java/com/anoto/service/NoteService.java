@@ -58,16 +58,16 @@ public class NoteService {
 
     public NoteResponse create(NoteRequest request) {
         User user = getCurrentUser();
-        String encryptedContent = request.getContent();
+        String encryptedContent = request.content();
         try {
-            encryptedContent = CryptoUtil.encrypt(request.getContent());
+            encryptedContent = CryptoUtil.encrypt(request.content());
         } catch (Exception e) {
             // Se falhar, salva o conteúdo original (pode logar se quiser)
         }
         Note note = Note.builder()
-                .title(request.getTitle())
+                .title(request.title())
                 .content(encryptedContent)
-                .color(request.getColor())
+                .color(request.color())
                 .user(user)
                 .fixed(false)
                 .updatedAt(null)
@@ -79,15 +79,15 @@ public class NoteService {
         User user = getCurrentUser();
         Note note = noteRepository.findByIdAndUserId(id, user.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Nota não encontrada."));
-        note.setTitle(request.getTitle());
-        String encryptedContent = request.getContent();
+        note.setTitle(request.title());
+        String encryptedContent = request.content();
         try {
-            encryptedContent = CryptoUtil.encrypt(request.getContent());
+            encryptedContent = CryptoUtil.encrypt(request.content());
         } catch (Exception e) {
             // Se falhar, salva o conteúdo original (pode logar se quiser)
         }
         note.setContent(encryptedContent);
-        note.setColor(request.getColor());
+        note.setColor(request.color());
         note.setUpdatedAt(LocalDateTime.now());
         return toResponse(noteRepository.save(note));
     }
@@ -96,20 +96,20 @@ public class NoteService {
         User user = getCurrentUser();
         Note note = noteRepository.findByIdAndUserId(id, user.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Nota não encontrada."));
-        if (request.getTitle() != null) {
-            note.setTitle(request.getTitle());
+        if (request.title() != null) {
+            note.setTitle(request.title());
         }
-        if (request.getContent() != null) {
-            String encryptedContent = request.getContent();
+        if (request.content() != null) {
+            String encryptedContent = request.content();
             try {
-                encryptedContent = CryptoUtil.encrypt(request.getContent());
+                encryptedContent = CryptoUtil.encrypt(request.content());
             } catch (Exception e) {
                 // Se falhar, salva o conteúdo original (pode logar se quiser)
             }
             note.setContent(encryptedContent);
         }
-        if (request.getColor() != null) {
-            note.setColor(request.getColor());
+        if (request.color() != null) {
+            note.setColor(request.color());
         }
         note.setUpdatedAt(LocalDateTime.now());
         return toResponse(noteRepository.save(note));

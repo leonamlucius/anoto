@@ -1,4 +1,4 @@
-package com.anoto.config;
+package com.anoto.service;
 
 import com.anoto.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

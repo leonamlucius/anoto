@@ -8,7 +8,6 @@ import com.anoto.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,11 +24,9 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @Autowired
-    private JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
-    @Autowired
-    private CookieService cookieService;
+    private final CookieService cookieService;
 
     @PostMapping("/register")
     public ResponseEntity<LoginResponse> register(@Valid @RequestBody RegisterRequest request,
@@ -37,7 +34,7 @@ public class AuthController {
 
         LoginResponse loginResponse = authService.register(request);
 
-        Cookie cookie = cookieService.createCookie(loginResponse.getEmail(), loginResponse.getId());
+        Cookie cookie = cookieService.createCookie(loginResponse.email(), loginResponse.id());
         response.addCookie(cookie);
         return ResponseEntity.ok(loginResponse);
     }
@@ -46,7 +43,7 @@ public class AuthController {
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request,
             HttpServletResponse response) {
         LoginResponse loginResponse = authService.login(request);
-        Cookie cookie = cookieService.createCookie(loginResponse.getEmail(), loginResponse.getId());
+        Cookie cookie = cookieService.createCookie(loginResponse.email(), loginResponse.id());
         response.addCookie(cookie);
         return ResponseEntity.ok(loginResponse);
     }
