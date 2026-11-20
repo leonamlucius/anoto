@@ -68,7 +68,7 @@ public class NoteService {
         Note note = noteRepository.findByIdAndUserId(id, user.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Nota não encontrada."));
         if (request.title() != null) {
-            note.setTitle(request.title());
+            note.setTitle(noteMapper.encryptContent(request.title()));
         }
         if (request.content() != null) {
             note.setContent(noteMapper.encryptContent(request.content()));
@@ -93,5 +93,15 @@ public class NoteService {
         Note note = noteRepository.findByIdAndUserId(id, user.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Nota não encontrada."));
         noteRepository.delete(note);
+    }
+
+    public NoteResponse encryptAll() {
+        List<Note> notes = noteRepository.findAll();
+        for (Note note : notes) {
+            note.setTitle(noteMapper.encryptContent(note.getTitle()));
+            note.setContent(noteMapper.encryptContent(note.getContent()));
+            noteRepository.save(note);
+        }
+        return null;
     }
 }
