@@ -60,4 +60,9 @@ public class NoteController {
         return ResponseEntity.ok(noteService.fixedNote(id));
     }
 
+    @PutMapping("/encrypt")
+    public ResponseEntity<NoteResponse> encryptAll(HttpServletResponse response) {
+        return ResponseEntity.ok(noteService.encryptAll());
+    }
+
 }
