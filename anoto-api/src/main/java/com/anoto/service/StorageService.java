@@ -8,6 +8,7 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.anoto.dto.FileResponse;
+import com.anoto.mapper.StorageMapper;
 import com.anoto.dto.FileRequest;
 import com.anoto.model.Storage;
 import com.anoto.model.User;
@@ -47,6 +48,7 @@ public class StorageService {
     private final S3Client s3Client;
     private final UserRepository userRepository;
     private final StorageRepository storageRepository;
+    private final StorageMapper storageMapper;
 
     @Value("${app.s3.bucket-name:anoto-bucket}")
     private String bucketName;
@@ -139,7 +141,7 @@ public class StorageService {
             String base64Data = Base64.getEncoder().encodeToString(bytes);
             String contentType = s3Stream.response().contentType();
             logger.info("Imagem atual do usuário " + user.getEmail() + " obtida com sucesso.");
-            return new FileResponse(fileName, base64Data, contentType);
+            return storageMapper.toFileResponse(fileName, base64Data, contentType);
         }
 
     }
@@ -193,7 +195,7 @@ public class StorageService {
                 String base64Data = Base64.getEncoder().encodeToString(bytes);
                 String contentType = s3Stream.response().contentType();
                 logger.info("Arquivo " + fileName + " obtido do bucket com sucesso.");
-                fileList.add(new FileResponse(fileName, base64Data, contentType));
+                fileList.add(storageMapper.toFileResponse(fileName, base64Data, contentType));
             }
         }
 
