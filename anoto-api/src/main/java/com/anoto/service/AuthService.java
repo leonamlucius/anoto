@@ -3,6 +3,7 @@ package com.anoto.service;
 import com.anoto.dto.LoginRequest;
 import com.anoto.dto.LoginResponse;
 import com.anoto.dto.RegisterRequest;
+import com.anoto.mapper.LoginMapper;
 import com.anoto.model.User;
 import com.anoto.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,17 +20,14 @@ public class AuthService {
     private final StorageService storageService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final LoginMapper loginMapper;
 
     public LoginResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.email())) {
             throw new IllegalArgumentException("Email já cadastrado.");
         }
 
-        User user = User.builder()
-                .name(request.name())
-                .email(request.email())
-                .password(passwordEncoder.encode(request.password()))
-                .build();
+        User user = loginMapper.toEntity(request);
 
         userRepository.save(user);
 
@@ -39,7 +37,7 @@ public class AuthService {
             throw new RuntimeException("Erro ao definir a imagem padrão.", e);
         }
 
-        return new LoginResponse(user.getId(), user.getEmail(), user.getName());
+        return loginMapper.toResponse(user);
     }
 
     public LoginResponse login(LoginRequest request) {
@@ -49,6 +47,6 @@ public class AuthService {
         User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
 
-        return new LoginResponse(user.getId(), user.getEmail(), user.getName());
+        return loginMapper.toResponse(user);
     }
 }

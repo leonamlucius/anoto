@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import com.anoto.dto.InfoResponse;
 import com.anoto.model.User;
 import com.anoto.repository.UserRepository;
+import com.anoto.mapper.InfoMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public class InfoService {
 
     private final UserRepository userRepository;
+    private final InfoMapper infoMapper;
 
     private User getCurrentUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -27,9 +29,7 @@ public class InfoService {
 
         User currentUser = getCurrentUser();
 
-        return userRepository.findById(Long.parseLong(currentUser.getId().toString()))
-                .map(user -> new InfoResponse(user.getEmail(), user.getName()))
-                .orElse(null);
+        return infoMapper.toResponse(currentUser);
     }
 
     public InfoResponse updateInfo(InfoRequest infoRequest) {
@@ -43,7 +43,7 @@ public class InfoService {
         }
         userRepository.save(currentUser);
 
-        return new InfoResponse(currentUser.getEmail(), currentUser.getName());
+        return infoMapper.toResponse(currentUser);
     }
 
 }

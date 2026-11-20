@@ -2,6 +2,7 @@ package com.anoto.service;
 
 import com.anoto.dto.NoteRequest;
 import com.anoto.dto.NoteResponse;
+import com.anoto.mapper.NoteMapper;
 import com.anoto.model.Note;
 import com.anoto.model.User;
 import com.anoto.repository.NoteRepository;
@@ -20,6 +21,7 @@ public class NoteService {
 
     private final NoteRepository noteRepository;
     private final UserRepository userRepository;
+    private final NoteMapper noteMapper;
 
     private User getCurrentUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -27,69 +29,38 @@ public class NoteService {
                 .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
     }
 
-    private NoteResponse toResponse(Note note) {
-        String decryptedContent = note.getContent();
-        try {
-            decryptedContent = CryptoUtil.decrypt(note.getContent());
-        } catch (Exception e) {
-            // Se falhar, retorna o conteúdo original (pode logar se quiser)
-        }
-        return new NoteResponse(
-                note.getId(),
-                note.getTitle(),
-                decryptedContent,
-                note.getColor(),
-                note.getCreatedAt(),
-                note.getUpdatedAt(),
-                note.getFixed());
-    }
-
     public List<NoteResponse> findAll() {
-        return noteRepository.findByUserId(getCurrentUser().getId())
-                .stream().map(this::toResponse).toList();
+
+        List<Note> notes = noteRepository.findByUserId(getCurrentUser().getId());
+        return notes.stream().map(noteMapper::toResponse).toList();
     }
 
     public NoteResponse findById(Long id) {
         User user = getCurrentUser();
         Note note = noteRepository.findByIdAndUserId(id, user.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Nota não encontrada."));
-        return toResponse(note);
+        return noteMapper.toResponse(note);
     }
 
     public NoteResponse create(NoteRequest request) {
         User user = getCurrentUser();
         String encryptedContent = request.content();
-        try {
-            encryptedContent = CryptoUtil.encrypt(request.content());
-        } catch (Exception e) {
-            // Se falhar, salva o conteúdo original (pode logar se quiser)
-        }
-        Note note = Note.builder()
-                .title(request.title())
-                .content(encryptedContent)
-                .color(request.color())
-                .user(user)
-                .fixed(false)
-                .updatedAt(null)
-                .build();
-        return toResponse(noteRepository.save(note));
+
+        Note note = noteMapper.toEntity(request);
+        note.setUser(user);
+        note.setFixed(false);
+        return noteMapper.toResponse(noteRepository.save(note));
     }
 
     public NoteResponse update(Long id, NoteRequest request) {
         User user = getCurrentUser();
         Note note = noteRepository.findByIdAndUserId(id, user.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Nota não encontrada."));
-        note.setTitle(request.title());
-        String encryptedContent = request.content();
-        try {
-            encryptedContent = CryptoUtil.encrypt(request.content());
-        } catch (Exception e) {
-            // Se falhar, salva o conteúdo original (pode logar se quiser)
-        }
-        note.setContent(encryptedContent);
+        note.setTitle(noteMapper.encryptContent(request.title()));
+        note.setContent(noteMapper.encryptContent(request.content()));
         note.setColor(request.color());
         note.setUpdatedAt(LocalDateTime.now());
-        return toResponse(noteRepository.save(note));
+        return noteMapper.toResponse(noteRepository.save(note));
     }
 
     public NoteResponse updatePartial(Long id, NoteRequest request) {
@@ -100,19 +71,13 @@ public class NoteService {
             note.setTitle(request.title());
         }
         if (request.content() != null) {
-            String encryptedContent = request.content();
-            try {
-                encryptedContent = CryptoUtil.encrypt(request.content());
-            } catch (Exception e) {
-                // Se falhar, salva o conteúdo original (pode logar se quiser)
-            }
-            note.setContent(encryptedContent);
+            note.setContent(noteMapper.encryptContent(request.content()));
         }
         if (request.color() != null) {
             note.setColor(request.color());
         }
         note.setUpdatedAt(LocalDateTime.now());
-        return toResponse(noteRepository.save(note));
+        return noteMapper.toResponse(noteRepository.save(note));
     }
 
     public NoteResponse fixedNote(Long id) {
@@ -120,7 +85,7 @@ public class NoteService {
         Note note = noteRepository.findByIdAndUserId(id, user.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Nota não encontrada."));
         note.setFixed(!note.getFixed());
-        return toResponse(noteRepository.save(note));
+        return noteMapper.toResponse(noteRepository.save(note));
     }
 
     public void delete(Long id) {

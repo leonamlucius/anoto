@@ -15,6 +15,7 @@ import com.anoto.model.Folder;
 import com.anoto.model.Note;
 import com.anoto.dto.FolderRequest;
 import com.anoto.dto.FolderResponse;
+import com.anoto.mapper.FolderMapper;
 import com.anoto.repository.FolderRepository;
 import com.anoto.repository.NoteRepository;
 import com.anoto.repository.UserRepository;
@@ -32,6 +33,7 @@ public class FolderService {
         private final FolderRepository folderRepository;
         private final NoteRepository noteRepository;
         private final UserRepository userRepository;
+        private final FolderMapper folderMapper;
 
         private User getCurrentUser() {
                 String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -81,10 +83,9 @@ public class FolderService {
                 noteRepository.saveAll(newNotes);
 
                 logger.info("Pasta vinculada: " + folder.getId());
-                return new FolderResponse(folder.getId(), folder.getTitle(), folder.getDescription(),
-                                folder.getCreatedAt(),
-                                folder.getUpdatedAt(), folder.getNotes().stream().map(note -> note.getId()).toList(),
-                                folder.getColor());
+
+                return folderMapper.toResponse(folder);
+
         }
 
         @Transactional
@@ -108,7 +109,8 @@ public class FolderService {
                                         .filter(note -> !requestedIds.contains(note.getId()))
                                         .forEach(note -> {
                                                 note.getFolders().removeIf(
-                                                                noteFolder -> noteFolder.getId().equals(folder.getId()));
+                                                                noteFolder -> noteFolder.getId()
+                                                                                .equals(folder.getId()));
                                                 folder.getNotes().remove(note);
                                         });
 
@@ -135,10 +137,7 @@ public class FolderService {
                 folderRepository.save(folder);
 
                 logger.info("Pasta atualizada: " + folder.getId());
-                return new FolderResponse(folder.getId(), folder.getTitle(), folder.getDescription(),
-                                folder.getCreatedAt(),
-                                folder.getUpdatedAt(), folder.getNotes().stream().map(note -> note.getId()).toList(),
-                                folder.getColor());
+                return folderMapper.toResponse(folder);
         }
 
         @Transactional
@@ -169,10 +168,7 @@ public class FolderService {
                                 });
 
                 logger.info("Pasta encontrada: " + folder.getId());
-                return new FolderResponse(folder.getId(), folder.getTitle(), folder.getDescription(),
-                                folder.getCreatedAt(),
-                                folder.getUpdatedAt(), folder.getNotes().stream().map(note -> note.getId()).toList(),
-                                folder.getColor());
+                return folderMapper.toResponse(folder);
         }
 
         @Transactional(readOnly = true)
@@ -181,12 +177,7 @@ public class FolderService {
                 User user = getCurrentUser();
                 return folderRepository.findByUserIdOrderByIdAsc(user.getId())
                                 .stream()
-                                .map(folder -> new FolderResponse(folder.getId(), folder.getTitle(),
-                                                folder.getDescription(),
-                                                folder.getCreatedAt(),
-                                                folder.getUpdatedAt(),
-                                                folder.getNotes().stream().map(note -> note.getId()).toList(),
-                                                folder.getColor()))
+                                .map(folder -> folderMapper.toResponse(folder))
                                 .toList();
         }
 
@@ -195,12 +186,8 @@ public class FolderService {
 
                 User user = getCurrentUser();
 
-                Folder folder = Folder.builder()
-                                .title(folderRequest.title())
-                                .description(folderRequest.description())
-                                .user(user)
-                                .color(folderRequest.color())
-                                .build();
+                Folder folder = folderMapper.toEntity(folderRequest);
+                folder.setUser(user);
 
                 folderRepository.save(folder);
 
@@ -225,10 +212,7 @@ public class FolderService {
 
                 logger.info("Pasta criada com sucesso! " + folder.getId());
 
-                return new FolderResponse(folder.getId(), folder.getTitle(), folder.getDescription(),
-                                folder.getCreatedAt(),
-                                folder.getUpdatedAt(), folder.getNotes().stream().map(note -> note.getId()).toList(),
-                                folder.getColor());
+                return folderMapper.toResponse(folder);
 
         }
 

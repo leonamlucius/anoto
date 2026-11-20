@@ -6,7 +6,7 @@ import java.util.Base64;
 
 public class CryptoUtil {
     private static final String ALGORITHM = "AES";
-    private static final String KEY = System.getenv("NOTE_SECRET_KEY"); // Defina no ambiente
+    private static final String KEY = System.getProperty("NOTE_SECRET_KEY"); // Defina no ambiente
 
     public static String encrypt(String value) throws Exception {
         SecretKeySpec keySpec = new SecretKeySpec(KEY.getBytes(), ALGORITHM);
